@@ -1,8 +1,8 @@
 const model = require('../models/booksModel')
 
-async function getAll() {
+async function getAll(libraryId) {
     try {
-        return await model.getbooks()
+        return await model.getBooks(libraryId)
     } catch (err) {
         throw err
     }

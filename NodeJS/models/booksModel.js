@@ -1,7 +1,7 @@
 const pool = require('../DB')
 async function getBooks(libraryId) {
     try {
-        const [rows] = await pool.query('SELECT * FROM Books WHERE LibraryId = ?', [libraryId]);
+        const [rows] = await pool.query('SELECT * FROM Books where LibraryId=?', [libraryId]);
         return rows;
     } catch (err) {
         console.log(err);

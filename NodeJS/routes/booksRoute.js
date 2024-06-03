@@ -5,7 +5,7 @@ const { getAll, getSingle, create, update, deleteB } = require('../controllers/b
 
 booksRouter.get('/', async (req, res) => {
     try {
-        const books = await getAll(req.query.userId);
+        const books = await getAll(req.query.libraryId);
         res.status(200).send(books);
     } catch (error) {
         res.status(500).send({ error: 'Failed to fetch books' });
