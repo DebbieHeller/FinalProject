@@ -1,25 +1,32 @@
-import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from "react-router-dom"
+import React, { useEffect, useState, createContext } from 'react';
 import './App.css'
 import Layout from '../components/Layout'
+import Login from "../pages/Login"
+import Register from "../pages/Register"
+import Books from "../pages/Books";
+
+export const userContext = createContext();
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [user, setUser] = useState()
 
   return (
     <>
       <BrowserRouter>
-        <Routes>
-          {/* <Route path="/" element={<Layout />}>
+        <userContext.Provider value={{ user, setUser }}>
+          <Routes>
+            {/* <Route path="/" element={<Layout />}>
             <Route path="login" element={<Login />} />
             <Route path="register" element={<Register />} />
           </Route> */}
-          
-          <Route path="/" element={<Layout />}>
-            {/* <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} /> */}
-          </Route>
-         
+
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Books />} />
+              <Route path="login" element={<Login />} />
+              <Route path="register" element={<Register />} />
+            </Route>
+
             {/* <Route path="logout" element={<Logout />} />
             <Route path="users/:id/albums" element={<Albums />} />
             <Route path="users/:id/posts" element={<Posts />} />
@@ -33,8 +40,9 @@ function App() {
                 <Route path=":commentId" element={<Comment />} />
               </Route>
             </Route> */}
-      
-        </Routes>
+
+          </Routes>
+        </userContext.Provider>
       </BrowserRouter>
     </>
   )
