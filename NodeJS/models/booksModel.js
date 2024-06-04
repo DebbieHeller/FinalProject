@@ -1,7 +1,7 @@
-const pool = require('../DB')
+const pool = require('../LibraryDB')
 async function getBooks(libraryId) {
     try {
-        const [rows] = await pool.query('SELECT * FROM Books where LibraryId=?', [libraryId]);
+        const [rows] = await pool.query('SELECT * FROM Books where libraryId=?', [libraryId]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -13,7 +13,7 @@ async function getBooks(libraryId) {
 
 async function getBook(id) {
     try {
-        const [rows] = await pool.query('SELECT * FROM Books where LibraryId=?', [id])
+        const [rows] = await pool.query('SELECT * FROM Books where id=?', [id])
         return rows[0]
     } catch (err) {
         console.log(err)
@@ -37,7 +37,7 @@ async function createBook(nameBook, author, numOfPages, publishingYear, likes, s
 async function updateBook(id, nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew) {
     try {
         const [rows] = await pool.query(
-            "UPDATE Books SET nameBook = ?, author = ?, numOfPages = ?, publishingYear = ?, likes = ?, summary = ?, image = ?, unitsInStock = ?, category = ?, libraryId = ?, isNew = ? ",
+            "UPDATE Books SET nameBook = ?, author = ?, numOfPages = ?, publishingYear = ?, likes = ?, summary = ?, image = ?, unitsInStock = ?, category = ?, libraryId = ?, isNew = ? where id = ?",
             [nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew, id]
         );
         return rows;
