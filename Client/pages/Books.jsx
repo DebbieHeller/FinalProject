@@ -16,7 +16,8 @@ function Books() {
           .catch((error) => console.error('Error fetching books:', error));
     }, []);
 
-    const handleShowComments = (bookId) => {
+    const handleShowComments = (e, bookId) => {
+        e.preventDefault();
         if (showComments[bookId]) {
             setShowComments({ ...showComments, [bookId]: false });
         } else {
@@ -30,16 +31,42 @@ function Books() {
         }
     };
 
-    const handleBookClick = (book) => {
-        setSelectedBook(book);
+    const handleUpdateTodo = () => {
+        fetch(`http://localhost:3000/todos/${params.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...todo,  
+                ...formData, 
+            }),
+        })
+            .then(response => {
+                if (response.ok) {
+                    navigate(`/home/users/${user.id}/todos`);
+                } else {
+                    console.error('Error updating todo:', response.statusText);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating todo:', error.message);
+            });
     };
 
-    const handleCloseModal = () => {
-        setSelectedBook(null);
-    };
-    const handleLike = (bookId) => {
-        fetch(`http://localhost:3000/books/${bookId}`, { method: 'PUT' })
-            .then((res) => res.json())
+    const handleLike = (e, bookId) => {
+        e.preventDefault();
+        fetch(`http://localhost:3000/books/${bookId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                ...books[0],  //////אתכל הקטע של בחירת ספר בודד, הוספת לייקים שזה עדכון וצפייה בתגובות נעשה בPAGE חדש של Book.jsx 
+                likes: books[0].likes + 1
+            }),
+        })
+            .then((res) => { res.json() })
             .then((updatedBook) => {
                 setBooks(books.map(book => book.id === bookId ? updatedBook : book));
             })
@@ -51,15 +78,15 @@ function Books() {
             <h1>Books</h1>
             <div className="books-grid">
                 {books.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => handleBookClick(book)}>
+                    <div key={book.id} className="book-card" onClick={() => setSelectedBook(book)}>
                         <img src={`data:image/jpeg;base64,${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                             <p className="book-likes">
-                                <button className="like-button" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
+                                <button className="like-button" onClick={(e) => { e.stopPropagation(); handleLike(e, book.id) }}>
                                     <span role="img" aria-label="like">👍</span> {book.likes}
                                 </button>
                             </p>
-                            <button onClick={(e) => { e.stopPropagation(); handleShowComments(book.id); }}>
+                            <button onClick={(e) => { e.stopPropagation(); handleShowComments(e, book.id) }}>
                                 {showComments[book.id] ? 'Hide Comments' : 'Show Comments'}
                             </button>
                             {showComments[book.id] && (
@@ -81,9 +108,9 @@ function Books() {
                 ))}
             </div>
             {selectedBook && (
-                <div className="modal" onClick={handleCloseModal}>
+                <div className="modal" onClick={() => setSelectedBook(null)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-                        <span className="close" onClick={handleCloseModal}>&times;</span>
+                        <span className="close" onClick={() => setSelectedBook(null)}>&times;</span>
                         <h2>{selectedBook.nameBook}</h2>
                         <p><strong>Author:</strong> {selectedBook.author}</p>
                         <p><strong>Pages:</strong> {selectedBook.numOfPages}</p>
