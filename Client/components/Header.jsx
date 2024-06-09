@@ -12,7 +12,7 @@ function Header() {
 
     return (
         <header className="main-header">
-            <Link className="site-logo" to="/">Our Website📸</Link>
+            <Link className="site-logo" to="/">Our Library</Link>
             <nav className="nav-header">
                 <NavLink
                     to="/login"

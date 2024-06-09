@@ -53,15 +53,15 @@
     border: none;
     cursor: pointer;
     font-size: 1.1em;
-    color: #ff6600;
+    color: #41aef7;
 }
 
 .like-button:hover {
-    color: #e65c00;
+    color: #41aef7;
 }
 
-button {
-    background-color:#ff6600;
+.singleBook {
+    background-color:#41aef7;
     color: white;
     border: none;
     border-radius: 5px;
@@ -101,6 +101,21 @@ button {
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
+
+.modal-content {
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    max-width: 800px; /* גובה מרבי כאשר אין תגובות */
+    max-height: 400px; /* גובה מרבי כאשר אין תגובות */
+    overflow: auto; /* סרגל גלילה כאשר התגובות גדולות מהחלון */
+}
+
+.modal-content.show-comments {
+    max-height: 100vh; /* גובה מרבי כאשר יש תגובות */
+}
+
 
 .modal-content {
     background-color: #fff;

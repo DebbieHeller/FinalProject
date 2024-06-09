@@ -1,7 +1,10 @@
-const pool = require('../LibraryDB')
+const mysql = require('mysql2');
+const path = require('path');
+const pool = require('../LibraryDB');  // הקובץ שמגדיר את החיבור לבסיס הנתונים
+
 async function getBooks(libraryId) {
     try {
-        const [rows] = await pool.query('SELECT * FROM Books where libraryId=?', [libraryId]);
+        const [rows] = await pool.query('SELECT * FROM Books WHERE libraryId=?', [libraryId]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -9,22 +12,20 @@ async function getBooks(libraryId) {
     }
 }
 
-
-
 async function getBook(id) {
     try {
-        const [rows] = await pool.query('SELECT * FROM Books where id=?', [id])
-        return rows[0]
+        const [rows] = await pool.query('SELECT * FROM Books WHERE id=?', [id]);
+        return rows[0];
     } catch (err) {
-        console.log(err)
+        console.log(err);
     }
 }
 
-async function createBook(nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew) {
+async function createBook(nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) {
     try {
         const [result] = await pool.query(
-            "INSERT INTO Books (nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew]
+            "INSERT INTO Books (nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            [nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew]
         );
         return result.insertId;
     } catch (err) {
@@ -33,12 +34,11 @@ async function createBook(nameBook, author, numOfPages, publishingYear, likes, s
     }
 }
 
-
-async function updateBook(id, nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew) {
+async function updateBook(id, nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) {
     try {
         const [rows] = await pool.query(
-            "UPDATE Books SET nameBook = ?, author = ?, numOfPages = ?, publishingYear = ?, likes = ?, summary = ?, image = ?, unitsInStock = ?, category = ?, libraryId = ?, isNew = ? where id = ?",
-            [nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId, isNew, id]
+            "UPDATE Books SET nameBook = ?, author = ?, numOfPages = ?, publishingYear = ?, likes = ?, summary = ?, imagePath = ?, unitsInStock = ?, category = ?, libraryId = ?, isNew = ? WHERE id = ?",
+            [nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew, id]
         );
         return rows;
     } catch (err) {
@@ -47,17 +47,13 @@ async function updateBook(id, nameBook, author, numOfPages, publishingYear, like
     }
 }
 
-
 async function deleteBook(id) {
     try {
-        await pool.query(
-            "DELETE FROM Books WHERE id = ?", [id]
-        )
+        await pool.query("DELETE FROM Books WHERE id = ?", [id]);
     } catch (err) {
-        console.error('Error deleting Book:', err)
-        throw err
+        console.error('Error deleting Book:', err);
+        throw err;
     }
 }
 
-module.exports = { getBooks, getBook, createBook, updateBook, deleteBook }
-
+module.exports = { getBooks, getBook, createBook, updateBook, deleteBook };
