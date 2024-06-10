@@ -1,15 +1,63 @@
-/* Books.css */
+/* books.css */
 
 .books-container {
-    padding: 20px;
-    background-color: #f7f7f7;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.search-form {
+    width: auto;
+    display: flex;
+    justify-content: flex-end;
+    padding: 10px;
+    position: relative; /* Add relative positioning to the search form */
+}
+
+.search-input-container {
+    position: relative;
+    margin-right: 20px;
+}
+
+.search-input {
+    width: 250px;
+    height: 40px;
+    padding: 10px 40px 10px 20px;
+    margin: 10px;
+    margin-right: 0%;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.search-input:focus {
+    border-color: #007BFF;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    left: calc(100% - 30px); 
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #888;
+    padding-right: 2px;
 }
 
 .books-grid {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+    width: 100%;
 }
 
 .book-card {
@@ -61,7 +109,7 @@
 }
 
 .singleBook {
-    background-color:#41aef7;
+    background-color: #41aef7;
     color: white;
     border: none;
     border-radius: 5px;
@@ -70,8 +118,6 @@
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
-
-
 
 .book-details, .comments-section {
     margin-top: 15px;
@@ -107,15 +153,14 @@
     background-color: white;
     padding: 20px;
     border-radius: 5px;
-    max-width: 800px; /* גובה מרבי כאשר אין תגובות */
-    max-height: 400px; /* גובה מרבי כאשר אין תגובות */
-    overflow: auto; /* סרגל גלילה כאשר התגובות גדולות מהחלון */
+    max-width: 800px;
+    max-height: 400px;
+    overflow: auto;
 }
 
 .modal-content.show-comments {
-    max-height: 100vh; /* גובה מרבי כאשר יש תגובות */
+    max-height: 100vh;
 }
-
 
 .modal-content {
     background-color: #fff;
