@@ -51,7 +51,7 @@ CREATE TABLE users (
   phone VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   address VARCHAR(50),
-  subscriptionTypeId INT NOT NULL,
+  subscriptionTypeId INT default NULL,
   roleId INT NOT NULL,
   libraryId INT NOT NULL,
   paymentId INT NOT NULL,
