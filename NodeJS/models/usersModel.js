@@ -59,16 +59,4 @@ async function validateUsername(username) {
     }
 }
 
-async function confirmPassword(id, password) {//////////////////////!!!!!!!!!!!!!!!!!!
-    try {
-        const [userPassword] = await pool.query(`SELECT password FROM passwords where id=?`, [])
-        const hashedPassword = userPassword[0].password;
-        const isMatch = await bcrypt.compare(password, hashedPassword);
-        return isMatch;
-    } catch (err) {
-        console.error('Error confirm password:', err)
-        throw err
-    }
-}
-
-module.exports = { getUser, getByUsername, createUser, validateUsername, confirmPassword }
+module.exports = { getUser, getByUsername, createUser, validateUsername }

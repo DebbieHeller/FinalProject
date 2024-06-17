@@ -32,13 +32,6 @@ async function create(username,phone, email, address, subscriptionTypeId, roleId
     }
 }
 
-async function confirmPassword(id, password) {
-    try {
-        return await model.confirmPassword(id, password)
-    } catch (err) {
-        throw err
-    }
-}
 
 
-module.exports = { getSingle, getByUsername ,create, confirmPassword }
+module.exports = { getSingle, getByUsername ,create }

@@ -22,7 +22,7 @@ usersRouter.get('/:userId', async (req, res) => {
 
 usersRouter.post('/', async (req, res) => {
     console.log('create')
-    const response = await create(req.body.username, req.body.phone, req.body.email, req.body.address, req.body.subscriptionTypeId, req.body.roleId, libraryId, req.body.creditCardNumber, req.body.expirationDate, req.body.cvv, req.body.password)
+    const response = await create(req.body.username, req.body.phone, req.body.email, req.body.address, req.body.subscriptionTypeId, req.body.roleId,  req.body.libraryId, req.body.creditCardNumber, req.body.expirationDate, req.body.cvv, req.body.password)
     console.log(response)
     if (response){
         res.sendStatus(201)

@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { userContext } from '../src/App'
 import { useNavigate } from 'react-router-dom';
-import CompleteRegistration from './CompleteRegistration';
+import SignUp from './SignUp';
 
-function Register() {
+function SignUp() {
   const { user, setUser } = useContext(userContext);
   const [formData, setFormData] = useState({
     username: '',
@@ -49,13 +49,13 @@ function Register() {
           navigate('/login');
       })
       .catch(() => 
-        console.log('register')
+        console.log('sign-up')
       )
   };
 
   return (
     <div className='container'>
-      {isRegistered ? <CompleteRegistration /> :
+      {isRegistered ? <SignUp /> :
         <form className="form" onSubmit={handleSubmit}>
           <label>
             Username:
@@ -72,14 +72,14 @@ function Register() {
             <input type="password" name="passwordVerify" value={formData.passwordVerify} onChange={handleInputChange} />
           </label>
           <br />
-          <button type="submit">Register</button>
+          <button type="submit">Sign-up</button>
         </form>
       }
     </div >
   );
 }
 
-export default Register;
+export default SignUp;
 
 
 

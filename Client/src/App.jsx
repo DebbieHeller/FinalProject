@@ -3,7 +3,7 @@ import React, { useEffect, useState, createContext } from 'react';
 import './App.css'
 import Layout from '../components/Layout'
 import Login from "../pages/Login"
-import Register from "../pages/Register"
+import SignUp from "../pages/SignUp"
 import Books from "../pages/Books";
 
 export const userContext = createContext();
@@ -18,13 +18,13 @@ function App() {
           <Routes>
             {/* <Route path="/" element={<Layout />}>
             <Route path="login" element={<Login />} />
-            <Route path="register" element={<Register />} />
+            <Route path="sign-up" element={<SignUp />} />
           </Route> */}
 
             <Route path="/" element={<Layout />}>
               <Route index element={<Books />} />
               <Route path="login" element={<Login />} />
-              <Route path="register" element={<Register />} />
+              <Route path="sign-up" element={<SignUp />} />
             </Route>
 
             {/* <Route path="logout" element={<Logout />} />

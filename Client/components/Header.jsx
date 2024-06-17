@@ -21,10 +21,10 @@ function Header() {
                     Login
                 </NavLink>
                 <NavLink
-                    to="/register"
+                    to="/sign-up"
                     style={({ isActive }) => isActive ? activeStyles : null}
                 >
-                    Register
+                    Sign-up
                 </NavLink>
             </nav>
         </header>

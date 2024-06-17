@@ -4,7 +4,8 @@ const loginRouter = express.Router()
 loginRouter.use(express.json())
 loginRouter.use(express.urlencoded({ extended: true }))
 loginRouter.use(cors())//
-const { getByUsername, confirmPassword } = require('../controllers/usersController')
+const { getByUsername } = require('../controllers/usersController')
+const { confirmPassword } = require('../controllers/passwordsController')
 
 loginRouter.post('/', async (req, res) => {
     console.log(req.body.username)
@@ -12,12 +13,12 @@ loginRouter.post('/', async (req, res) => {
     if(!user){
         res.status(404).send({})
     } else {
-        // const confirm = await confirmPassword(user.id, req.body.password)
-        // if (confirm) {
+        const confirm = await confirmPassword(user.passwordId, req.body.password)
+        if (confirm) {
             res.status(201).send(user)
-        // } else {
-        //     res.status(401).send({})
-        // }
+        } else {
+            res.status(401).send({})
+        }
     }
 })
 
