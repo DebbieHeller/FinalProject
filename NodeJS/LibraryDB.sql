@@ -35,9 +35,9 @@ CREATE TABLE libraries (
 
 CREATE TABLE payments (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  creditCardNumber VARCHAR(16) NOT NULL,
-  expirationDate DATE NOT NULL,
-  cvv INT NOT NULL
+  creditCardNumber VARCHAR(16) ,
+  expirationDate DATE ,
+  cvv INT 
 );
 
 CREATE TABLE passwords (
@@ -71,9 +71,9 @@ CREATE TABLE books (
   publishingYear YEAR NOT NULL,
   likes INT,
   summary VARCHAR(255) NOT NULL,
-  image BLOB NOT NULL,
+  image VARCHAR(50) NOT NULL,
   unitsInStock INT NOT NULL,
-  category VARCHAR(30) NOT NULL,
+  category VARCHAR(50) NOT NULL,
   libraryId INT NOT NULL,
   isNew BOOLEAN NOT NULL DEFAULT FALSE,
   FOREIGN KEY (libraryId) REFERENCES libraries(id)
@@ -105,7 +105,7 @@ CREATE TABLE barrows (
   userId INT NOT NULL,
   borrowDate DATE NOT NULL,
   returnDate DATE,
-  status VARCHAR(20) NOT NULL CHECK (status IN ('Borrowed', 'Returned', 'Overdue')),
+  status VARCHAR(50) NOT NULL CHECK (status IN ('Borrowed', 'Returned', 'Overdue')),
   isReturned BOOLEAN NOT NULL DEFAULT FALSE,
   isIntact BOOLEAN NOT NULL DEFAULT TRUE,
   FOREIGN KEY (copyBookId) REFERENCES copyBook(id),
@@ -151,16 +151,16 @@ INSERT INTO payments (creditCardNumber, expirationDate, cvv) VALUES
 ('8765432187654321', '2024-11-30', 456);
 
 INSERT INTO passwords (password) VALUES 
-('password1'),
-('password2'),
-('password3'),
-('password4'),
-('password5'),
-('password6'),
-('password7'),
-('password8'),
-('password9'),
-('password10');
+('$2b$10$q6n4J8qQg5x9LLhFY8O1GefHpPCOAQDoc/DqD7lSPiC87TaZ3mwIG'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.JyenO/2UglhLRxuLnISu0tK7srjDOWi'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.2sIOfvB1CDwb7hiDtFtcWSfnlx7/9x6'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.EatKcZ8GRvesfm1pcUxPGVjr6BqUoW.'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.rP.EEJ9jEa3j7iCTpS3U6htGj0djdKO'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.M6qwRZVXdJ3cgQsaTLzkuCk09Lmf6oO'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.pjvNFn3JG6AnADsAqzeRQeK7k5xqrrS'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.BAqwaVnAizdAkpVo05Ijfejn50F.i0O'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q.8n87T4KouYBTYtBPWR6ZwoYS4u6oZry'),
+('$2b$10$L/W/YTql1OFd2kk1cva3q..bNaKcOJDiiy9JwhSlIRpcaWR8cRk9G');
 
 INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, libraryId, paymentId, passwordId) VALUES 
 ('Alice', '123-456-7890', 'alice@example.com', '123 Main St', 1, 1, 1, 1, 1),
@@ -175,9 +175,9 @@ INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, 
 ('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 2, 2, 2, 10);
 
 INSERT INTO books (nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId) VALUES 
-('Book 1', 'Author 1', 200, '2020', 100, 'Summary of Book 1', 'book_images/book1.jpg', 50, 'Fiction', 1),
-('Book 2', 'Author 2', 300, '2019', 150, 'Summary of Book 2', 'book_images/book2.jpg', 75, 'Non-Fiction', 2),
-('Book 3', 'Author 3', 250, '2018', 120, 'Summary of Book 3', 'book_images/book3.jpg', 60, 'Fantasy', 3),
+('Book 1', 'Author 1', 200, '2020', 100, 'Summary of Book 1', 'nahn.jpg', 50, 'Fiction', 1),
+('Book 2', 'Author 2', 300, '2019', 150, 'Summary of Book 2', 'metsula.jpg', 75, 'Non-Fiction', 2),
+('Book 3', 'Author 3', 250, '2018', 120, 'Summary of Book 3', 'hanormali-haacharon.jpg', 60, 'Fantasy', 3),
 ('Book 4', 'Author 4', 180, '2017', 80, 'Summary of Book 4', 'book_images/book4.jpg', 40, 'Mystery', 1),
 ('Book 5', 'Author 5', 320, '2016', 200, 'Summary of Book 5', 'book_images/book5.jpg', 100, 'Thriller', 2),
 ('Book 6', 'Author 6', 270, '2015', 140, 'Summary of Book 6', 'book_images/book6.jpg', 65, 'Romance', 3),

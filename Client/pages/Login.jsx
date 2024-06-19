@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { userContext } from '../src/App';
+import '../css/signUp&Login.css'; // Import the CSS file
 
 function Login() {
-  localStorage.setItem('currentUser', null);
   const [formData, setFormData] = useState({ username: '', password: '' });
   const navigate = useNavigate();
   const { setUser } = useContext(userContext);
@@ -25,40 +25,39 @@ function Login() {
     })
       .then(res => {
         if (res.status !== 201) {
-          alert('The username or password is not correct')
-          throw console.error();
+          alert('The username or password is not correct');
+          throw new Error('Failed to login');
         } else {
-          return res.json()
+          return res.json();
         }
       })
       .then(data => {
         setUser(data);
-        localStorage.setItem('currentUser', JSON.stringify(data));
-        alert('Login successful');
         navigate('/home');
       })
       .catch(() => 
         console.log('error')
-      )
+      );
   };
 
   return (
     <div className='container'>
+      <h1 className='title'>Login</h1>
       <form className='form' onSubmit={handleSubmit}>
-        <label>
+        <label className='form-label'>
           Username:
-          <input type="text" name="username" value={formData.username} onChange={handleInputChange} />
+          <input type="text" name="username" value={formData.username} onChange={handleInputChange} className='form-input' />
         </label>
         <br />
-        <label>
+        <label className='form-label'>
           Password:
-          <input type="password" name="password" value={formData.password} onChange={handleInputChange} />
+          <input type="password" name="password" value={formData.password} onChange={handleInputChange} className='form-input' />
         </label>
         <br />
-        <button type="submit">Login</button>
+        <button type="submit" className='submit-button'>Login</button>
       </form>
     </div>
-  )
+  );
 }
 
-export default Login
+export default Login;

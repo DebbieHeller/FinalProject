@@ -1,0 +1,48 @@
+
+.comments-controls {
+    margin-bottom: 10px;
+}
+
+.toggle-comments,
+.toggle-add-comment {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    color: #007bff;
+}
+
+.comment-icon,
+.add-comment-icon {
+    margin-right: 5px;
+}
+
+.add-comment-form {
+    margin-top: 10px;
+}
+
+.add-comment-form input,
+.add-comment-form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.add-comment-form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.add-comment-form button:hover {
+    background-color: #0056b3;
+}

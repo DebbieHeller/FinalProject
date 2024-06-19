@@ -1,7 +1,7 @@
 import React from "react";
-function Home(){
+function NewBorrow(){
     return
     <>
     </>
 }
-export default Home
+export default NewBorrow

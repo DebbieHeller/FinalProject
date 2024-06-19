@@ -1,34 +1,35 @@
-import React from "react"
-import { Link, NavLink } from "react-router-dom"
+import React from "react";
+import { NavLink } from "react-router-dom";
+import "../css/header.css"; 
 
 function Header() {
-
-    const activeStyles = {
-        fontWeight: "bold",
-        textDecoration: "underline",
-        color: "#161616",
-        textDecorationColor: "rgb(127, 205, 179)",
-    };
-
     return (
         <header className="main-header">
-            <Link className="site-logo" to="/">Our Library</Link>
-            <nav className="nav-header">
-                <NavLink
-                    to="/login"
-                    style={({ isActive }) => isActive ? activeStyles : null}
-                >
-                    Login
+            <div className="header-left">
+                <nav className="nav-header">
+                    <NavLink
+                        to="/login"
+                        className="nav-link"
+                        activeclassname="active-link"
+                    >
+                        Login
+                    </NavLink>
+                    <NavLink
+                        to="/sign-up"
+                        className="nav-link"
+                        activeclassname="active-link"
+                    >
+                        Sign-up
+                    </NavLink>
+                </nav>
+            </div>
+            <div className="header-right">
+                <NavLink to="/" className="site-logo">
+                    Our Library
                 </NavLink>
-                <NavLink
-                    to="/sign-up"
-                    style={({ isActive }) => isActive ? activeStyles : null}
-                >
-                    Sign-up
-                </NavLink>
-            </nav>
+            </div>
         </header>
-    )
+    );
 }
 
-export default Header
+export default Header;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../css/books.css';
-import { FaSearch } from 'react-icons/fa'; // Import the search icon
+import { FaSearch,FaThumbsUp } from 'react-icons/fa'; // Import the search icon
 
 function Books() {
     const libraryId = parseInt(localStorage.getItem('libraryId'));
@@ -47,26 +47,6 @@ function Books() {
         }
     };
 
-    const handleLike = (e, book) => {
-        e.preventDefault();
-
-        fetch(`http://localhost:3000/books/${book.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                ...book,
-                likes: book.likes + 1
-            }),
-        })
-            .then((res) => res.json())
-            .then((updatedBook) => {
-                setBooks(books.map(b => b.id === book.id ? updatedBook : b));
-            })
-            .catch((error) => console.error('Error updating like:', error));
-    };
-
     return (
         <div className="books-container">
             <h1>Books</h1>
@@ -85,12 +65,10 @@ function Books() {
             <div className="books-grid">
                 {searchResults.map(book => (
                     <div key={book.id} className="book-card" onClick={() => setSelectedBook(book)}>
-                        <img src={`data:image/jpeg;base64,${book.image}`} alt={book.nameBook} className="book-image" />
+                        <img src={`http://localhost:5173/images${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                             <p className="book-likes">
-                                <button className="like-button" onClick={(e) => { e.stopPropagation(); handleLike(e, book) }}>
-                                    <span role="img" aria-label="like">👍</span> {book.likes}
-                                </button>
+                                <FaThumbsUp className="like-icon" /> {book.likes}
                             </p>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 import React from "react";
-function Home(){
+function Messages(){
     return
     <>
     </>
 }
-export default Home
+export default Messages
