@@ -12,6 +12,7 @@ import UserBorrows from "../pages/UserBorrows";
 import UserBooks from "../pages/UserBooks";
 import NewBorrow from "../pages/NewBorrow";
 import Logout from "../components/Logout";
+import Book from "../pages/Book";
 
 export const userContext = createContext();
 
@@ -35,14 +36,14 @@ function App() {
               <Route path="messages" element={<Messages />} />
               <Route path="user-borrows" element={<UserBorrows />} />
               <Route path="user-books" element={<UserBooks />} />
+              <Route path="user-books/:id" element={<Book />} />
               <Route path="new-borrow" element={<NewBorrow />} />
 
               {/* <Route
                 path="users/:userId/albums/:albumId"
                 element={<Photos />}
-              />
-              <Route path="users/:userId/todos/:id" element={<Todo />} />
-              <Route path="users/:userId/posts/:postId" element={<Post />}>
+              /> */}
+              {/* <Route path="users/:userId/posts/:postId" element={<Post />}>
                 <Route path="comments" element={<Comments />}>
                   <Route path=":commentId" element={<Comment />} />
                 </Route>

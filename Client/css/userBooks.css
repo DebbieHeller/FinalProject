@@ -1,48 +1,69 @@
 
+
 .comments-controls {
-    margin-bottom: 10px;
+  margin-bottom: 10px;
 }
 
 .toggle-comments,
 .toggle-add-comment {
-    border: none;
-    background: none;
-    cursor: pointer;
-    font-size: 1rem;
-    display: flex;
-    align-items: center;
-    color: #007bff;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  color: #007bff;
 }
 
 .comment-icon,
 .add-comment-icon {
-    margin-right: 5px;
+  margin-right: 5px;
 }
 
 .add-comment-form {
-    margin-top: 10px;
+  margin-top: 10px;
 }
 
 .add-comment-form input,
 .add-comment-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1rem;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
 }
 
 .add-comment-form button {
-    background-color: #007bff;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.add-comment-form button:hover {
+  background-color: #0056b3;
+}
+
+.return-books-button {
+    background-color: #dc3545;
     color: #fff;
     border: none;
     padding: 10px 20px;
     border-radius: 4px;
     cursor: pointer;
     font-size: 1rem;
+    margin-top: 20px;
+  }
+
+.return-books-button:hover {
+  background-color: #c82333;
 }
 
-.add-comment-form button:hover {
-    background-color: #0056b3;
+.error-message {
+  color: #dc3545;
+  margin-bottom: 10px;
 }

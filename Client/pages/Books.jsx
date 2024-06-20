@@ -65,8 +65,8 @@ function Books() {
             <div className="books-grid">
                 {searchResults.map(book => (
                     <div key={book.id} className="book-card" onClick={() => setSelectedBook(book)}>
-                        <img src={`http://localhost:5173/images${book.image}`} alt={book.nameBook} className="book-image" />
-                        <div className="book-info">
+                        <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
+                         <div className="book-info">
                             <p className="book-likes">
                                 <FaThumbsUp className="like-icon" /> {book.likes}
                             </p>

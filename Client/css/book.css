@@ -1,0 +1,75 @@
+.book {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+.comments-controls {
+    margin-top: 10px;
+}
+
+.toggle-comments, .toggle-add-comment {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.toggle-add-comment {
+    background-color: #28a745;
+}
+
+.add-comment-form {
+    margin-top: 10px;
+}
+
+.add-comment-form input[type="text"],
+.add-comment-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+.add-comment-form button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.comments-section {
+    margin-top: 10px;
+}
+
+.comment-card {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+.comment-actions {
+    margin-top: 5px;
+}
+
+.comment-actions button {
+    margin-right: 10px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.edit-icon, .delete-icon {
+    vertical-align: middle;
+    margin-right: 5px;
+}

@@ -175,19 +175,19 @@ INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, 
 ('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 2, 2, 2, 10);
 
 INSERT INTO books (nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId) VALUES 
-('Book 1', 'Author 1', 200, '2020', 100, 'Summary of Book 1', 'nahn.jpg', 50, 'Fiction', 1),
-('Book 2', 'Author 2', 300, '2019', 150, 'Summary of Book 2', 'metsula.jpg', 75, 'Non-Fiction', 2),
-('Book 3', 'Author 3', 250, '2018', 120, 'Summary of Book 3', 'hanormali-haacharon.jpg', 60, 'Fantasy', 3),
-('Book 4', 'Author 4', 180, '2017', 80, 'Summary of Book 4', 'book_images/book4.jpg', 40, 'Mystery', 1),
-('Book 5', 'Author 5', 320, '2016', 200, 'Summary of Book 5', 'book_images/book5.jpg', 100, 'Thriller', 2),
-('Book 6', 'Author 6', 270, '2015', 140, 'Summary of Book 6', 'book_images/book6.jpg', 65, 'Romance', 3),
-('Book 7', 'Author 7', 230, '2014', 110, 'Summary of Book 7', 'book_images/book7.jpg', 55, 'Science Fiction', 1),
-('Book 8', 'Author 8', 280, '2013', 160, 'Summary of Book 8', 'book_images/book8.jpg', 80, 'Historical Fiction', 2),
-('Book 9', 'Author 9', 290, '2012', 170, 'Summary of Book 9', 'book_images/book9.jpg', 85, 'Biography', 3),
-('Book 10', 'Author 10', 210, '2011', 130, 'Summary of Book 10', 'book_images/book10.jpg', 70, 'Horror', 1);
+('המסע הארוך של נאן', 'לאה פריד', 200, '2020', 100, 'Summary of Book 1', 'nahn.jpg', 50, 'Fiction', 1),
+('המצולע', 'יונה ספיר', 300, '2019', 150, 'Summary of Book 2', 'metsula.jpg', 75, 'Non-Fiction', 2),
+('הנורמלי האחרון', 'רותי קפלר', 250, '2018', 120, 'Summary of Book 3', 'hanormali-haacharon.jpg', 60, 'Fantasy', 3),
+('שלנו את סרינה', 'רותי טננולד', 180, '2017', 80, 'Summary of Book 4', 'shelanuatsarina.jpg', 40, 'Mystery', 1),
+('שטח סגור', 'דבורה רוזן', 320, '2016', 200, 'Summary of Book 5', 'shetach-sagur.jpg', 100, 'Thriller', 2),
+('בכל עת', 'ליבי קליין', 270, '2015', 140, 'Summary of Book 6', 'bechol-et.jpg', 65, 'Romance', 3),
+('אשא עיניי', 'ליבי קליין', 230, '2014', 110, 'Summary of Book 7', 'EsaEinay.jpg', 55, 'Science Fiction', 1),
+('איך לא ידעתי', 'חנה רוטנברג', 280, '2013', 160, 'Summary of Book 8', 'howDidnotIKnow.jpg', 80, 'Historical Fiction', 2),
+('תיק מקסיקו', 'חיים גרינבוים', 290, '2012', 170, 'Summary of Book 9', 'tik-mexico.jpg', 85, 'Biography', 3),
+('הקוקייה', 'אסתר קווין', 210, '2011', 130, 'Summary of Book 10', 'hkukiya.jpg', 70, 'Horror', 1);
 
 INSERT INTO comments (title, body, userId, bookId) VALUES 
-('Comment 1', 'Body of Comment 1', 1, 1),
+('סופרת ותיקה', 'ספר יפה ומרגש ככ נוסטלגי', 1, 1),
 ('Comment 2', 'Body of Comment 2', 2, 2),
 ('Comment 3', 'Body of Comment 3', 3, 3),
 ('Comment 4', 'Body of Comment 4', 4, 4),
