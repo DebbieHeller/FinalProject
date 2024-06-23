@@ -30,16 +30,13 @@ async function getByUsername(username) {
     }
 }
 
-async function createUser(username, phone, email, address, subscriptionTypeId, roleId, libraryId, creditCardNumber, expirationDate, cvv, hashedPassword) {
+async function createUser(username, phone, email, address, subscriptionTypeId, roleId, libraryId, hashedPassword) {
     try {
         const [password] = await pool.query(
             "INSERT INTO passwords(password) VALUES(?)", [hashedPassword]
         )
-        const [payment] = await pool.query(
-            "INSERT INTO payments(creditCardNumber, expirationDate, cvv) VALUES(?, ?, ?)", [creditCardNumber, expirationDate, cvv]
-        )
         const [user] = await pool.query(
-            "INSERT INTO users(username, phone, email, address, subscriptionTypeId, roleId, libraryId, paymentId, passwordId) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", [username, phone, email, address, subscriptionTypeId, roleId, libraryId, payment.insertId, password.insertId]
+            "INSERT INTO users(username, phone, email, address, subscriptionTypeId, roleId, libraryId, passwordId) VALUES(?, ?, ?, ?, ?, ?, ?, ?)", [username, phone, email, address, subscriptionTypeId, roleId, libraryId, password.insertId]
         )
         return user.insertId
     } catch (err) {

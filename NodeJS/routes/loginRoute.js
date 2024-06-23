@@ -8,8 +8,8 @@ const { getByUsername } = require('../controllers/usersController')
 const { confirmPassword } = require('../controllers/passwordsController')
 
 loginRouter.post('/', async (req, res) => {
-    console.log(req.body.username)
     const user = await getByUsername(req.body.username)
+    
     if(!user){
         res.status(404).send({})
     } else {

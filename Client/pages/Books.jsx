@@ -83,7 +83,6 @@ function Books() {
                         <p><strong>Pages:</strong> {selectedBook.numOfPages}</p>
                         <p><strong>Published:</strong> {selectedBook.publishingYear}</p>
                         <p><strong>Summary:</strong> {selectedBook.summary}</p>
-                        <p><strong>Units in Stock:</strong> {selectedBook.unitsInStock}</p>
                         <p><strong>Category:</strong> {selectedBook.category}</p>
                         <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>
                         <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id) }}>

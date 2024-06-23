@@ -29,6 +29,7 @@ commentsRouter.post('/', async (req, res) => {
 commentsRouter.put('/:commentId', async (req, res) => {
     try {
         await update(
+            req.params.commentId,
             req.body.title,
             req.body.body,
             req.body.userId,

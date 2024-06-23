@@ -24,12 +24,12 @@
     background-color: #28a745;
 }
 
-.add-comment-form {
+.comment-form {
     margin-top: 10px;
 }
 
-.add-comment-form input[type="text"],
-.add-comment-form textarea {
+.comment-form input[type="text"],
+.comment-form textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 10px;
@@ -37,7 +37,7 @@
     border-radius: 3px;
 }
 
-.add-comment-form button {
+.comment-form button {
     background-color: #007bff;
     color: white;
     border: none;

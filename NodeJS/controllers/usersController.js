@@ -18,14 +18,14 @@ async function getByUsername(username) {
     }
 }
 
-async function create(username,phone, email, address, subscriptionTypeId, roleId, libraryId, creditCardNumber, expirationDate, cvv, password) {
+async function create(username, phone, email, address, subscriptionTypeId, roleId, libraryId, password) {
     try {
      const validate = await model.validateUsername(username)
      if (validate){
         return null
     } else {
         const hashedPassword = await bcrypt.hash(password, saltRounds)
-        return await model.createUser(username,phone, email, address, subscriptionTypeId, roleId, libraryId, creditCardNumber, expirationDate, cvv, hashedPassword)
+        return await model.createUser(username, phone, email, address, subscriptionTypeId, roleId, libraryId, hashedPassword)
     }
     } catch (err) {
         throw err

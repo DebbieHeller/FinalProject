@@ -20,12 +20,12 @@
   margin-right: 5px;
 }
 
-.add-comment-form {
+.comment-form {
   margin-top: 10px;
 }
 
-.add-comment-form input,
-.add-comment-form textarea {
+.comment-form input,
+.comment-form textarea {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
@@ -34,7 +34,7 @@
   font-size: 1rem;
 }
 
-.add-comment-form button {
+.comment-form button {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -44,7 +44,7 @@
   font-size: 1rem;
 }
 
-.add-comment-form button:hover {
+.comment-form button:hover {
   background-color: #0056b3;
 }
 

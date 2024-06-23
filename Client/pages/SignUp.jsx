@@ -6,6 +6,8 @@ import "../css/signUp&Login.css"; // Import the CSS file
 function SignUp() {
   const libraryId = localStorage.getItem("libraryId");
   const { setUser } = useContext(userContext);
+ 
+
   const [formData, setFormData] = useState({
     username: "",
     phone: "",
@@ -61,11 +63,9 @@ function SignUp() {
           alert("Invalid username");
           throw new Error("Failed to register");
         }
-        res.json();
       })
-      .then((user) => {
-        console.log("in then2");
-        setUser(user);
+      .then(() => {
+        setUser(formData);
         navigate("/home");
       })
       .catch((error) => console.log("Error:", error));

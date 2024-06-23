@@ -4,7 +4,11 @@ const pool = require('../LibraryDB');  // הקובץ שמגדיר את החיב�
 
 async function getBooks(libraryId) {
     try {
-        const [rows] = await pool.query('SELECT * FROM Books WHERE libraryId=?', [libraryId]);
+        const [rows] = await pool.query(
+        `SELECT b.*, bil.isNew
+        FROM booksInLibrary bil
+        JOIN books b ON bil.bookId = b.id
+        WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
         console.log(err);

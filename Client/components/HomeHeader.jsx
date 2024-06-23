@@ -23,6 +23,11 @@ function HomeHeader() {
         <li>
           <Link to="/home/new-borrow">השאלה חדשה</Link>
         </li>
+        {/* <div className="header-right">
+                <NavLink to="/" className="site-logo">
+                    Our Library
+                </NavLink>
+            </div> */}
       </ul>
     </nav>
   );

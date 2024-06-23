@@ -12,7 +12,7 @@ import UserBorrows from "../pages/UserBorrows";
 import UserBooks from "../pages/UserBooks";
 import NewBorrow from "../pages/NewBorrow";
 import Logout from "../components/Logout";
-import Book from "../pages/Book";
+import UserBook from "../pages/UserBook";
 
 export const userContext = createContext();
 
@@ -25,6 +25,7 @@ function App() {
         <userContext.Provider value={{ user, setUser }}>
           <Routes>
             <Route path="/" element={<Layout />}>
+              
               <Route index element={<Books />} />
               <Route path="login" element={<Login />} />
               <Route path="sign-up" element={<SignUp />} />
@@ -36,7 +37,7 @@ function App() {
               <Route path="messages" element={<Messages />} />
               <Route path="user-borrows" element={<UserBorrows />} />
               <Route path="user-books" element={<UserBooks />} />
-              <Route path="user-books/:id" element={<Book />} />
+              <Route path="user-books/:id" element={<UserBook />} />
               <Route path="new-borrow" element={<NewBorrow />} />
 
               {/* <Route

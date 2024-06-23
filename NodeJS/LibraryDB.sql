@@ -1,12 +1,12 @@
-
 CREATE DATABASE IF NOT EXISTS LibraryDB;
 USE LibraryDB;
 
 DROP TABLE IF EXISTS comments;
-DROP TABLE IF EXISTS barrows;
+DROP TABLE IF EXISTS borrows;
 DROP TABLE IF EXISTS waiting;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS copyBook;
+DROP TABLE IF EXISTS booksInLibrary;
 DROP TABLE IF EXISTS books;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS passwords;
@@ -29,15 +29,9 @@ CREATE TABLE subscriptionTypes (
 
 CREATE TABLE libraries (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  libraryName VARCHAR(50) NOT NULL
-);
-
-
-CREATE TABLE payments (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  creditCardNumber VARCHAR(16) ,
-  expirationDate DATE ,
-  cvv INT 
+  libraryName VARCHAR(50) NOT NULL,
+  address VARCHAR(50) NOT NULL,
+  phone VARCHAR(50) NOT NULL
 );
 
 CREATE TABLE passwords (
@@ -54,12 +48,10 @@ CREATE TABLE users (
   subscriptionTypeId INT default NULL,
   roleId INT NOT NULL,
   libraryId INT NOT NULL,
-  paymentId INT NOT NULL,
   passwordId INT NOT NULL,
   FOREIGN KEY (subscriptionTypeId) REFERENCES subscriptionTypes(id),
   FOREIGN KEY (roleId) REFERENCES roles(id),
   FOREIGN KEY (libraryId) REFERENCES libraries(id),
-  FOREIGN KEY (paymentId) REFERENCES payments(id),
   FOREIGN KEY (passwordId) REFERENCES passwords(id)
 );
 
@@ -72,11 +64,17 @@ CREATE TABLE books (
   likes INT,
   summary VARCHAR(255) NOT NULL,
   image VARCHAR(50) NOT NULL,
-  unitsInStock INT NOT NULL,
-  category VARCHAR(50) NOT NULL,
+  category VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE booksInLibrary (
+  id INT AUTO_INCREMENT PRIMARY KEY,
   libraryId INT NOT NULL,
+  bookId INT NOT NULL,
+  unitsInStock INT NOT NULL,
   isNew BOOLEAN NOT NULL DEFAULT FALSE,
-  FOREIGN KEY (libraryId) REFERENCES libraries(id)
+  FOREIGN KEY (libraryId) REFERENCES libraries(id),
+  FOREIGN KEY (bookId) REFERENCES books(id)
 );
 
 CREATE TABLE comments (
@@ -89,7 +87,6 @@ CREATE TABLE comments (
   FOREIGN KEY (bookId) REFERENCES books(id)
 );
 
-
 CREATE TABLE copyBook (
   id INT AUTO_INCREMENT PRIMARY KEY,
   bookId INT NOT NULL,
@@ -99,7 +96,7 @@ CREATE TABLE copyBook (
   FOREIGN KEY (libraryId) REFERENCES libraries(id)
 );
 
-CREATE TABLE barrows (
+CREATE TABLE borrows (
   id INT AUTO_INCREMENT PRIMARY KEY,
   copyBookId INT NOT NULL,
   userId INT NOT NULL,
@@ -141,14 +138,10 @@ INSERT INTO subscriptionTypes (typeName, ammountToBorrow) VALUES
 ('Monthly', 10), 
 ('Yearly', 50);
 
-INSERT INTO libraries (libraryName) VALUES 
-('Central Library'), 
-('Westside Library'), 
-('Eastside Library');
-
-INSERT INTO payments (creditCardNumber, expirationDate, cvv) VALUES 
-('1234567812345678', '2025-12-31', 123),
-('8765432187654321', '2024-11-30', 456);
+INSERT INTO libraries (libraryName, address, phone) VALUES 
+('Central Library', 'fdg', '026554567'), 
+('Westside Library', 'fdg', '026533907'), 
+('Eastside Library', 'fdg', '026523205');
 
 INSERT INTO passwords (password) VALUES 
 ('$2b$10$q6n4J8qQg5x9LLhFY8O1GefHpPCOAQDoc/DqD7lSPiC87TaZ3mwIG'),
@@ -162,29 +155,41 @@ INSERT INTO passwords (password) VALUES
 ('$2b$10$L/W/YTql1OFd2kk1cva3q.8n87T4KouYBTYtBPWR6ZwoYS4u6oZry'),
 ('$2b$10$L/W/YTql1OFd2kk1cva3q..bNaKcOJDiiy9JwhSlIRpcaWR8cRk9G');
 
-INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, libraryId, paymentId, passwordId) VALUES 
-('Alice', '123-456-7890', 'alice@example.com', '123 Main St', 1, 1, 1, 1, 1),
-('Bob', '987-654-3210', 'bob@example.com', '456 Elm St', 2, 2, 2, 2, 2),
-('Charlie', '555-555-5555', 'charlie@example.com', '789 Oak St', 1, 3, 1, 2, 3),
-('David', '222-222-2222', 'david@example.com', '321 Pine St', 2, 2, 2, 1, 4),
-('Emma', '333-333-3333', 'emma@example.com', '456 Maple St', 1, 3, 3, 2, 5),
-('Frank', '444-444-4444', 'frank@example.com', '987 Cedar St', 1, 3, 1, 2, 6),
-('Grace', '666-666-6666', 'grace@example.com', '654 Birch St', 2, 2, 2, 1, 7),
-('Henry', '777-777-7777', 'henry@example.com', '753 Walnut St', 1, 3, 3, 2, 8),
-('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St', 1, 3, 1, 1, 9),
-('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 2, 2, 2, 10);
+INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, libraryId, passwordId) VALUES 
+('Alice', '123-456-7890', 'alice@example.com', '123 Main St', 1, 1, 1, 1),
+('Bob', '987-654-3210', 'bob@example.com', '456 Elm St', 2, 2, 2, 2),
+('Charlie', '555-555-5555', 'charlie@example.com', '789 Oak St', 1, 3, 1, 3),
+('David', '222-222-2222', 'david@example.com', '321 Pine St', 2, 2, 2, 4),
+('Emma', '333-333-3333', 'emma@example.com', '456 Maple St', 1, 3, 3, 5),
+('Frank', '444-444-4444', 'frank@example.com', '987 Cedar St', 1, 3, 1, 6),
+('Grace', '666-666-6666', 'grace@example.com', '654 Birch St', 2, 2, 2, 7),
+('Henry', '777-777-7777', 'henry@example.com', '753 Walnut St', 1, 3, 3, 8),
+('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St', 1, 3, 1, 9),
+('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 2, 2, 10);
 
-INSERT INTO books (nameBook, author, numOfPages, publishingYear, likes, summary, image, unitsInStock, category, libraryId) VALUES 
-('המסע הארוך של נאן', 'לאה פריד', 200, '2020', 100, 'Summary of Book 1', 'nahn.jpg', 50, 'Fiction', 1),
-('המצולע', 'יונה ספיר', 300, '2019', 150, 'Summary of Book 2', 'metsula.jpg', 75, 'Non-Fiction', 2),
-('הנורמלי האחרון', 'רותי קפלר', 250, '2018', 120, 'Summary of Book 3', 'hanormali-haacharon.jpg', 60, 'Fantasy', 3),
-('שלנו את סרינה', 'רותי טננולד', 180, '2017', 80, 'Summary of Book 4', 'shelanuatsarina.jpg', 40, 'Mystery', 1),
-('שטח סגור', 'דבורה רוזן', 320, '2016', 200, 'Summary of Book 5', 'shetach-sagur.jpg', 100, 'Thriller', 2),
-('בכל עת', 'ליבי קליין', 270, '2015', 140, 'Summary of Book 6', 'bechol-et.jpg', 65, 'Romance', 3),
-('אשא עיניי', 'ליבי קליין', 230, '2014', 110, 'Summary of Book 7', 'EsaEinay.jpg', 55, 'Science Fiction', 1),
-('איך לא ידעתי', 'חנה רוטנברג', 280, '2013', 160, 'Summary of Book 8', 'howDidnotIKnow.jpg', 80, 'Historical Fiction', 2),
-('תיק מקסיקו', 'חיים גרינבוים', 290, '2012', 170, 'Summary of Book 9', 'tik-mexico.jpg', 85, 'Biography', 3),
-('הקוקייה', 'אסתר קווין', 210, '2011', 130, 'Summary of Book 10', 'hkukiya.jpg', 70, 'Horror', 1);
+INSERT INTO books (nameBook, author, numOfPages, publishingYear, likes, summary, image, category) VALUES 
+('המסע הארוך של נאן', 'לאה פריד', 200, '2020', 100, 'Summary of Book 1', 'nahn.jpg', 'Fiction'),
+('המצולע', 'יונה ספיר', 300, '2019', 150, 'Summary of Book 2', 'metsula.jpg', 'Non-Fiction'),
+('הנורמלי האחרון', 'רותי קפלר', 250, '2018', 120, 'Summary of Book 3', 'hanormali-haacharon.jpg', 'Fantasy'),
+('שלנו את סרינה', 'רותי טננולד', 180, '2017', 80, 'Summary of Book 4', 'shelanuatsarina.jpg', 'Mystery'),
+('שטח סגור', 'דבורה רוזן', 320, '2016', 200, 'Summary of Book 5', 'shetach-sagur.jpg', 'Thriller'),
+('בכל עת', 'ליבי קליין', 270, '2015', 140, 'Summary of Book 6', 'bechol-et.jpg', 'Romance'),
+('אשא עיניי', 'ליבי קליין', 230, '2014', 110, 'Summary of Book 7', 'EsaEinay.jpg', 'Science Fiction'),
+('איך לא ידעתי', 'חנה רוטנברג', 280, '2013', 160, 'Summary of Book 8', 'howDidnotIKnow.jpg', 'Historical Fiction'),
+('תיק מקסיקו', 'חיים גרינבוים', 290, '2012', 170, 'Summary of Book 9', 'tik-mexico.jpg', 'Biography'),
+('הקוקייה', 'אסתר קווין', 210, '2011', 130, 'Summary of Book 10', 'hkukiya.jpg', 'Horror');
+
+INSERT INTO booksInLibrary (libraryId, bookId, unitsInStock, isNew) VALUES 
+(1, 1, 50, FALSE),
+(2, 2, 75, TRUE),
+(3, 3, 60, FALSE),
+(1, 4, 40, TRUE),
+(2, 5, 100, FALSE),
+(3, 6, 65, TRUE),
+(1, 7, 55, FALSE),
+(2, 8, 80, TRUE),
+(3, 9, 85, FALSE),
+(1, 10, 70, TRUE);
 
 INSERT INTO comments (title, body, userId, bookId) VALUES 
 ('סופרת ותיקה', 'ספר יפה ומרגש ככ נוסטלגי', 1, 1),
@@ -210,17 +215,17 @@ INSERT INTO copyBook (bookId, libraryId) VALUES
 (9, 3),
 (10, 1);
 
-INSERT INTO barrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
+INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
 (2, 2, '2024-05-15', '2024-06-15', 'Returned', TRUE, TRUE),
 (3, 3, '2024-05-20', '2024-06-20', 'Returned', TRUE, TRUE),
 (4, 4, '2024-05-25', NULL, 'Borrowed', FALSE, TRUE),
 (5, 5, '2024-05-30', NULL, 'Borrowed', FALSE, TRUE),
-(6, 6, '2024-06-05', NULL, 'Borrowed', FALSE, TRUE),
+(6, 5, '2024-06-05', NULL, 'Borrowed', FALSE, TRUE),
 (7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (8, 8, '2024-06-15', NULL, 'Borrowed', FALSE, TRUE),
 (9, 9, '2024-06-20', NULL, 'Borrowed', FALSE, TRUE),
-(10, 10, '2024-06-25', NULL, 'Borrowed', FALSE, TRUE);
+(2, 5, '2024-06-25', NULL, 'Borrowed', FALSE, TRUE);
 
 INSERT INTO messages (userId, title, body, status, readDate) VALUES 
 (1, 'Title of Message 1', 'Body of Message 1', 'read', '2024-05-20'),
@@ -245,5 +250,3 @@ INSERT INTO waiting (userId, bookId, forwait, requestDate) VALUES
 (8, 9, '2024-07-10', '2024-06-25'),
 (9, 10, '2024-07-15', '2024-07-01'),
 (10, 1, '2024-07-20', '2024-07-05');
-
-
