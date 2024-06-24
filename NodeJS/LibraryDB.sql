@@ -89,11 +89,9 @@ CREATE TABLE comments (
 
 CREATE TABLE copyBook (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  bookId INT NOT NULL,
-  libraryId INT NOT NULL,
+  bookInLibraryId INT NOT NULL,
   isAvailable BOOLEAN NOT NULL DEFAULT TRUE,
-  FOREIGN KEY (bookId) REFERENCES books(id),
-  FOREIGN KEY (libraryId) REFERENCES libraries(id)
+  FOREIGN KEY (bookInLibraryId) REFERENCES booksInLibrary(id)
 );
 
 CREATE TABLE borrows (
@@ -102,9 +100,9 @@ CREATE TABLE borrows (
   userId INT NOT NULL,
   borrowDate DATE NOT NULL,
   returnDate DATE,
-  status VARCHAR(50) NOT NULL CHECK (status IN ('Borrowed', 'Returned', 'Overdue')),
-  isReturned BOOLEAN NOT NULL DEFAULT FALSE,
-  isIntact BOOLEAN NOT NULL DEFAULT TRUE,
+  status VARCHAR(50)  CHECK (status IN ('Borrowed', 'Returned', 'Overdue')),
+  isReturned BOOLEAN  DEFAULT TRUE,
+  isIntact BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (copyBookId) REFERENCES copyBook(id),
   FOREIGN KEY (userId) REFERENCES users(id)
 );
@@ -203,17 +201,17 @@ INSERT INTO comments (title, body, userId, bookId) VALUES
 ('Comment 9', 'Body of Comment 9', 9, 9),
 ('Comment 10', 'Body of Comment 10', 10, 10);
 
-INSERT INTO copyBook (bookId, libraryId) VALUES 
-(1, 1),
-(2, 2),
-(3, 3),
-(4, 1),
-(5, 2),
-(6, 3),
-(7, 1),
-(8, 2),
-(9, 3),
-(10, 1);
+INSERT INTO copyBook (bookInLibraryId) VALUES 
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7),
+(8),
+(9),
+(10);
 
 INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
