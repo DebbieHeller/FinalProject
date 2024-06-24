@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../css/books.css';
-import { FaSearch,FaThumbsUp } from 'react-icons/fa'; // Import the search icon
+import { FaSearch, FaThumbsUp } from 'react-icons/fa';
 
 function Books() {
     const libraryId = parseInt(localStorage.getItem('libraryId'));
@@ -64,7 +64,7 @@ function Books() {
             </form>
             <div className="books-grid">
                 {searchResults.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => setSelectedBook(book)}>
+                    <div key={book.id} className="book-card" onClick={() =>{setShowComments(false, setSelectedBook(book))} }>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                          <div className="book-info">
                             <p className="book-likes">
@@ -76,8 +76,9 @@ function Books() {
             </div>
             {selectedBook && (
                 <div className="modal" onClick={() => setSelectedBook(null)}>
-                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                    <div className={`modal-content ${showComments ? 'show-comments' : ''}`} onClick={(e) => e.stopPropagation()}>
                         <span className="close" onClick={() => setSelectedBook(null)}>&times;</span>
+                        <img src={`http://localhost:3000/images/${selectedBook.image}`} alt={selectedBook.nameBook} />
                         <h2>{selectedBook.nameBook}</h2>
                         <p><strong>Author:</strong> {selectedBook.author}</p>
                         <p><strong>Pages:</strong> {selectedBook.numOfPages}</p>

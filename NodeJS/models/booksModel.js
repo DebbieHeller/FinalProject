@@ -16,6 +16,24 @@ async function getBooks(libraryId) {
     }
 }
 
+async function getAvailableBooks(libraryId) {
+    try {
+        const [rows] = await pool.query(
+            `SELECT b.*, bil.isNew
+            FROM booksInLibrary bil
+            JOIN books b ON bil.bookId = b.id
+            JOIN copyBook cb ON bil.id = cb.bookInLibraryId
+            WHERE bil.libraryId = ? AND cb.isAvailable = TRUE`, 
+            [libraryId]
+        );
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+
 async function getBook(id) {
     try {
         const [rows] = await pool.query('SELECT * FROM Books WHERE id=?', [id]);
@@ -60,4 +78,4 @@ async function deleteBook(id) {
     }
 }
 
-module.exports = { getBooks, getBook, createBook, updateBook, deleteBook };
+module.exports = { getBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook };
