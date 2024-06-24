@@ -5,28 +5,22 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
-//require('./controllers/imageController');
-
 const users = require("./routes/usersRoute");
-// const todos = require('./routes/todosRoute')
-// const posts = require('./routes/postsRoute')
-// const comments = require('./routes/commentsRoute')
 const login = require("./routes/loginRoute");
 const books = require("./routes/booksRoute");
 const comments = require("./routes/commentsRoute");
 const borrows = require("./routes/borrowsRoute");
+const recommends=require("./routes/recommedBooksRoute");
 
 app.use("/books", books);
 app.use("/comments", comments);
 app.use("/users", users);
-// app.use("/todos", todos)
-// app.use("/posts", posts)
-// app.use("/comments", comments)
 app.use("/login", login);
 app.use("/borrows", borrows);
+app.use("/recommends", recommends);
+
 
 const PORT = 3000;
 app.listen(PORT, () => {

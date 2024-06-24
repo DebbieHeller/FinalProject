@@ -7,7 +7,13 @@ async function getAll(libraryId) {
         throw err
     }
 }
-
+async function getRecommendedForYou(userId) {
+    try {
+        return await model.getRecommendedBooksForYou(userId)
+    } catch (err) {
+        throw err
+    }
+}
 async function getSingle(id) {
     try {
         return await model.getBook(id)
@@ -40,4 +46,4 @@ async function deleteB(id) {
     }
 }
 
-module.exports = { getAll, getSingle, create, update, deleteB }
+module.exports = { getAll, getSingle, create, update, deleteB ,getRecommendedForYou}

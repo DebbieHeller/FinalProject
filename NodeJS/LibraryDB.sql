@@ -90,7 +90,7 @@ CREATE TABLE comments (
 CREATE TABLE copyBook (
   id INT AUTO_INCREMENT PRIMARY KEY,
   bookInLibraryId INT NOT NULL,
-  isAvailable BOOLEAN NOT NULL DEFAULT TRUE,
+  isAvailable BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (bookInLibraryId) REFERENCES booksInLibrary(id)
 );
 
@@ -201,17 +201,17 @@ INSERT INTO comments (title, body, userId, bookId) VALUES
 ('Comment 9', 'Body of Comment 9', 9, 9),
 ('Comment 10', 'Body of Comment 10', 10, 10);
 
-INSERT INTO copyBook (bookInLibraryId) VALUES 
-(1),
-(2),
-(3),
-(4),
-(5),
-(6),
-(7),
-(8),
-(9),
-(10);
+INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES 
+(1, true),
+(2, true),
+(3, true),
+(4, false),
+(5, true),
+(6, true),
+(7, true),
+(8, true),
+(9, true),
+(10, true);
 
 INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),

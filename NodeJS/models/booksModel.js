@@ -5,7 +5,7 @@ const pool = require('../LibraryDB');  // הקובץ שמגדיר את החיב�
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-        `SELECT b.*, bil.isNew
+            `SELECT b.*, bil.isNew
         FROM booksInLibrary bil
         JOIN books b ON bil.bookId = b.id
         WHERE bil.libraryId = ?`, [libraryId]);
@@ -24,6 +24,54 @@ async function getBook(id) {
         console.log(err);
     }
 }
+
+
+
+async function getRecommendedBooksForYou(userId) {
+    try {
+        // Query to find the most used category by the user
+        const categoryQuery = `
+        SELECT b.category
+        FROM borrows bor
+        JOIN copyBook cb ON bor.copyBookId = cb.id
+        JOIN booksInLibrary bil ON cb.bookInLibraryId = bil.id
+        JOIN books b ON bil.bookId = b.id
+        WHERE bor.userId = ?
+        GROUP BY b.category
+        ORDER BY COUNT(*) DESC
+        LIMIT 1;
+        `;
+
+        const [categoryRows] = await pool.query(categoryQuery, [userId]);
+
+        if (categoryRows.length === 0) {
+            throw new Error(`No books borrowed by user with ID ${userId}`);
+        }
+
+        const mostUsedCategory = categoryRows[0].category;
+    
+        // Query to find books in the most used category that are available in the user's library
+        const booksQuery = `
+        SELECT b.*
+        FROM books b
+        JOIN booksInLibrary bil ON b.id = bil.bookId
+        JOIN copyBook cb ON bil.id = cb.bookInLibraryId
+        LEFT JOIN borrows bor ON cb.id = bor.copyBookId AND bor.userId = ?
+        WHERE b.category = ?
+        `;
+
+        const [booksRows] = await pool.query(booksQuery, [userId, mostUsedCategory]);
+
+        return booksRows;
+    } catch (err) {
+        console.error('Error executing SQL query:', err);
+        throw err;
+    }
+}
+
+
+
+
 
 async function createBook(nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) {
     try {
@@ -60,4 +108,4 @@ async function deleteBook(id) {
     }
 }
 
-module.exports = { getBooks, getBook, createBook, updateBook, deleteBook };
+module.exports = { getBooks, getBook, createBook, updateBook, deleteBook, getRecommendedBooksForYou };
