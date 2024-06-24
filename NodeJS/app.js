@@ -12,12 +12,16 @@ const login = require("./routes/loginRoute");
 const books = require("./routes/booksRoute");
 const comments = require("./routes/commentsRoute");
 const borrows = require("./routes/borrowsRoute");
+const availableBooks = require("./routes/AvailableBooksRoute");
+const recommends=require("./routes/recommedBooksRoute");
 
 app.use("/books", books);
 app.use("/comments", comments);
 app.use("/users", users);
 app.use("/login", login);
 app.use("/borrows", borrows);
+app.use("/availableBooks", availableBooks);
+app.use("/recommends", recommends);
 
 const PORT = 3000;
 app.listen(PORT, () => {

@@ -5,6 +5,7 @@ import '../css/signUp&Login.css'; // Import the CSS file
 
 function Login() {
   const [formData, setFormData] = useState({ username: '', password: '' });
+  const libraryId = localStorage.getItem("libraryId");
   const navigate = useNavigate();
   const { setUser } = useContext(userContext);
 
@@ -32,8 +33,13 @@ function Login() {
         }
       })
       .then(data => {
-        setUser(data);
-        navigate('/home');
+        if(data.libraryId != libraryId){
+          alert("אינך רשום בספריה שלנו")
+          navigate('/sign-up');
+        } else {
+          setUser(data);
+          navigate('/home');
+        }
       })
       .catch(() => 
         console.log('error')

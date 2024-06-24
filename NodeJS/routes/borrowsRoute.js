@@ -1,7 +1,7 @@
 const express = require('express');
 const borrowsRouter = express.Router();
 borrowsRouter.use(express.json());
-const { getAll,getSingle ,update} = require('../controllers/borrowsController');
+const { getAll, getSingle, update, create } = require('../controllers/borrowsController');
 
 borrowsRouter.get('/', async (req, res) => {
     try {
@@ -12,6 +12,22 @@ borrowsRouter.get('/', async (req, res) => {
     }
 });
 
+borrowsRouter.post('/', async (req, res) => {
+    try {
+        const response = await create(
+            req.body.copyBookId,
+            req.body.userId,
+            req.body.borrowDate,
+            req.body.returnDate,
+            req.body.status,
+            req.body.isReturned,
+            req.body.isIntact
+        );
+        res.status(201).send(await getSingle(response));
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to create book' });
+    }
+});
 
 borrowsRouter.put('/:borrowId', async (req, res) => {
     try {

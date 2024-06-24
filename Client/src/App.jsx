@@ -32,13 +32,13 @@ function App() {
             </Route>
 
             <Route path="/home" element={<HomeLayout />}>
-              <Route index element={<Home />} />
+              <Route index element={<NewBorrow />} />
+              <Route path="new-borrow" element={<NewBorrow />} />
               <Route path="logout" element={<Logout />} />
               <Route path="messages" element={<Messages />} />
               <Route path="user-borrows" element={<UserBorrows />} />
               <Route path="user-books" element={<UserBooks />} />
               <Route path="user-books/:id" element={<UserBook />} />
-              <Route path="new-borrow" element={<NewBorrow />} />
 
               {/* <Route
                 path="users/:userId/albums/:albumId"

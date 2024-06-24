@@ -61,10 +61,16 @@ CREATE TABLE books (
   author VARCHAR(50) NOT NULL,
   numOfPages INT NOT NULL,
   publishingYear YEAR NOT NULL,
-  likes INT,
   summary VARCHAR(255) NOT NULL,
   image VARCHAR(50) NOT NULL,
   category VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE likes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  bookId INT NOT NULL,
+  numLikes INT NOT NULL,
+  FOREIGN KEY (bookId) REFERENCES books(id)
 );
 
 CREATE TABLE booksInLibrary (
@@ -99,7 +105,7 @@ CREATE TABLE borrows (
   copyBookId INT NOT NULL,
   userId INT NOT NULL,
   borrowDate DATE NOT NULL,
-  returnDate DATE,
+  returnDate DATE default NULL,
   status VARCHAR(50)  CHECK (status IN ('Borrowed', 'Returned', 'Overdue')),
   isReturned BOOLEAN  DEFAULT TRUE,
   isIntact BOOLEAN DEFAULT TRUE,
@@ -165,17 +171,30 @@ INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, 
 ('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St', 1, 3, 1, 9),
 ('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 2, 2, 10);
 
-INSERT INTO books (nameBook, author, numOfPages, publishingYear, likes, summary, image, category) VALUES 
-('המסע הארוך של נאן', 'לאה פריד', 200, '2020', 100, 'Summary of Book 1', 'nahn.jpg', 'Fiction'),
-('המצולע', 'יונה ספיר', 300, '2019', 150, 'Summary of Book 2', 'metsula.jpg', 'Non-Fiction'),
-('הנורמלי האחרון', 'רותי קפלר', 250, '2018', 120, 'Summary of Book 3', 'hanormali-haacharon.jpg', 'Fantasy'),
-('שלנו את סרינה', 'רותי טננולד', 180, '2017', 80, 'Summary of Book 4', 'shelanuatsarina.jpg', 'Mystery'),
-('שטח סגור', 'דבורה רוזן', 320, '2016', 200, 'Summary of Book 5', 'shetach-sagur.jpg', 'Thriller'),
-('בכל עת', 'ליבי קליין', 270, '2015', 140, 'Summary of Book 6', 'bechol-et.jpg', 'Romance'),
-('אשא עיניי', 'ליבי קליין', 230, '2014', 110, 'Summary of Book 7', 'EsaEinay.jpg', 'Science Fiction'),
-('איך לא ידעתי', 'חנה רוטנברג', 280, '2013', 160, 'Summary of Book 8', 'howDidnotIKnow.jpg', 'Historical Fiction'),
-('תיק מקסיקו', 'חיים גרינבוים', 290, '2012', 170, 'Summary of Book 9', 'tik-mexico.jpg', 'Biography'),
-('הקוקייה', 'אסתר קווין', 210, '2011', 130, 'Summary of Book 10', 'hkukiya.jpg', 'Horror');
+INSERT INTO books (nameBook, author, numOfPages, publishingYear, summary, image, category) VALUES 
+('המסע הארוך של נאן', 'לאה פריד', 200, '2020', 'Summary of Book 1', 'nahn.jpg', 'Fiction'),
+('המצולע', 'יונה ספיר', 300, '2019', 'Summary of Book 2', 'metsula.jpg', 'Non-Fiction'),
+('הנורמלי האחרון', 'רותי קפלר', 250, '2018', 'Summary of Book 3', 'hanormali-haacharon.jpg', 'Fiction'),
+('שלנו את סרינה', 'רותי טננולד', 180, '2017', 'Summary of Book 4', 'shelanuatsarina.jpg', 'Fiction'),
+('שטח סגור', 'דבורה רוזן', 320, '2016', 'Summary of Book 5', 'shetach-sagur.jpg', 'Fiction'),
+('בכל עת', 'ליבי קליין', 270, '2015', 'Summary of Book 6', 'bechol-et.jpg', 'Fiction'),
+('אשא עיניי', 'ליבי קליין', 230, '2014', 'Summary of Book 7', 'EsaEinay.jpg', 'Science Fiction'),
+('איך לא ידעתי', 'חנה רוטנברג', 280, '2013', 'Summary of Book 8', 'howDidnotIKnow.jpg', 'Historical Fiction'),
+('תיק מקסיקו', 'חיים גרינבוים', 290, '2012', 'Summary of Book 9', 'tik-mexico.jpg', 'Fiction'),
+('הקוקייה', 'אסתר קווין', 210, '2011', 'Summary of Book 10', 'hkukiya.jpg', 'Fiction');
+
+INSERT INTO likes (bookId, numLikes) VALUES 
+(1, 100), 
+(2, 150), 
+(3, 120), 
+(4, 80), 
+(5, 200), 
+(6, 140), 
+(7, 110), 
+(8, 160), 
+(9, 170), 
+(10, 130);
+
 
 INSERT INTO booksInLibrary (libraryId, bookId, unitsInStock, isNew) VALUES 
 (1, 1, 50, FALSE),
@@ -206,19 +225,19 @@ INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES
 (2, true),
 (3, true),
 (4, false),
-(5, true),
+(1, true),
 (6, true),
-(7, true),
+(10, true),
 (8, true),
 (9, true),
 (10, true);
 
 INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(2, 2, '2024-05-15', '2024-06-15', 'Returned', TRUE, TRUE),
-(3, 3, '2024-05-20', '2024-06-20', 'Returned', TRUE, TRUE),
-(4, 4, '2024-05-25', NULL, 'Borrowed', FALSE, TRUE),
-(5, 5, '2024-05-30', NULL, 'Borrowed', FALSE, TRUE),
+(2, 1, '2024-05-15', '2024-06-15', 'Returned', TRUE, TRUE),
+(3, 1, '2024-05-20', '2024-06-20', 'Returned', TRUE, TRUE),
+(4, 1, '2024-05-25', NULL, 'Borrowed', FALSE, TRUE),
+(5, 1, '2024-05-30', NULL, 'Borrowed', FALSE, TRUE),
 (6, 5, '2024-06-05', NULL, 'Borrowed', FALSE, TRUE),
 (7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (8, 8, '2024-06-15', NULL, 'Borrowed', FALSE, TRUE),

@@ -19,11 +19,17 @@ async function getBooks(libraryId) {
 async function getAvailableBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-            `SELECT b.*, bil.isNew
+            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
             FROM booksInLibrary bil
             JOIN books b ON bil.bookId = b.id
             JOIN copyBook cb ON bil.id = cb.bookInLibraryId
-            WHERE bil.libraryId = ? AND cb.isAvailable = TRUE`, 
+            WHERE cb.id = (
+            SELECT cb2.id
+            FROM copyBook cb2
+            WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
+            LIMIT 1
+            ) AND bil.libraryId = ? AND cb.isAvailable = TRUE
+            `,
             [libraryId]
         );
         return rows;
@@ -32,7 +38,6 @@ async function getAvailableBooks(libraryId) {
         throw err;
     }
 }
-
 
 async function getBook(id) {
     try {
@@ -43,9 +48,7 @@ async function getBook(id) {
     }
 }
 
-
-
-async function getRecommendedBooksForYou(userId) {
+async function getRecommendedBooksForYou(libraryId, userId) {
     try {
         // Query to find the most used category by the user
         const categoryQuery = `
@@ -61,35 +64,29 @@ async function getRecommendedBooksForYou(userId) {
         `;
 
         const [categoryRows] = await pool.query(categoryQuery, [userId]);
-
-        if (categoryRows.length === 0) {
-            throw new Error(`No books borrowed by user with ID ${userId}`);
-        }
-
         const mostUsedCategory = categoryRows[0].category;
-    
+        console.log(mostUsedCategory)
+
         // Query to find books in the most used category that are available in the user's library
-        const booksQuery = `
-        SELECT b.*
-        FROM books b
-        JOIN booksInLibrary bil ON b.id = bil.bookId
+        const booksQuery =
+        `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
+        FROM booksInLibrary bil
+        JOIN books b ON bil.bookId = b.id
         JOIN copyBook cb ON bil.id = cb.bookInLibraryId
-        LEFT JOIN borrows bor ON cb.id = bor.copyBookId AND bor.userId = ?
-        WHERE b.category = ?
-        `;
+        WHERE cb.id = (
+        SELECT cb2.id
+        FROM copyBook cb2
+        WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
+        LIMIT 1
+        ) AND bil.libraryId = ? AND b.category = ? AND cb.isAvailable = TRUE`;
 
-        const [booksRows] = await pool.query(booksQuery, [userId, mostUsedCategory]);
-
+        const [booksRows] = await pool.query(booksQuery, [libraryId, mostUsedCategory]);
         return booksRows;
     } catch (err) {
         console.error('Error executing SQL query:', err);
         throw err;
     }
 }
-
-
-
-
 
 async function createBook(nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) {
     try {
@@ -126,8 +123,6 @@ async function deleteBook(id) {
     }
 }
 
-<<<<<<< HEAD
-module.exports = { getBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook };
-=======
-module.exports = { getBooks, getBook, createBook, updateBook, deleteBook, getRecommendedBooksForYou };
->>>>>>> 39e02153f0d46740f9ab78fa2997aaceb83349d9
+
+module.exports = { getBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook, getRecommendedBooksForYou };
+

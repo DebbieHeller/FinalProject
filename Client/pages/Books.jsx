@@ -16,7 +16,7 @@ function Books() {
             .then((res) => res.json())
             .then((books) => {
                 setBooks(books);
-                setSearchResults(books); // Initial display of all books
+                setSearchResults(books);
             })
             .catch((error) => console.error('Error fetching books:', error));
     }, [libraryId]);
@@ -24,7 +24,7 @@ function Books() {
     useEffect(() => {
         const query = searchQuery.toLowerCase();
         if (query === '') {
-            setSearchResults(books); // Display all books when search box is empty
+            setSearchResults(books); 
         } else {
             const filteredBooks = books.filter(book =>
                 book.nameBook.toLowerCase().includes(query) ||
