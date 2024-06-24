@@ -3,13 +3,15 @@ import { Link } from 'react-router-dom';
 import { userContext } from "../src/App";
 import "../css/userBooks.css";
 import "../css/books.css";
-import { FaThumbsUp } from 'react-icons/fa'; // Import necessary icons
+import { FaThumbsUp } from 'react-icons/fa';
 
 function UserBooks() {
   const { user } = useContext(userContext);
   const [books, setBooks] = useState([]);
   const [selectedBooksToReturn, setSelectedBooksToReturn] = useState([]); 
   const [showErrorMessage, setShowErrorMessage] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isLoading, setIsLoading] = useState(false); 
 
   useEffect(() => {
     fetch(`http://localhost:3000/borrows?userId=${user.id}`)
@@ -34,45 +36,64 @@ function UserBooks() {
       setTimeout(() => {
         setShowErrorMessage(false);
       }, 3000);
+      return;
     }
-    
-    // selectedBooksToReturn.forEach((borrowBook) => {
+    setShowConfirmation(true);
+  };
 
-    //   const updatedBorrow = {
-    //     id: borrowBook.borrowId,
-    //     copyBookId: borrowBook.copyBookId,
-    //     userId: user.id,
-    //     bookId: ,
-    //     borrowDate: borrowBook.borrowDate,
-    //     returnDate: createRoutesFromElements,
-    //   };
+  const confirmReturnBooks = () => {
+    setShowConfirmation(false);
+    setIsLoading(true); 
 
-    //   fetch(`http://localhost:3000/borrows/${borrowId}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(),
-    //   })
-    //     .then(response => {
-    //       if (response.ok) {
-    //         // כאן תוכל לבצע פעולות נוספות אם נדרש
-    //       } else {
-    //         console.error('Error returning book:', response.statusText);
-    //       }
-    //     })
-    //     .catch(error => {
-    //       console.error('Error returning book:', error.message);
-    //     });
-    // });
+    const updatedBooks = [...books];
 
-    // לאחר טיפול בכל הבקשות
-    setSelectedBooksToReturn([]);
+    const fetchPromises = selectedBooksToReturn.map((borrowBook) => {
+      const returnDate = new Date().toISOString().split('T')[0];
+      const borrowDate = new Date(borrowBook.borrowDate).toISOString().split('T')[0];
+      
+      const updatedBorrow = {
+        id: borrowBook.borrowId,
+        copyBookId: borrowBook.copyBookId,
+        userId: user.id,
+        bookId: borrowBook.id,
+        borrowDate: borrowDate,
+        returnDate: returnDate, 
+        status: 'Returned'
+      };
+
+      return fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedBorrow), 
+      })
+      .then(response => {
+        if (response.ok) {
+          const index = updatedBooks.findIndex(book => book.borrowId === borrowBook.borrowId);
+          if (index > -1) {
+            updatedBooks.splice(index, 1);
+          }
+        } else {
+          console.error('Error returning book:', response.statusText);
+        }
+      })
+      .catch(error => {
+        console.error('Error returning book:', error.message);
+      });
+    });
+
+    Promise.all(fetchPromises).then(() => {
+      setBooks(updatedBooks);
+      setSelectedBooksToReturn([]);
+      setIsLoading(false); 
+    });
   };
 
   return (
     <div className="user-books-container">
       <h1>Your Borrowed Books</h1>
+      {isLoading && <div className="loading-message">מתבצעת החזרה...</div>}
       <div className="books-grid">
         {books.map((book) => (
           <div key={book.id} className="book-card">
@@ -106,6 +127,16 @@ function UserBooks() {
       )}
 
       {showErrorMessage && <div className="error-message">לא נבחרו ספרים להחזרה</div>}
+
+      {showConfirmation && (
+        <div className="confirmation-popup">
+          <div className="confirmation-popup-content">
+            <p>האם אתה בטוח שברצונך להחזיר את הספרים הנבחרים?</p>
+            <button onClick={confirmReturnBooks}>אישור</button>
+            <button onClick={() => setShowConfirmation(false)}>ביטול</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
