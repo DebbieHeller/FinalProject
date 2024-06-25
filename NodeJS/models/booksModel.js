@@ -5,16 +5,18 @@ const pool = require('../LibraryDB');  // הקובץ שמגדיר את החיב�
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-            `SELECT b.*, bil.isNew
-        FROM booksInLibrary bil
-        JOIN books b ON bil.bookId = b.id
-        WHERE bil.libraryId = ?`, [libraryId]);
+            `SELECT b.*, bil.isNew, IFNULL(l.numLikes, 0) as likes
+             FROM booksInLibrary bil
+             JOIN books b ON bil.bookId = b.id
+             LEFT JOIN likes l ON b.id = l.bookId
+             WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
         console.log(err);
         throw err;
     }
 }
+
 
 async function getAvailableBooks(libraryId) {
     try {
@@ -39,6 +41,29 @@ async function getAvailableBooks(libraryId) {
     }
 }
 
+async function getNewBooks(libraryId) {
+    try {
+        const [rows] = await pool.query(
+            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
+            FROM booksInLibrary bil
+            JOIN books b ON bil.bookId = b.id
+            JOIN copyBook cb ON bil.id = cb.bookInLibraryId
+            WHERE cb.id = (
+            SELECT cb2.id
+            FROM copyBook cb2
+            WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
+            LIMIT 1
+            ) AND bil.libraryId = ? AND cb.isAvailable = TRUE AND bil.isNew = TRUE
+            `,
+            [libraryId]
+        );
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 async function getBook(id) {
     try {
         const [rows] = await pool.query('SELECT * FROM Books WHERE id=?', [id]);
@@ -48,27 +73,31 @@ async function getBook(id) {
     }
 }
 
-async function getRecommendedBooksForYou(libraryId, userId) {
+async function getRecommendedCategory(userId) {
     try {
-        // Query to find the most used category by the user
-        const categoryQuery = `
-        SELECT b.category
-        FROM borrows bor
-        JOIN copyBook cb ON bor.copyBookId = cb.id
-        JOIN booksInLibrary bil ON cb.bookInLibraryId = bil.id
-        JOIN books b ON bil.bookId = b.id
-        WHERE bor.userId = ?
-        GROUP BY b.category
-        ORDER BY COUNT(*) DESC
-        LIMIT 1;
-        `;
+        const [categoryRows] = await pool.query(
+            `SELECT IFNULL(
+                (SELECT b.category
+                FROM borrows bor
+                JOIN copyBook cb ON bor.copyBookId = cb.id
+                JOIN booksInLibrary bil ON cb.bookInLibraryId = bil.id
+                JOIN books b ON bil.bookId = b.id
+                WHERE bor.userId = ?
+                GROUP BY b.category
+                ORDER BY COUNT(*) DESC
+                LIMIT 1), NULL) AS category;`
+            , [userId]);
+        return categoryRows[0].category;
 
-        const [categoryRows] = await pool.query(categoryQuery, [userId]);
-        const mostUsedCategory = categoryRows[0].category;
-        console.log(mostUsedCategory)
+    } catch (err) {
+        console.error('Error executing SQL query:', err);
+        throw err;
+    }
+}
 
-        // Query to find books in the most used category that are available in the user's library
-        const booksQuery =
+async function getRecommendedBooksForYou(libraryId, category) {
+    try {
+        const [booksRows] = await pool.query(
         `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
         FROM booksInLibrary bil
         JOIN books b ON bil.bookId = b.id
@@ -78,9 +107,8 @@ async function getRecommendedBooksForYou(libraryId, userId) {
         FROM copyBook cb2
         WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
         LIMIT 1
-        ) AND bil.libraryId = ? AND b.category = ? AND cb.isAvailable = TRUE`;
-
-        const [booksRows] = await pool.query(booksQuery, [libraryId, mostUsedCategory]);
+        ) AND bil.libraryId = ? AND b.category = ? AND cb.isAvailable = TRUE`
+        , [libraryId, category]);
         return booksRows;
     } catch (err) {
         console.error('Error executing SQL query:', err);
@@ -124,5 +152,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook, getRecommendedBooksForYou };
+module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou };
 

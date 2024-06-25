@@ -12,6 +12,14 @@ borrowsRouter.get('/', async (req, res) => {
     }
 });
 
+borrowsRouter.get('/', async (req, res) => {
+    try {
+        const borrows = await getAll(req.query.userId);
+        res.status(200).send(borrows);
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to fetch borrows' });
+    }
+});
 borrowsRouter.post('/', async (req, res) => {
     try {
         const response = await create(

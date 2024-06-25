@@ -5,7 +5,7 @@ import { userContext } from "../src/App";
 
 function UserBook() {
   const { user } = useContext(userContext);
-  const [comments, setComments] = useState(null);
+  const [comments, setComments] = useState([]);
   const [showComments, setShowComments] = useState(false);
   const [commentTitle, setCommentTitle] = useState('');
   const [commentBody, setCommentBody] = useState('');
@@ -16,7 +16,7 @@ function UserBook() {
 
   const handleShowComments = (bookId) => {
     setShowComments(!showComments);
-    if (!comments) {
+    if (comments.length==0) {
       fetch(`http://localhost:3000/comments?bookId=${bookId}`)
         .then((res) => res.json())
         .then((bookComments) => {

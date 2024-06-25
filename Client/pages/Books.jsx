@@ -11,6 +11,8 @@ function Books() {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
 
+    
+
     useEffect(() => {
         fetch(`http://localhost:3000/books?libraryId=${libraryId}`)
             .then((res) => res.json())
@@ -64,12 +66,10 @@ function Books() {
             </form>
             <div className="books-grid">
                 {searchResults.map(book => (
-                    <div key={book.id} className="book-card" onClick={() =>{setShowComments(false, setSelectedBook(book))} }>
+                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false, setSelectedBook(book)) }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
-                         <div className="book-info">
-                            <p className="book-likes">
-                                <FaThumbsUp className="like-icon" /> {book.likes}
-                            </p>
+                        <div className="book-info">
+                            <LikeButton bookId={book.id} initialLikes={book.likes} />
                         </div>
                     </div>
                 ))}
@@ -103,6 +103,27 @@ function Books() {
                 </div>
             )}
         </div>
+    );
+}
+
+function LikeButton({ bookId, initialLikes }) {
+    const [likes, setLikes] = useState(initialLikes);
+
+    const handleLike = () => {
+        fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
+            method: 'POST',
+        })
+            .then(response => response.json())
+            .then(data => {
+                setLikes(likes + 1);
+            })
+            .catch(error => console.error('Error liking book:', error));
+    };
+
+    return (
+        <p className="book-likes" onClick={handleLike}>
+            <FaThumbsUp className="like-icon" /> {likes}
+        </p>
     );
 }
 

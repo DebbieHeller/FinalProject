@@ -8,10 +8,10 @@ import { FaThumbsUp } from 'react-icons/fa';
 function UserBooks() {
   const { user } = useContext(userContext);
   const [books, setBooks] = useState([]);
-  const [selectedBooksToReturn, setSelectedBooksToReturn] = useState([]); 
+  const [selectedBooksToReturn, setSelectedBooksToReturn] = useState([]);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); 
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:3000/borrows?userId=${user.id}`)
@@ -41,53 +41,47 @@ function UserBooks() {
     setShowConfirmation(true);
   };
 
-  const confirmReturnBooks = () => {
+  const confirmReturnBooks = async () => {
     setShowConfirmation(false);
-    setIsLoading(true); 
+    setIsLoading(true);
 
     const updatedBooks = [...books];
 
-    const fetchPromises = selectedBooksToReturn.map((borrowBook) => {
+    for (const borrowBook of selectedBooksToReturn) {
       const returnDate = new Date().toISOString().split('T')[0];
       const borrowDate = new Date(borrowBook.borrowDate).toISOString().split('T')[0];
-      
+
       const updatedBorrow = {
         id: borrowBook.borrowId,
         copyBookId: borrowBook.copyBookId,
         userId: user.id,
         bookId: borrowBook.id,
         borrowDate: borrowDate,
-        returnDate: returnDate, 
+        returnDate: returnDate,
         status: 'Returned'
       };
 
-      return fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
+      const response = await fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedBorrow), 
-      })
-      .then(response => {
-        if (response.ok) {
-          const index = updatedBooks.findIndex(book => book.borrowId === borrowBook.borrowId);
-          if (index > -1) {
-            updatedBooks.splice(index, 1);
-          }
-        } else {
-          console.error('Error returning book:', response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error returning book:', error.message);
+        body: JSON.stringify(updatedBorrow),
       });
-    });
 
-    Promise.all(fetchPromises).then(() => {
-      setBooks(updatedBooks);
-      setSelectedBooksToReturn([]);
-      setIsLoading(false); 
-    });
+      if (response.ok) {
+        const index = updatedBooks.findIndex(book => book.borrowId === borrowBook.borrowId);
+        if (index > -1) {
+          updatedBooks.splice(index, 1);
+        }
+      } else {
+        console.error('Error returning book:', response.statusText);
+      }
+    }
+
+    setBooks(updatedBooks);
+    setSelectedBooksToReturn([]);
+    setIsLoading(false);
   };
 
   return (
@@ -98,7 +92,7 @@ function UserBooks() {
         {books.map((book) => (
           <div key={book.id} className="book-card">
             <input
-              type="checkbox"
+              type ="checkbox"
               checked={selectedBooksToReturn.includes(book)}
               onChange={() => toggleBookSelection(book)}
             />
@@ -142,3 +136,5 @@ function UserBooks() {
 }
 
 export default UserBooks;
+
+

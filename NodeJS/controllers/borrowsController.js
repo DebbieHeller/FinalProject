@@ -8,6 +8,13 @@ async function getAll(userId) {
   }
 }
 
+async function getPrevBorrows(userId) {
+  try {
+    return await model.Prevborrows(userId);
+  } catch (err) {
+    throw err;
+  }
+}
 
 
 async function getSingle(id) {
@@ -34,4 +41,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update,getSingle, create};
+module.exports = { getAll ,update,getSingle, create,getPrevBorrows};

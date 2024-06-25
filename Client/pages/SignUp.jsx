@@ -62,10 +62,12 @@ function SignUp() {
         if (res.status !== 201) {
           alert("Invalid username");
           throw new Error("Failed to register");
+        } else {
+          return res.json();
         }
       })
-      .then(() => {
-        setUser(formData);
+      .then(data => {
+        setUser({ id: data.id, ...formData });
         navigate("/home");
       })
       .catch((error) => console.log("Error:", error));

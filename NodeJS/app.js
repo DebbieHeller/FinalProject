@@ -14,6 +14,7 @@ const comments = require("./routes/commentsRoute");
 const borrows = require("./routes/borrowsRoute");
 const availableBooks = require("./routes/AvailableBooksRoute");
 const recommends=require("./routes/recommedBooksRoute");
+const prevBorrows=require("./routes/prevBorrowsRoute");
 
 app.use("/books", books);
 app.use("/comments", comments);
@@ -22,6 +23,8 @@ app.use("/login", login);
 app.use("/borrows", borrows);
 app.use("/availableBooks", availableBooks);
 app.use("/recommends", recommends);
+app.use("/prevBorrows", prevBorrows);
+
 
 const PORT = 3000;
 app.listen(PORT, () => {

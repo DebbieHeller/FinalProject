@@ -17,7 +17,17 @@ async function getAvailableBooks(libraryId) {
 
 async function getRecommendedForYou(libraryId, userId) {
     try {
-        return await model.getRecommendedBooksForYou(libraryId, userId)
+        const mostUsedUserCategory = await model.getRecommendedCategory(userId)
+        console.log("555555555")
+
+        console.log(mostUsedUserCategory)
+        if(mostUsedUserCategory){
+            return await model.getRecommendedBooksForYou(libraryId, mostUsedUserCategory)
+        }
+        else{
+            return await model.getNewBooks(libraryId)
+        }
+       
     } catch (err) {
         throw err
     }
