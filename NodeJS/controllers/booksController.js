@@ -15,12 +15,18 @@ async function getAvailableBooks(libraryId) {
     }
 }
 
+async function updateLikes(bookId) {
+    try {
+        return await model.updateLikes(bookId)
+    } catch (err) {
+        throw err
+    }
+}
+
 async function getRecommendedForYou(libraryId, userId) {
     try {
         const mostUsedUserCategory = await model.getRecommendedCategory(userId)
-        console.log("555555555")
-
-        console.log(mostUsedUserCategory)
+       
         if(mostUsedUserCategory){
             return await model.getRecommendedBooksForYou(libraryId, mostUsedUserCategory)
         }
@@ -65,4 +71,4 @@ async function deleteB(id) {
     }
 }
 
-module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou }
+module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou,updateLikes }

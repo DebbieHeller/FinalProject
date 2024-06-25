@@ -142,6 +142,30 @@ async function updateBook(id, nameBook, author, numOfPages, publishingYear, like
     }
 }
 
+async function updateLikes(bookId) {
+    try {
+        const [rows] = await pool.query(
+            `UPDATE likes
+            SET numLikes = numLikes + 1
+            WHERE bookId = ?`,
+            [bookId]
+        );
+
+        // Fetch updated likes count after update
+        const [updatedRows] = await pool.query(
+            `SELECT numLikes FROM likes WHERE bookId = ?`,
+            [bookId]
+        );
+
+        const updatedLikes = updatedRows[0].numLikes;
+        return updatedLikes;
+    } catch (err) {
+        console.error('Error updating likes:', err);
+        throw err;
+    }
+}
+
+
 async function deleteBook(id) {
     try {
         await pool.query("DELETE FROM Books WHERE id = ?", [id]);
@@ -152,5 +176,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou };
+module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou ,updateLikes};
 
