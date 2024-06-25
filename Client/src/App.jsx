@@ -37,6 +37,7 @@ function App() {
               <Route path="logout" element={<Logout />} />
               <Route path="messages" element={<Messages />} />
               <Route path="user-borrows" element={<UserBorrows />} />
+              <Route path="user-borrows/:id" element={<UserBook />} />
               <Route path="user-books" element={<UserBooks />} />
               <Route path="user-books/:id" element={<UserBook />} />
 

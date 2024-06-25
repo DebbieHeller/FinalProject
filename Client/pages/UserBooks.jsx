@@ -97,7 +97,7 @@ function UserBooks() {
               onChange={() => toggleBookSelection(book)}
             />
             <Link
-              to={`/home/user-books/${book.id}`}
+              to={`/home/user-books/${book.copyBookId}`}
               className='book-card-link'
               state={{ book }}
             >

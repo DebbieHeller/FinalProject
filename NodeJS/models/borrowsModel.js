@@ -24,7 +24,6 @@ async function getborrows(userId) {
   }
 }
 
-
 async function Prevborrows(userId) {
   try {
     const [rows] = await pool.query(

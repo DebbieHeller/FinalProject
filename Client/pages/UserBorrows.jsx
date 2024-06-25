@@ -1,56 +1,61 @@
-import React, { useEffect, useState, useContext } from "react";
-import { FaSearch, FaThumbsUp } from "react-icons/fa";
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FaSearch, FaThumbsUp } from 'react-icons/fa';
 import { userContext } from "../src/App";
+import '../css/userBorrows.css'; // Import the CSS file
 
 function UserBorrows() {
     const { user } = useContext(userContext);
     const [borrowedBooks, setBorrowedBooks] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
-    const [selectedBook, setSelectedBook] = useState(null);
-    const [showComments, setShowComments] = useState(false);
-    const [comments, setComments] = useState({});
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [filter, setFilter] = useState('all'); // New state for date filter
+    const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`)
+        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`) // <--- השורה שנשמטה בטעות
             .then((res) => res.json())
             .then((data) => {
                 setBorrowedBooks(data);
+                setSearchResults(data);
             })
             .catch((error) => console.error("Error fetching books:", error));
     }, [user.id]);
 
     useEffect(() => {
-        // Filtering search results based on search query
-        if (searchQuery) {
-            const results = borrowedBooks.filter(book =>
-                book.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                book.author.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                book.category.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-            setSearchResults(results);
-        } else {
-            setSearchResults(borrowedBooks);
-        }
-    }, [searchQuery, borrowedBooks]);
+        const query = searchQuery.toLowerCase();
+        let filteredBooks = borrowedBooks.filter(book =>
+            book.nameBook.toLowerCase().includes(query) ||
+            book.author.toLowerCase().includes(query) ||
+            book.category.toLowerCase().includes(query)
+        );
 
-    const handleShowComments = (bookId) => {
-        // Assuming there's an endpoint to fetch comments for a book
-        fetch(`http://localhost:3000/comments?bookId=${bookId}`)
-            .then((res) => res.json())
-            .then((data) => {
-                setComments((prevComments) => ({
-                    ...prevComments,
-                    [bookId]: data,
-                }));
-                setShowComments(true);
-            })
-            .catch((error) => console.error("Error fetching comments:", error));
+        if (filter === 'month') {
+            const oneMonthAgo = new Date();
+            oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+            filteredBooks = filteredBooks.filter(book => new Date(book.borrowDate) > oneMonthAgo);
+        } else if (filter === 'week') {
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            filteredBooks = filteredBooks.filter(book => new Date(book.borrowDate) > oneWeekAgo);
+        } else if (filter === 'day') {
+            const oneDayAgo = new Date();
+            oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+            filteredBooks = filteredBooks.filter(book => new Date(book.borrowDate) > oneDayAgo);
+        }
+
+        setSearchResults(filteredBooks);
+    }, [searchQuery, filter, borrowedBooks]);
+
+    const handleRowDoubleClick = (index, book) => {
+        setSelectedRow(index);
+        navigate(`${book.copyBookId}`, { state: { book } });
     };
 
     return (
         <div className="books-container">
-            <h1>Books Borrowed by {user.name}</h1>
+            <h1>Books Borrowed by {user.name}</h1> 
             <form className="search-form">
                 <div className="search-input-container">
                     <input
@@ -62,51 +67,79 @@ function UserBorrows() {
                     />
                     <FaSearch className="search-icon" />
                 </div>
-            </form>
-            <div className="books-grid">
-                {searchResults.length > 0 ? (
-                    searchResults.map(book => (
-                        <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-                            <img src={`http://localhost:3000/images/${book.image}`} alt={book.title} className="book-image" />
-                            <div className="book-info">
-                                <p className="book-likes">
-                                    <FaThumbsUp className="like-icon" /> {book.likes}
-                                </p>
-                            </div>
-                        </div>
-                    ))
-                ) : (
-                    <p>No books borrowed yet.</p>
-                )}
-            </div>
-            {selectedBook && (
-                <div className="modal" onClick={() => setSelectedBook(null)}>
-                    <div className={`modal-content ${showComments ? 'show-comments' : ''}`} onClick={(e) => e.stopPropagation()}>
-                        <span className="close" onClick={() => setSelectedBook(null)}>&times;</span>
-                        <img src={`http://localhost:3000/images/${selectedBook.image}`} alt={selectedBook.title} />
-                        <h2>{selectedBook.title}</h2>
-                        <p><strong>Author:</strong> {selectedBook.author}</p>
-                        <p><strong>Pages:</strong> {selectedBook.numOfPages}</p>
-                        <p><strong>Published:</strong> {selectedBook.publishingYear}</p>
-                        <p><strong>Summary:</strong> {selectedBook.summary}</p>
-                        <p><strong>Category:</strong> {selectedBook.category}</p>
-                        <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>
-                        <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id); }}>
-                            {showComments ? 'Hide Comments' : 'Show Comments'}
-                        </button>
-                        {showComments && comments[selectedBook.id] && (
-                            <div className="comments-section">
-                                {comments[selectedBook.id].map(comment => (
-                                    <div key={comment.id} className="comment-card">
-                                        <h4>{comment.title}</h4>
-                                        <p>{comment.body}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                <div className="filter-container">
+                    <label>
+                        <input
+                            type="radio"
+                            value="all"
+                            checked={filter === 'all'}
+                            onChange={() => setFilter('all')}
+                        />
+                        All
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="month"
+                            checked={filter === 'month'}
+                            onChange={() => setFilter('month')}
+                        />
+                        Last Month
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="week"
+                            checked={filter === 'week'}
+                            onChange={() => setFilter('week')}
+                        />
+                        Last Week
+                    </label>
+                    <label>
+                        <input
+                            type="radio"
+                            value="day"
+                            checked={filter === 'day'}
+                            onChange={() => setFilter('day')}
+                        />
+                        Last Day
+                    </label>
                 </div>
-            )}
+            </form>
+            <table className="books-table">
+                <thead>
+                    <tr>
+                        <th>Borrow Date</th>
+                        <th>Return Date</th>
+                        <th>Book Name</th>
+                        <th>Author</th>
+                        <th>Category</th>
+                        <th>Likes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {searchResults.length > 0 ? (
+                        searchResults.map((book, index) => (
+                            <tr
+                                key={book.id}
+                                className={selectedRow === index ? "selected-row" : ""}
+                                onDoubleClick={() => handleRowDoubleClick(index, book)}
+                            >
+                                <td>{new Date(book.borrowDate).toISOString().split('T')[0]}</td>
+                                <td>{new Date(book.returnDate).toISOString().split('T')[0]}</td>
+                                <td>{book.nameBook}</td>
+                                <td>{book.author}</td>
+                                <td>{book.category}</td>
+                                <td><FaThumbsUp className="like-icon" /> {book.likes}</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="6">No books borrowed yet.</td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
         </div>
     );
 }

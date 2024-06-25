@@ -30,5 +30,3 @@ const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
-//להוסיף טבלת קטגוריות ולקשר אותה לתכונה קטגוריה שעשינו בטבלת ספר
