@@ -15,6 +15,7 @@ const borrows = require("./routes/borrowsRoute");
 const availableBooks = require("./routes/AvailableBooksRoute");
 const recommends=require("./routes/recommedBooksRoute");
 const prevBorrows=require("./routes/prevBorrowsRoute");
+const likes=require("./routes/likesRoute")
 
 app.use("/books", books);
 app.use("/comments", comments);
@@ -24,6 +25,7 @@ app.use("/borrows", borrows);
 app.use("/availableBooks", availableBooks);
 app.use("/recommends", recommends);
 app.use("/prevBorrows", prevBorrows);
+app.use("/likes",likes);
 
 
 const PORT = 3000;

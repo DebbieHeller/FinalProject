@@ -5,13 +5,12 @@ import { FaSearch, FaThumbsUp } from 'react-icons/fa';
 function Books() {
     const libraryId = parseInt(localStorage.getItem('libraryId'));
     const [books, setBooks] = useState([]);
+    const [likes, setLikes] = useState({});
     const [comments, setComments] = useState({});
     const [selectedBook, setSelectedBook] = useState(null);
     const [showComments, setShowComments] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-
-    
 
     useEffect(() => {
         fetch(`http://localhost:3000/books?libraryId=${libraryId}`)
@@ -19,6 +18,11 @@ function Books() {
             .then((books) => {
                 setBooks(books);
                 setSearchResults(books);
+                const initialLikes = books.reduce((acc, book) => {
+                    acc[book.id] = book.likes;
+                    return acc;
+                }, {});
+                setLikes(initialLikes);
             })
             .catch((error) => console.error('Error fetching books:', error));
     }, [libraryId]);
@@ -26,7 +30,7 @@ function Books() {
     useEffect(() => {
         const query = searchQuery.toLowerCase();
         if (query === '') {
-            setSearchResults(books); 
+            setSearchResults(books);
         } else {
             const filteredBooks = books.filter(book =>
                 book.nameBook.toLowerCase().includes(query) ||
@@ -49,6 +53,27 @@ function Books() {
         }
     };
 
+    const handleLike = (bookId) => {
+        fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ bookId }),
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return res.json();
+            })
+            .then((updatedLikes) => {
+                setLikes({ ...likes, [bookId]: updatedLikes });
+            })
+            .catch((error) => console.error('Error updating likes:', error));
+    };
+
+
     return (
         <div className="books-container">
             <h1>Books</h1>
@@ -66,10 +91,12 @@ function Books() {
             </form>
             <div className="books-grid">
                 {searchResults.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false, setSelectedBook(book)) }}>
+                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
-                            <LikeButton bookId={book.id} initialLikes={book.likes} />
+                            <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
+                                <FaThumbsUp className="like-icon" /> {likes[book.id] || book.likes}
+                            </p>
                         </div>
                     </div>
                 ))}
@@ -103,27 +130,6 @@ function Books() {
                 </div>
             )}
         </div>
-    );
-}
-
-function LikeButton({ bookId, initialLikes }) {
-    const [likes, setLikes] = useState(initialLikes);
-
-    const handleLike = () => {
-        fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
-            method: 'POST',
-        })
-            .then(response => response.json())
-            .then(data => {
-                setLikes(likes + 1);
-            })
-            .catch(error => console.error('Error liking book:', error));
-    };
-
-    return (
-        <p className="book-likes" onClick={handleLike}>
-            <FaThumbsUp className="like-icon" /> {likes}
-        </p>
     );
 }
 
