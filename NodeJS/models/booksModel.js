@@ -151,15 +151,13 @@ async function updateLikes(bookId) {
             WHERE bookId = ?`,
             [bookId]
         );
-
-        // Fetch updated likes count after update
         const [updatedRows] = await pool.query(
-            `SELECT numLikes FROM likes WHERE bookId = ?`,
+            `SELECT * FROM likes WHERE bookId = ?`,
             [bookId]
         );
 
-        const updatedLikes = updatedRows[0].numLikes;
-        return updatedLikes;
+        const updatedLikes = updatedRows[0]
+        return updatedLikes.numLikes;
     } catch (err) {
         console.error('Error updating likes:', err);
         throw err;

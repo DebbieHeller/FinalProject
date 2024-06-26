@@ -235,15 +235,15 @@ INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES
 
 INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(2, 1, '2024-05-15', '2024-06-15', 'Returned', TRUE, TRUE),
-(3, 1, '2024-05-20', '2024-06-20', 'Returned', TRUE, TRUE),
-(4, 1, '2024-05-25', NULL, 'Borrowed', FALSE, TRUE),
-(5, 1, '2024-05-30', NULL, 'Borrowed', FALSE, TRUE),
-(6, 5, '2024-06-05', NULL, 'Borrowed', FALSE, TRUE),
+(2, 1, '2024-05-10', '2024-06-15', 'Returned', TRUE, TRUE),
+(3, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, TRUE),
+(4, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
+(5, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
+(6, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(8, 8, '2024-06-15', NULL, 'Borrowed', FALSE, TRUE),
-(9, 9, '2024-06-20', NULL, 'Borrowed', FALSE, TRUE),
-(2, 5, '2024-06-25', NULL, 'Borrowed', FALSE, TRUE);
+(8, 8, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(9, 9, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);
 
 INSERT INTO messages (userId, title, body, status, readDate) VALUES 
 (1, 'Title of Message 1', 'Body of Message 1', 'read', '2024-05-20'),

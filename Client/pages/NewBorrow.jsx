@@ -90,13 +90,6 @@ function NewBorrow() {
         setCart(cart.filter(cartItem => cartItem.id !== bookId));
     };
     const handleLike = (bookId) => {
-        alert("jjj")
-        const likedBooks = JSON.parse(sessionStorage.getItem('likedBooks')) || [];
-        if (likedBooks.includes(bookId)) {
-           
-            return;
-        }
-    
         fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
             method: 'PUT',
             headers: {
@@ -112,8 +105,6 @@ function NewBorrow() {
             })
             .then((updatedLikes) => {
                 setLikes({ ...likes, [bookId]: updatedLikes });
-                likedBooks.push(bookId);
-                sessionStorage.setItem('likedBooks', JSON.stringify(likedBooks));
             })
             .catch((error) => console.error('Error updating likes:', error));
     };

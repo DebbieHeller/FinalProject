@@ -13,6 +13,7 @@ function UserBooks() {
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [daysLeftMap, setDaysLeftMap] = useState(new Map());
 
   useEffect(() => {
     fetch(`http://localhost:3000/borrows?userId=${user.id}`)
@@ -24,14 +25,25 @@ function UserBooks() {
           return acc;
         }, {});
         setLikes(initialLikes);
-        console.log(likes)
-       
+
+        // Calculate days left and populate daysLeftMap
+        const today = new Date();
+
+        const newDaysLeftMap = new Map();
+        borrowedBooks.forEach((book) => {
+          const borrowDate = new Date(book.borrowDate);
+          const returnDate = new Date(borrowDate);
+          returnDate.setDate(borrowDate.getDate() + 14);
+          const diffTime = returnDate.getTime() - today.getTime();
+          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+          newDaysLeftMap.set(book.id, diffDays);
+        });
+
+        setDaysLeftMap(newDaysLeftMap);
       })
       .catch((error) => console.error("Error fetching books:", error));
   }, [user.id]);
-
-  
-    
 
   const toggleBookSelection = (borrowBook) => {
     if (selectedBooksToReturn.includes(borrowBook)) {
@@ -57,12 +69,6 @@ function UserBooks() {
   };
 
   const handleLike = (bookId) => {
-    const likedBooks = JSON.parse(sessionStorage.getItem('likedBooks')) || [];
-    if (likedBooks.includes(bookId)) {
-      alert("u just liked already")
-        return;
-    }
-
     fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
         method: 'PUT',
         headers: {
@@ -78,11 +84,9 @@ function UserBooks() {
         })
         .then((updatedLikes) => {
             setLikes({ ...likes, [bookId]: updatedLikes });
-            likedBooks.push(bookId);
-            sessionStorage.setItem('likedBooks', JSON.stringify(likedBooks));
         })
         .catch((error) => console.error('Error updating likes:', error));
-  };
+};
 
   const confirmReturnBooks = async () => {
     setShowConfirmation(false);
@@ -145,22 +149,30 @@ function UserBooks() {
               type="checkbox"
               checked={selectedBooksToReturn.includes(book)}
               onChange={() => toggleBookSelection(book)}
-              
             />
             <div className="book-info">
-                <button
-                  className="like-button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleLike(book.id);
-                  }}
-                >
-                  <FaThumbsUp className="like-icon" />
-                </button>
-                <p className="book-likes">
-                  {likes[book.id] || book.likes}
+              <button
+                className="like-button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleLike(book.id);
+                }}
+              >
+                <FaThumbsUp className="like-icon" />
+              </button>
+              <p className="book-likes">
+                {likes[book.id] || book.likes}
+              </p>
+              {daysLeftMap.get(book.id) < 0 ? (
+                <p className="overdue-message">
+                  באיחור של {Math.abs(daysLeftMap.get(book.id))} ימים
                 </p>
-              </div>
+              ) : (
+                <p className="days-left-message">
+                  נשארו {daysLeftMap.get(book.id)} ימים להחזיר
+                </p>
+              )}
+            </div>
             <Link
               to={`/home/user-books/${book.copyBookId}`}
               className="book-card-link"
@@ -171,7 +183,6 @@ function UserBooks() {
                 alt={book.nameBook}
                 className="book-image"
               />
-              
             </Link>
           </div>
         ))}

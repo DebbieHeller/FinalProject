@@ -23,6 +23,7 @@ function Books() {
                     return acc;
                 }, {});
                 setLikes(initialLikes);
+                console.log(likes)
             })
             .catch((error) => console.error('Error fetching books:', error));
     }, [libraryId]);
@@ -52,14 +53,7 @@ function Books() {
                 .catch((error) => console.error('Error fetching comments:', error));
         }
     };
-
     const handleLike = (bookId) => {
-        const likedBooks = JSON.parse(sessionStorage.getItem('likedBooks')) || [];
-        if (likedBooks.includes(bookId)) {
-           
-            return;
-        }
-    
         fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
             method: 'PUT',
             headers: {
@@ -75,13 +69,11 @@ function Books() {
             })
             .then((updatedLikes) => {
                 setLikes({ ...likes, [bookId]: updatedLikes });
-                likedBooks.push(bookId);
-                sessionStorage.setItem('likedBooks', JSON.stringify(likedBooks));
             })
+            console.log(likes)
             .catch((error) => console.error('Error updating likes:', error));
     };
     
-
     return (
         <div className="books-container">
             <h1>Books</h1>
