@@ -10,6 +10,9 @@
     flex-direction: column;
     align-items: center;
 }
+.book-likes.liked {
+    color: red; /* או כל צבע/סגנון אחר שיסמן שהספר נלחץ */
+}
 
 .search-form {
     width: auto;

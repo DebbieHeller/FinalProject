@@ -6,23 +6,27 @@ async function getborrows(userId) {
   try {
     const [rows] = await pool.query(
       `
-        SELECT books.*, borrows.id as borrowId, borrows.*
+        SELECT books.*, borrows.id as borrowId, borrows.*, IFNULL(l.numLikes, 0) as likes
+               
         FROM borrows
         JOIN copyBook ON borrows.copyBookId = copyBook.id
         JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
         JOIN books ON booksInLibrary.bookId = books.id
+        LEFT JOIN likes l ON books.id = l.bookId
         WHERE borrows.userId = ?
         AND borrows.returnDate IS NULL;
       `,
       [userId]
+      
     );
-
     return rows;
-  } catch (err) {
-    console.log(err);
-    throw err;
+  } catch (error) {
+    console.error(error);
+    throw error;
   }
 }
+
+
 
 async function Prevborrows(userId) {
   try {

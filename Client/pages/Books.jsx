@@ -54,6 +54,12 @@ function Books() {
     };
 
     const handleLike = (bookId) => {
+        const likedBooks = JSON.parse(sessionStorage.getItem('likedBooks')) || [];
+        if (likedBooks.includes(bookId)) {
+           
+            return;
+        }
+    
         fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
             method: 'PUT',
             headers: {
@@ -69,10 +75,12 @@ function Books() {
             })
             .then((updatedLikes) => {
                 setLikes({ ...likes, [bookId]: updatedLikes });
+                likedBooks.push(bookId);
+                sessionStorage.setItem('likedBooks', JSON.stringify(likedBooks));
             })
             .catch((error) => console.error('Error updating likes:', error));
     };
-
+    
 
     return (
         <div className="books-container">
