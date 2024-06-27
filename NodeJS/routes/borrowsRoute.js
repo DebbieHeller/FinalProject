@@ -2,6 +2,7 @@ const express = require('express');
 const borrowsRouter = express.Router();
 borrowsRouter.use(express.json());
 const { getAll, getSingle, update, create } = require('../controllers/borrowsController');
+//const authorizeAdmin = require('../middlewares/authorizeAdmin');
 
 borrowsRouter.get('/', async (req, res) => {
     try {

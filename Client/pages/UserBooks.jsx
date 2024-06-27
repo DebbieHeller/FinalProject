@@ -6,6 +6,7 @@ import "../css/books.css";
 import { FaThumbsUp } from "react-icons/fa";
 
 function UserBooks() {
+  const libraryId = parseInt(localStorage.getItem('libraryId'));
   const { user } = useContext(userContext);
   const [books, setBooks] = useState([]);
   const [likes, setLikes] = useState({});
@@ -20,11 +21,6 @@ function UserBooks() {
       .then((res) => res.json())
       .then((borrowedBooks) => {
         setBooks(borrowedBooks);
-        const initialLikes = borrowedBooks.reduce((acc, book) => {
-          acc[book.id] = book.likes;
-          return acc;
-        }, {});
-        setLikes(initialLikes);
 
         // Calculate days left and populate daysLeftMap
         const today = new Date();
@@ -36,13 +32,24 @@ function UserBooks() {
           returnDate.setDate(borrowDate.getDate() + 14);
           const diffTime = returnDate.getTime() - today.getTime();
           const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
           newDaysLeftMap.set(book.id, diffDays);
         });
-
         setDaysLeftMap(newDaysLeftMap);
       })
       .catch((error) => console.error("Error fetching books:", error));
+
+      fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
+    .then((res) => res.json())
+    .then((likes) => {
+        const likesObject = likes.reduce((acc, like) => {
+            acc[like.bookId] = like.numLikes;
+            return acc;
+        }, {});
+        setLikes(likesObject);
+        console.log(likesObject)
+    })
+    .catch((error) => console.error('Error fetching likes:', error));
+
   }, [user.id]);
 
   const toggleBookSelection = (borrowBook) => {
@@ -73,70 +80,62 @@ function UserBooks() {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ bookId }),
+        }
     })
-        .then((res) => {
-            if (!res.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return res.json();
-        })
-        .then((updatedLikes) => {
-            setLikes({ ...likes, [bookId]: updatedLikes });
+        .then((res) => res.json())
+        .then(() => {
+            const prevLikes = likes[bookId]
+            setLikes({ ...likes, [bookId]: prevLikes + 1 });
         })
         .catch((error) => console.error('Error updating likes:', error));
 };
 
-  const confirmReturnBooks = async () => {
-    setShowConfirmation(false);
-    setIsLoading(true);
+const confirmReturnBooks = () => {
+  setShowConfirmation(false);
+  setIsLoading(true);
 
-    const updatedBooks = [...books];
+  const updatedBooks = [...books];
 
-    for (const borrowBook of selectedBooksToReturn) {
+  selectedBooksToReturn.forEach((borrowBook) => {
       const returnDate = new Date().toISOString().split("T")[0];
       const borrowDate = new Date(borrowBook.borrowDate)
-        .toISOString()
-        .split("T")[0];
+          .toISOString()
+          .split("T")[0];
 
       const updatedBorrow = {
-        id: borrowBook.borrowId,
-        copyBookId: borrowBook.copyBookId,
-        userId: user.id,
-        bookId: borrowBook.id,
-        borrowDate: borrowDate,
-        returnDate: returnDate,
-        status: "Returned",
+          id: borrowBook.borrowId,
+          copyBookId: borrowBook.copyBookId,
+          userId: user.id,
+          bookId: borrowBook.id,
+          borrowDate: borrowDate,
+          returnDate: returnDate,
+          status: "Returned",
       };
 
-      const response = await fetch(
-        `http://localhost:3000/borrows/${borrowBook.borrowId}`,
-        {
+      fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
           method: "PUT",
           headers: {
-            "Content-Type": "application/json",
+              "Content-Type": "application/json",
           },
           body: JSON.stringify(updatedBorrow),
-        }
-      );
+      })
+      .then((response) => {
+          if (response.ok) {
+              const index = updatedBooks.findIndex((book) => book.borrowId === borrowBook.borrowId);
+              if (index > -1) {
+                  updatedBooks.splice(index, 1);
+              }
+          } else {
+              console.error("Error returning book:", response.statusText);
+          }
+      })
+      .catch((error) => console.error("Error returning book:", error));
+  });
 
-      if (response.ok) {
-        const index = updatedBooks.findIndex(
-          (book) => book.borrowId === borrowBook.borrowId
-        );
-        if (index > -1) {
-          updatedBooks.splice(index, 1);
-        }
-      } else {
-        console.error("Error returning book:", response.statusText);
-      }
-    }
-
-    setBooks(updatedBooks);
-    setSelectedBooksToReturn([]);
-    setIsLoading(false);
-  };
+  setBooks(updatedBooks);
+  setSelectedBooksToReturn([]);
+  setIsLoading(false);
+};
 
   return (
     <div className="user-books-container">
@@ -161,7 +160,7 @@ function UserBooks() {
                 <FaThumbsUp className="like-icon" />
               </button>
               <p className="book-likes">
-                {likes[book.id] || book.likes}
+                {likes[book.id]}
               </p>
               {daysLeftMap.get(book.id) < 0 ? (
                 <p className="overdue-message">

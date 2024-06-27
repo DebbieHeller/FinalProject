@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaThumbsUp } from 'react-icons/fa';
 import { userContext } from "../src/App";
-import '../css/userBorrows.css'; // Import the CSS file
+import '../css/userBorrows.css'; 
 
 function UserBorrows() {
     const { user } = useContext(userContext);
@@ -10,11 +10,11 @@ function UserBorrows() {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchResults, setSearchResults] = useState([]);
     const [selectedRow, setSelectedRow] = useState(null);
-    const [filter, setFilter] = useState('all'); // New state for date filter
+    const [filter, setFilter] = useState('all');
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`) // <--- השורה שנשמטה בטעות
+        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`) 
             .then((res) => res.json())
             .then((data) => {
                 setBorrowedBooks(data);

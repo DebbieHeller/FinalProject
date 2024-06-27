@@ -18,14 +18,21 @@ function Books() {
             .then((books) => {
                 setBooks(books);
                 setSearchResults(books);
-                const initialLikes = books.reduce((acc, book) => {
-                    acc[book.id] = book.likes;
-                    return acc;
-                }, {});
-                setLikes(initialLikes);
-                console.log(likes)
             })
             .catch((error) => console.error('Error fetching books:', error));
+
+        fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
+            .then((res) => res.json())
+            .then((likes) => {
+                const likesObject = likes.reduce((acc, like) => {
+                    acc[like.bookId] = like.numLikes;
+                    return acc;
+                }, {});
+                setLikes(likesObject);
+            })
+            .catch((error) => console.error('Error fetching likes:', error));
+
+
     }, [libraryId]);
 
     useEffect(() => {
@@ -53,27 +60,22 @@ function Books() {
                 .catch((error) => console.error('Error fetching comments:', error));
         }
     };
+
     const handleLike = (bookId) => {
         fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ bookId }),
+            }
         })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
+            .then((res) => res.json())
+            .then(() => {
+                const prevLikes = likes[bookId]
+                setLikes({ ...likes, [bookId]: prevLikes + 1 });
             })
-            .then((updatedLikes) => {
-                setLikes({ ...likes, [bookId]: updatedLikes });
-            })
-            console.log(likes)
             .catch((error) => console.error('Error updating likes:', error));
     };
-    
+
     return (
         <div className="books-container">
             <h1>Books</h1>
@@ -95,7 +97,7 @@ function Books() {
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                             <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                <FaThumbsUp className="like-icon" /> {likes[book.id] || book.likes}
+                                <FaThumbsUp className="like-icon" /> {likes[book.id]}
                             </p>
                         </div>
                     </div>

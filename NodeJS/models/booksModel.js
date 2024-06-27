@@ -1,14 +1,13 @@
 const mysql = require('mysql2');
 const path = require('path');
-const pool = require('../LibraryDB');  // הקובץ שמגדיר את החיבור לבסיס הנתונים
+const pool = require('../LibraryDB');  
 
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-            `SELECT b.*, bil.isNew, IFNULL(l.numLikes, 0) as likes
+            `SELECT b.*, bil.isNew
              FROM booksInLibrary bil
              JOIN books b ON bil.bookId = b.id
-             LEFT JOIN likes l ON b.id = l.bookId
              WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
@@ -17,15 +16,13 @@ async function getBooks(libraryId) {
     }
 }
 
-
 async function getAvailableBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks,IFNULL(l.numLikes, 0) as likes
+            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
             FROM booksInLibrary bil
             JOIN books b ON bil.bookId = b.id
             JOIN copyBook cb ON bil.id = cb.bookInLibraryId
-            LEFT JOIN likes l ON b.id = l.bookId
             WHERE cb.id = (
             SELECT cb2.id
             FROM copyBook cb2
@@ -44,7 +41,7 @@ async function getAvailableBooks(libraryId) {
 
 async function getNewBooks(libraryId) {
     try {
-        const [rows] = await pool.query(
+        const [rows] = await pool.query(//1 as num...?
             `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
             FROM booksInLibrary bil
             JOIN books b ON bil.bookId = b.id
@@ -74,19 +71,28 @@ async function getBook(id) {
     }
 }
 
+async function getSingleByUserName(namebook) {
+    try {
+        const [rows] = await pool.query('SELECT * FROM Books WHERE bookName=?', [namebook]);
+        return rows[0];
+    } catch (err) {
+        console.log(err);
+    }
+}
+
 async function getRecommendedCategory(userId) {
     try {
         const [categoryRows] = await pool.query(
             `SELECT IFNULL(
-                (SELECT b.category
-                FROM borrows bor
-                JOIN copyBook cb ON bor.copyBookId = cb.id
-                JOIN booksInLibrary bil ON cb.bookInLibraryId = bil.id
-                JOIN books b ON bil.bookId = b.id
-                WHERE bor.userId = ?
-                GROUP BY b.category
-                ORDER BY COUNT(*) DESC
-                LIMIT 1), NULL) AS category;`
+            (SELECT b.category
+            FROM borrows bor
+            JOIN copyBook cb ON bor.copyBookId = cb.id
+            JOIN booksInLibrary bil ON cb.bookInLibraryId = bil.id
+            JOIN books b ON bil.bookId = b.id
+            WHERE bor.userId = ?
+            GROUP BY b.category
+            ORDER BY COUNT(*) DESC
+            LIMIT 1), NULL) AS category;`
             , [userId]);
         return categoryRows[0].category;
 
@@ -117,11 +123,26 @@ async function getRecommendedBooksForYou(libraryId, category) {
     }
 }
 
-async function createBook(nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) {
+
+
+async function createBook(nameBook, author, numOfPages, publishingYear, summary, image, category) {
     try {
         const [result] = await pool.query(
-            "INSERT INTO Books (nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-            [nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew]
+            "INSERT INTO Books (nameBook, author, numOfPages, publishingYear, summary, image, category) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [nameBook, author, numOfPages, publishingYear, summary, image, category]
+        );
+        return result.insertId;
+    } catch (err) {
+        console.error('Error creating Book:', err);
+        throw err;
+    }
+}
+
+async function insertBookToLibrary(libraryId, bookId, unitsInStock) {
+    try {
+        const [result] = await pool.query(
+            "INSERT INTO Books (nameBook, author, numOfPages, publishingYear, summary, image, category) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [nameBook, author, numOfPages, publishingYear, summary, image, category]
         );
         return result.insertId;
     } catch (err) {
@@ -143,28 +164,6 @@ async function updateBook(id, nameBook, author, numOfPages, publishingYear, like
     }
 }
 
-async function updateLikes(bookId) {
-    try {
-        const [rows] = await pool.query(
-            `UPDATE likes
-            SET numLikes = numLikes + 1
-            WHERE bookId = ?`,
-            [bookId]
-        );
-        const [updatedRows] = await pool.query(
-            `SELECT * FROM likes WHERE bookId = ?`,
-            [bookId]
-        );
-
-        const updatedLikes = updatedRows[0]
-        return updatedLikes.numLikes;
-    } catch (err) {
-        console.error('Error updating likes:', err);
-        throw err;
-    }
-}
-
-
 async function deleteBook(id) {
     try {
         await pool.query("DELETE FROM Books WHERE id = ?", [id]);
@@ -175,5 +174,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou ,updateLikes};
+module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName};
 

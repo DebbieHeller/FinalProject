@@ -20,10 +20,6 @@ usersRouter.get('/', async (req, res) => {
     }
 })
 
-// usersRouter.get('/:userId', async (req, res) => {
-//     res.send(await getSingle(req.params.userId))
-// })
-
 usersRouter.post('/', async (req, res) => {
     try {
         const response = await create(req.body.username, req.body.phone, req.body.email, req.body.address, req.body.subscriptionTypeId, req.body.roleId, req.body.libraryId, req.body.password)

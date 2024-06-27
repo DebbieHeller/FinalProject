@@ -21,14 +21,20 @@ function NewBorrow() {
             .then((res) => res.json())
             .then((books) => {
                 setRecommendedBooks(books);
-                const initialLikes = books.reduce((acc, book) => {
-                    acc[book.id] = book.likes;
+            })
+            .catch((error) => console.error('Error fetching books:', error));
+
+            fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
+            .then((res) => res.json())
+            .then((likes) => {
+                const likesObject = likes.reduce((acc, like) => {
+                    acc[like.bookId] = like.numLikes;
                     return acc;
                 }, {});
-                setLikes(initialLikes);
+                setLikes(likesObject);
             })
-            
-            .catch((error) => console.error('Error fetching books:', error));
+            .catch((error) => console.error('Error fetching likes:', error));
+        
     }, [user.id]);
 
     useEffect(() => {
@@ -40,11 +46,6 @@ function NewBorrow() {
                         availableBook => !recommendedBooks.some(recommendedBook => recommendedBook.id === availableBook.id)
                     );
                     setBooks(filteredBooks);
-                    const initialLikes = filteredBooks.reduce((acc, book) => {
-                        acc[book.id] = book.likes;
-                        return acc;
-                    }, {});
-                    setLikes(initialLikes);
                 } else {
                     setBooks(availableBooks);
                 }
@@ -89,25 +90,22 @@ function NewBorrow() {
     const removeFromCart = (bookId) => {
         setCart(cart.filter(cartItem => cartItem.id !== bookId));
     };
+    
     const handleLike = (bookId) => {
         fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ bookId }),
+            }
         })
-            .then((res) => {
-                if (!res.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return res.json();
-            })
-            .then((updatedLikes) => {
-                setLikes({ ...likes, [bookId]: updatedLikes });
+            .then((res) => res.json())
+            .then(() => {
+                const prevLikes = likes[bookId]
+                setLikes({ ...likes, [bookId]: prevLikes + 1 });
             })
             .catch((error) => console.error('Error updating likes:', error));
     };
+    
     const handleCartSubmit = () => {
         cart.map(book => {
             const newBorrow = {
@@ -179,9 +177,10 @@ function NewBorrow() {
                     <div key={book.id} className="book-card" onClick={() => { setShowComments(false, setSelectedBook(book)) }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
-                            <FaStar className="recommended-icon" /> {/* Recommended book icon */}
+                            <FaStar className="recommended-icon" /> 
                             <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                <FaThumbsUp className="like-icon" /> {likes[book.id] || book.likes}
+                                <FaThumbsUp className="like-icon" /> 
+                                {likes[book.id]}
                             </p>
                         </div>
                     </div>
@@ -192,7 +191,7 @@ function NewBorrow() {
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                         <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                <FaThumbsUp className="like-icon" /> {likes[book.id] || book.likes}
+                                <FaThumbsUp className="like-icon" /> {likes[book.id]}
                             </p>
                             
                         </div>

@@ -1,4 +1,5 @@
 const pool = require('../LibraryDB')
+
 async function getComments(bookId) {
     try {
         console.log("fetch comments")
@@ -9,8 +10,6 @@ async function getComments(bookId) {
         throw err;
     }
 }
-
-
 
 async function getComment(id) {
     try {

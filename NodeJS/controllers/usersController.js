@@ -1,5 +1,6 @@
 const model = require('../models/usersModel')
 const bcrypt = require('bcrypt')
+const { confirmPassword } = require('./passwordsController')
 const saltRounds = 10
 
 async function getSingle(id) {
@@ -7,6 +8,25 @@ async function getSingle(id) {
         return await model.getUser(id)
     } catch (err) {
         throw err
+    }
+}
+
+async function authenticateLogin(username, password) {
+    try {
+        const user = await getByUsername(username)
+
+        if (!user) {
+            return null
+        } else {
+            const confirm = await confirmPassword(user.passwordId, password)
+            if (confirm) {
+                return user
+            } else {
+                return 1//?
+            }
+        }
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to fetch book' });
     }
 }
 
@@ -34,4 +54,4 @@ async function create(username, phone, email, address, subscriptionTypeId, roleI
 
 
 
-module.exports = { getSingle, getByUsername ,create }
+module.exports = { getSingle, getByUsername ,create, authenticateLogin }

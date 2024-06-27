@@ -15,14 +15,6 @@ async function getAvailableBooks(libraryId) {
     }
 }
 
-async function updateLikes(bookId) {
-    try {
-        return await model.updateLikes(bookId)
-    } catch (err) {
-        throw err
-    }
-}
-
 async function getRecommendedForYou(libraryId, userId) {
     try {
         const mostUsedUserCategory = await model.getRecommendedCategory(userId)
@@ -46,10 +38,17 @@ async function getSingle(id) {
         throw err
     }
 }
-
-async function create(nameBook, author, numOfPages,publishingYear,likes,summary,image,unitsInStock,category,libraryId,isNew) {
+async function getSingleByUserName(namebook) {
     try {
-        return await model.createBook(nameBook, author, numOfPages,publishingYear,likes,summary,image,unitsInStock,category,libraryId,isNew)
+        return await model.getSingleByUserName(namebook)
+    } catch (err) {
+        throw err
+    }
+}
+
+async function create(nameBook, author, numOfPages, publishingYear, summary, image, category) {
+    try {
+        return await model.createBook(nameBook, author, numOfPages, publishingYear, summary, image, category)
     } catch (err) {
         throw err
     }
@@ -71,4 +70,4 @@ async function deleteB(id) {
     }
 }
 
-module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou,updateLikes }
+module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou, getSingleByUserName }

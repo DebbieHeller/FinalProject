@@ -41,4 +41,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update,getSingle, create,getPrevBorrows};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows};

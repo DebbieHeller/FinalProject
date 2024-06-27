@@ -1,18 +1,15 @@
 const express = require('express');
 const recommendedbooksRouter = express.Router();
 recommendedbooksRouter.use(express.json());
-const {getRecommendedForYou } = require('../controllers/booksController');
+const { getRecommendedForYou } = require('../controllers/booksController');
 
 recommendedbooksRouter.get('/', async (req, res) => {
     try {
-        const book = await getRecommendedForYou(req.query.libraryId, req.query.userId);
-        if (!book) {
-            res.status(404).send({ error: 'Book not found' });
-            return;
-        }
-        res.status(200).send(book);
+        const books = await getRecommendedForYou(req.query.libraryId, req.query.userId);
+        res.status(200).send(books);
     } catch (error) {
-        res.status(500).send({ error: 'Failed to fetch book' });
+        res.status(500).send({ error: 'Failed to fetch books' });
     }
 });
+
 module.exports = recommendedbooksRouter;
