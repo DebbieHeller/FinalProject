@@ -23,8 +23,10 @@ function NewBorrow() {
                 setRecommendedBooks(books);
             })
             .catch((error) => console.error('Error fetching books:', error));
+    }, [user.id]);
 
-            fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
+    useEffect(() => {
+        fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
             .then((res) => res.json())
             .then((likes) => {
                 const likesObject = likes.reduce((acc, like) => {
@@ -34,8 +36,7 @@ function NewBorrow() {
                 setLikes(likesObject);
             })
             .catch((error) => console.error('Error fetching likes:', error));
-        
-    }, [user.id]);
+    }, [libraryId]);
 
     useEffect(() => {
         fetch(`http://localhost:3000/availableBooks?libraryId=${libraryId}`)

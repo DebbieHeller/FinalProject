@@ -37,20 +37,20 @@ function UserBooks() {
         setDaysLeftMap(newDaysLeftMap);
       })
       .catch((error) => console.error("Error fetching books:", error));
+  }, [user.id]);
 
-      fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
-    .then((res) => res.json())
-    .then((likes) => {
+  useEffect(() => {
+    fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
+      .then((res) => res.json())
+      .then((likes) => {
         const likesObject = likes.reduce((acc, like) => {
-            acc[like.bookId] = like.numLikes;
-            return acc;
+          acc[like.bookId] = like.numLikes;
+          return acc;
         }, {});
         setLikes(likesObject);
-        console.log(likesObject)
-    })
-    .catch((error) => console.error('Error fetching likes:', error));
-
-  }, [user.id]);
+      })
+      .catch((error) => console.error('Error fetching likes:', error));
+  }, [libraryId]);
 
   const toggleBookSelection = (borrowBook) => {
     if (selectedBooksToReturn.includes(borrowBook)) {
@@ -77,65 +77,65 @@ function UserBooks() {
 
   const handleLike = (bookId) => {
     fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        }
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      }
     })
-        .then((res) => res.json())
-        .then(() => {
-            const prevLikes = likes[bookId]
-            setLikes({ ...likes, [bookId]: prevLikes + 1 });
-        })
-        .catch((error) => console.error('Error updating likes:', error));
-};
+      .then((res) => res.json())
+      .then(() => {
+        const prevLikes = likes[bookId]
+        setLikes({ ...likes, [bookId]: prevLikes + 1 });
+      })
+      .catch((error) => console.error('Error updating likes:', error));
+  };
 
-const confirmReturnBooks = () => {
-  setShowConfirmation(false);
-  setIsLoading(true);
+  const confirmReturnBooks = () => {
+    setShowConfirmation(false);
+    setIsLoading(true);
 
-  const updatedBooks = [...books];
+    const updatedBooks = [...books];
 
-  selectedBooksToReturn.forEach((borrowBook) => {
+    selectedBooksToReturn.forEach((borrowBook) => {
       const returnDate = new Date().toISOString().split("T")[0];
       const borrowDate = new Date(borrowBook.borrowDate)
-          .toISOString()
-          .split("T")[0];
+        .toISOString()
+        .split("T")[0];
 
       const updatedBorrow = {
-          id: borrowBook.borrowId,
-          copyBookId: borrowBook.copyBookId,
-          userId: user.id,
-          bookId: borrowBook.id,
-          borrowDate: borrowDate,
-          returnDate: returnDate,
-          status: "Returned",
+        id: borrowBook.borrowId,
+        copyBookId: borrowBook.copyBookId,
+        userId: user.id,
+        bookId: borrowBook.id,
+        borrowDate: borrowDate,
+        returnDate: returnDate,
+        status: "Returned",
       };
 
       fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
-          method: "PUT",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedBorrow),
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedBorrow),
       })
-      .then((response) => {
+        .then((response) => {
           if (response.ok) {
-              const index = updatedBooks.findIndex((book) => book.borrowId === borrowBook.borrowId);
-              if (index > -1) {
-                  updatedBooks.splice(index, 1);
-              }
+            const index = updatedBooks.findIndex((book) => book.borrowId === borrowBook.borrowId);
+            if (index > -1) {
+              updatedBooks.splice(index, 1);
+            }
           } else {
-              console.error("Error returning book:", response.statusText);
+            console.error("Error returning book:", response.statusText);
           }
-      })
-      .catch((error) => console.error("Error returning book:", error));
-  });
+        })
+        .catch((error) => console.error("Error returning book:", error));
+    });
 
-  setBooks(updatedBooks);
-  setSelectedBooksToReturn([]);
-  setIsLoading(false);
-};
+    setBooks(updatedBooks);
+    setSelectedBooksToReturn([]);
+    setIsLoading(false);
+  };
 
   return (
     <div className="user-books-container">
@@ -150,16 +150,10 @@ const confirmReturnBooks = () => {
               onChange={() => toggleBookSelection(book)}
             />
             <div className="book-info">
-              <button
-                className="like-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleLike(book.id);
-                }}
-              >
+
+              <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
                 <FaThumbsUp className="like-icon" />
-              </button>
-              <p className="book-likes">
+                {console.log(book)}
                 {likes[book.id]}
               </p>
               {daysLeftMap.get(book.id) < 0 ? (

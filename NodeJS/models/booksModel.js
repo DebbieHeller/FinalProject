@@ -18,7 +18,7 @@ async function getBooks(libraryId) {
 
 async function getAvailableBooks(libraryId) {
     try {
-        const [rows] = await pool.query(
+        const [rows] = await pool.query(//?
             `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
             FROM booksInLibrary bil
             JOIN books b ON bil.bookId = b.id

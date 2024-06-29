@@ -20,7 +20,9 @@ function Books() {
                 setSearchResults(books);
             })
             .catch((error) => console.error('Error fetching books:', error));
+    }, [libraryId]);
 
+    useEffect(() => {
         fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
             .then((res) => res.json())
             .then((likes) => {
@@ -31,8 +33,6 @@ function Books() {
                 setLikes(likesObject);
             })
             .catch((error) => console.error('Error fetching likes:', error));
-
-
     }, [libraryId]);
 
     useEffect(() => {
