@@ -6,7 +6,7 @@ async function getborrows(userId) {
   try {
     const [rows] = await pool.query(
       `
-        SELECT b.*, bil.isNew, bor.id as borrowId, bor.*
+        SELECT bor.*, bor.id as borrowId, b.*, bil.isNew, cb.id as copyBookId
         FROM booksInLibrary bil
         JOIN books b ON bil.bookId = b.id
         JOIN copyBook cb ON cb.bookInLibraryId = bil.id
@@ -16,6 +16,7 @@ async function getborrows(userId) {
       `,
       [userId]
     );
+    console.log(rows)
     return rows;
   } catch (error) {
     console.error(error);

@@ -143,7 +143,7 @@ function UserBooks() {
       {isLoading && <div className="loading-message">מתבצעת החזרה...</div>}
       <div className="books-grid">
         {books.map((book) => (
-          <div key={book.id} className="book-card">
+          <div key={book.copyBookId} className="book-card">
             <input
               type="checkbox"
               checked={selectedBooksToReturn.includes(book)}
@@ -153,7 +153,6 @@ function UserBooks() {
 
               <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
                 <FaThumbsUp className="like-icon" />
-                {console.log(book)}
                 {likes[book.id]}
               </p>
               {daysLeftMap.get(book.id) < 0 ? (

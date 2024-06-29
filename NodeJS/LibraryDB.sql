@@ -119,7 +119,8 @@ CREATE TABLE messages(
   userId INT NOT NULL,
   title VARCHAR(30) NOT NULL,
   body VARCHAR(100) NOT NULL,
-  status VARCHAR(20) NOT NULL CHECK (status IN ('read', 'didnt read yet')),
+  status VARCHAR(20) NOT NULL CHECK (status IN ('נקראה', 'לא נקראה')),
+  createdDate DATE NOT NULL,
   readDate DATE,
   FOREIGN KEY (userId) REFERENCES users(id)
 );
@@ -245,17 +246,17 @@ INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isRetur
 (9, 9, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);
 
-INSERT INTO messages (userId, title, body, status, readDate) VALUES 
-(1, 'Title of Message 1', 'Body of Message 1', 'read', '2024-05-20'),
-(2, 'Title of Message 2', 'Body of Message 2', 'didnt read yet', NULL),
-(3, 'Title of Message 3', 'Body of Message 3', 'read', '2024-05-25'),
-(4, 'Title of Message 4', 'Body of Message 4', 'didnt read yet', NULL),
-(5, 'Title of Message 5', 'Body of Message 5', 'read', '2024-06-01'),
-(6, 'Title of Message 6', 'Body of Message 6', 'didnt read yet', NULL),
-(7, 'Title of Message 7', 'Body of Message 7', 'read', '2024-06-05'),
-(8, 'Title of Message 8', 'Body of Message 8', 'didnt read yet', NULL),
-(9, 'Title of Message 9', 'Body of Message 9', 'read', '2024-06-10'),
-(10, 'Title of Message 10', 'Body of Message 10', 'didnt read yet', NULL);
+INSERT INTO messages (userId, title, body, status, createdDate, readDate) VALUES 
+(1, 'Title of Message 1', 'Body of Message 1', 'נקראה', '2024-02-20', '2024-05-20'),
+(1, 'Title of Message 2', 'Body of Message 2', 'לא נקראה', '2024-05-12', NULL),
+(3, 'Title of Message 3', 'Body of Message 3', 'נקראה', '2024-05-20', '2024-05-25'),
+(4, 'Title of Message 4', 'Body of Message 4', 'לא נקראה', '2024-05-20', NULL),
+(5, 'Title of Message 5', 'Body of Message 5', 'נקראה', '2024-05-20', '2024-06-01'),
+(6, 'Title of Message 6', 'Body of Message 6', 'לא נקראה', '2024-05-20', NULL),
+(7, 'Title of Message 7', 'Body of Message 7', 'נקראה', '2024-05-20', '2024-06-05'),
+(8, 'Title of Message 8', 'Body of Message 8', 'לא נקראה', '2024-05-20', NULL),
+(9, 'Title of Message 9', 'Body of Message 9', 'נקראה', '2024-05-20', '2024-06-10'),
+(10, 'Title of Message 10', 'Body of Message 10', 'לא נקראה', '2024-05-20', NULL);
 
 INSERT INTO waiting (userId, bookId, forwait, requestDate) VALUES 
 (1, 2, '2024-06-05', '2024-05-20'),

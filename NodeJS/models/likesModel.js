@@ -2,7 +2,6 @@ const pool = require('../LibraryDB')
 
 async function getlikes(libraryId) {
     try {
-        console.log("fetch likes");
         const [rows] = await pool.query(
             `SELECT likes.* 
             FROM likes 
@@ -11,7 +10,6 @@ async function getlikes(libraryId) {
             , [libraryId]);
         return rows;
     } catch (err) {
-        console.log(err);
         throw err;
     }
 }
