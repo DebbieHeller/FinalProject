@@ -18,15 +18,38 @@ function NewBorrow() {
     const [likes, setLikes] = useState({});
     const [subscriptionTypes, setSubscriptionTypes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
+    const [userBooks, setUserBooks] = useState([]);
+    const [ammountToBorrow, setAmmoutToBorrow] = useState(0);
+    const [remainingBooksToBorrow, setRemainingBooksToBorrow] = useState(0);
+
+    
+
+
+
+    useEffect(() => {
+        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setUserBooks(data);
+            })
+            .catch((error) => console.error("Error fetching books:", error));
+    }, [user.id]);
+    
 
     useEffect(() => {
         fetch(`http://localhost:3000/subscriptionTypes`)
             .then((res) => res.json())
             .then((subscriptionTypes) => {
                 setSubscriptionTypes(subscriptionTypes);
+                const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
+                if (userSubscription) {
+                    setAmmoutToBorrow(userSubscription.ammountToBorrow);
+                    setRemainingBooksToBorrow(userSubscription.ammountToBorrow - userBooks.length);
+                }
             })
             .catch((error) => console.error('Error fetching subscription types:', error));
-    }, []);
+    }, [user.subscriptionTypeId, userBooks.length]);
+    
 
     useEffect(() => {
         fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`)
@@ -62,7 +85,7 @@ function NewBorrow() {
                 } else {
                     setBooks(availableBooks);
                 }
-                setSearchResults(books); // Corrected to setSearchResults(availableBooks)
+                setSearchResults(availableBooks); // Corrected to setSearchResults(availableBooks)
             })
             .catch((error) => console.error('Error fetching available books:', error));
     }, [libraryId, recommendedBooks]);
@@ -102,6 +125,7 @@ function NewBorrow() {
 
     const removeFromCart = (bookId) => {
         setCart(cart.filter(cartItem => cartItem.id !== bookId));
+        setErrorMessage(''); // Clear error message when item is removed from the cart
     };
 
     const handleLike = (bookId) => {
@@ -119,23 +143,52 @@ function NewBorrow() {
             .catch((error) => console.error('Error updating likes:', error));
     };
 
+    const clearErrorMessage = () => {
+        setTimeout(() => {
+            setErrorMessage('');
+        }, 3000); // Clear error message after 3 seconds
+    };
+
     const handleCartSubmit = () => {
-        const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.id);
+        const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
+    
         if (!userSubscription) {
             setErrorMessage('User subscription information not found.');
+            clearErrorMessage();
             return;
         }
     
-        if (cart.length > userSubscription.amountToBorrow) {
-            setErrorMessage(`You cannot borrow more than ${userSubscription.amountToBorrow} books.`);
+        if (cart.length > remainingBooksToBorrow) {
+            setErrorMessage(`You cannot borrow more than ${remainingBooksToBorrow} books.`);
+            clearErrorMessage();
             return;
         }
     
-        // קוד ההוספה לסל כאן...
+        cart.forEach(book => {
+            const newBorrow = {
+                copyBookId: book.copyBookId,
+                userId: user.id,
+                borrowDate: new Date().toISOString().split('T')[0],
+                returnDate: null,
+                status: 'Borrowed',
+                isReturned: false,
+                isIntact: null
+            };
+            fetch('http://localhost:3000/borrows', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newBorrow),
+            })
+                .catch((error) => console.error('Error adding books to cart:', error));
+        });
     
         setRecommendedBooks(recommendedBooks.filter(recommendedBook => !cart.some(cartItem => cartItem.id === recommendedBook.id)));
         setBooks(books.filter(book => !cart.some(cartItem => cartItem.id === book.id)));
         setCart([]);
+        setRemainingBooksToBorrow(remainingBooksToBorrow - cart.length);
+        console.log(remainingBooksToBorrow)
         alert('Books have been successfully added to the cart');
     };
     
