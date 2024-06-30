@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from "react";
 import { userContext } from "../src/App";
 import '../css/books.css';
-import { FaSearch, FaThumbsUp, FaShoppingCart, FaTrash, FaStar } from 'react-icons/fa'; // Added FaStar icon
+import '../css/newBorrow.css'
+import { FaSearch, FaThumbsUp, FaShoppingCart, FaTrash, FaStar } from 'react-icons/fa';
 
 function NewBorrow() {
     const libraryId = parseInt(localStorage.getItem('libraryId'));
@@ -101,7 +102,7 @@ function NewBorrow() {
         })
             .then((res) => res.json())
             .then(() => {
-                const prevLikes = likes[bookId]
+                const prevLikes = likes[bookId];
                 setLikes({ ...likes, [bookId]: prevLikes + 1 });
             })
             .catch((error) => console.error('Error updating likes:', error));
@@ -117,7 +118,7 @@ function NewBorrow() {
                 status: 'Borrowed',
                 isReturned: false,
                 isIntact: null
-            }
+            };
             fetch('http://localhost:3000/borrows', {
                 method: 'POST',
                 headers: {
@@ -126,18 +127,20 @@ function NewBorrow() {
                 body: JSON.stringify(newBorrow),
             })
                 .catch((error) => console.error('Error adding books to cart:', error));
-        })
+        });
         setRecommendedBooks(recommendedBooks.filter(recommendedBook => !cart.some(cartItem => cartItem.id === recommendedBook.id)));
-        setBooks(books.filter(book => !cart.some(cartItem => cartItem.id === book.id)))
+        setBooks(books.filter(book => !cart.some(cartItem => cartItem.id === book.id)));
         setCart([]);
         alert('Books have been successfully added to the cart');
     };
 
     return (
         <div className="books-container">
+            <div className="cart-icon-container">
+                <FaShoppingCart className="cart-icon" />
+            </div>
             <div className="cart-container">
                 <div className="cart">
-                    <FaShoppingCart className="cart-icon" />
                     <h3>Borrow Cart</h3>
                     {cart.length === 0 ? (
                         <p>Your cart is empty</p>
@@ -175,7 +178,7 @@ function NewBorrow() {
             <div className="books-grid">
                 
                 {recommendedBooks.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false, setSelectedBook(book)) }}>
+                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                             <FaStar className="recommended-icon" /> 
@@ -188,13 +191,12 @@ function NewBorrow() {
                 ))}
 
                 {searchResults.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false, setSelectedBook(book)) }}>
+                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
-                        <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
+                            <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
                                 <FaThumbsUp className="like-icon" /> {likes[book.id]}
                             </p>
-                            
                         </div>
                     </div>
                 ))}
@@ -210,8 +212,8 @@ function NewBorrow() {
                         <p><strong>Summary:</strong> {selectedBook.summary}</p>
                         <p><strong>Category:</strong> {selectedBook.category}</p>
                         <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>
-                        <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id) }}>
-                            {showComments ? 'Hide Comments' : 'Show Comments'}
+                        <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id); }}>
+                        {showComments ? 'Hide Comments' : 'Show Comments'}
                         </button>
                         {showComments && comments[selectedBook.id] && (
                             <div className="comments-section">
@@ -223,7 +225,7 @@ function NewBorrow() {
                                 ))}
                             </div>
                         )}
-                        <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook) }}>
+                        <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
                             להשאלה
                         </button>
                     </div>
@@ -234,3 +236,4 @@ function NewBorrow() {
 }
 
 export default NewBorrow;
+
