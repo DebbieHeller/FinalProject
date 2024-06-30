@@ -197,7 +197,6 @@ INSERT INTO likes (bookId, numLikes) VALUES
 (9, 170), 
 (10, 130);
 
-
 INSERT INTO booksInLibrary (libraryId, bookId, unitsInStock, isNew) VALUES 
 (1, 1, 50, FALSE),
 (2, 2, 75, TRUE),
@@ -210,6 +209,30 @@ INSERT INTO booksInLibrary (libraryId, bookId, unitsInStock, isNew) VALUES
 (3, 9, 85, FALSE),
 (1, 10, 70, TRUE);
 
+INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES 
+(1, true),
+(2, true),
+(3, true),
+(4, true),
+(1, true),
+(6, true),
+(7, true),
+(8, true),
+(9, true),
+(10, true);
+
+INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
+(1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
+(4, 1, '2024-05-10', '2024-06-15', 'Returned', TRUE, TRUE),
+(7, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, TRUE),
+(4, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
+(5, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
+(6, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(8, 8, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(9, 9, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);
+
 INSERT INTO comments (title, body, userId, bookId) VALUES 
 ('סופרת ותיקה', 'ספר יפה ומרגש ככ נוסטלגי', 1, 1),
 ('Comment 2', 'Body of Comment 2', 2, 2),
@@ -221,30 +244,6 @@ INSERT INTO comments (title, body, userId, bookId) VALUES
 ('Comment 8', 'Body of Comment 8', 8, 8),
 ('Comment 9', 'Body of Comment 9', 9, 9),
 ('Comment 10', 'Body of Comment 10', 10, 10);
-
-INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES 
-(1, true),
-(2, true),
-(3, true),
-(4, false),
-(1, true),
-(6, true),
-(10, true),
-(8, true),
-(9, true),
-(10, true);
-
-INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
-(1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(2, 1, '2024-05-10', '2024-06-15', 'Returned', TRUE, TRUE),
-(3, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, TRUE),
-(4, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(5, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(6, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(8, 8, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(9, 9, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);
 
 INSERT INTO messages (userId, title, body, status, createdDate, readDate) VALUES 
 (1, 'Title of Message 1', 'Body of Message 1', 'נקראה', '2024-02-20', '2024-05-20'),

@@ -136,7 +136,7 @@ function NewBorrow() {
         setRecommendedBooks(recommendedBooks.filter(recommendedBook => !cart.some(cartItem => cartItem.id === recommendedBook.id)));
         setBooks(books.filter(book => !cart.some(cartItem => cartItem.id === book.id)));
         setCart([]);
-        alert('Books have been successfully added to the cart');
+        alert('השאלת הספרים התבצעה בהצלחה');
     };
     
     return (
