@@ -1,3 +1,40 @@
+.date-filter {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.date-filter label {
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.date-picker-container {
+    display: flex;
+    align-items: center;
+}
+
+.date-picker {
+    width: 45%;
+    margin-right: 10px;
+}
+
+.date-picker:first-child {
+    margin-right: 0;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.filter-container label {
+    margin-right: 10px;
+    font-size: 14px;
+}
+
 .books-table {
     width: 100%;
     border-collapse: collapse;
@@ -25,15 +62,4 @@
 
 .like-icon {
     margin-right: 5px;
-}
-
-.filter-container {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
-}
-
-.filter-container label {
-    margin-right: 10px;
-    font-size: 14px;
 }

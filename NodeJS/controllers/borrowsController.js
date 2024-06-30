@@ -10,7 +10,7 @@ async function getAll(userId) {
 
 async function getPrevBorrows(userId) {
   try {
-    return await model.Prevborrows(userId);
+    return await model.prevBorrows(userId);
   } catch (err) {
     throw err;
   }

@@ -26,11 +26,11 @@ async function getborrows(userId) {
 
 
 
-async function Prevborrows(userId) {
+async function prevBorrows(userId) {
   try {
     const [rows] = await pool.query(
       `
-        SELECT books.*, borrows.id as borrowId, borrows.*
+        SELECT borrows.id as borrowId, borrows.*, books.*
         FROM borrows
         JOIN copyBook ON borrows.copyBookId = copyBook.id
         JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
@@ -91,4 +91,4 @@ async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, 
 
 
 
-module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,Prevborrows};
+module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows};
