@@ -141,8 +141,8 @@ INSERT INTO roles (roleName) VALUES
 ('customer');
 
 INSERT INTO subscriptionTypes (typeName, ammountToBorrow) VALUES 
-('Monthly', 10), 
-('Yearly', 50);
+('Monthly', 1), 
+('Yearly', 1);
 
 INSERT INTO libraries (libraryName, address, phone) VALUES 
 ('Central Library', 'fdg', '026554567'), 

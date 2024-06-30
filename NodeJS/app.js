@@ -17,6 +17,7 @@ const recommends = require("./routes/recommedBooksRoute");
 const prevBorrows = require("./routes/prevBorrowsRoute");
 const likes = require("./routes/likesRoute")
 const messages = require("./routes/messagesRoute")
+const subscriptionTypes=require('./routes/subscriptionType')
 
 app.use("/books", books);
 app.use("/comments", comments);
@@ -28,6 +29,7 @@ app.use("/recommends", recommends);
 app.use("/prevBorrows", prevBorrows);
 app.use("/likes", likes);
 app.use("/messages", messages);
+app.use("/subscriptionTypes",subscriptionTypes);
 
 
 const PORT = 3000;
