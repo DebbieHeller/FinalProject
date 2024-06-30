@@ -13,7 +13,7 @@ function Books() {
     const [searchResults, setSearchResults] = useState([]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/books?libraryId=${libraryId}`)
+        fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}`)
             .then((res) => res.json())
             .then((books) => {
                 setBooks(books);

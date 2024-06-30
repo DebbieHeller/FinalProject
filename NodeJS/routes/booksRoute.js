@@ -1,18 +1,10 @@
 const express = require('express');
 const booksRouter = express.Router();
 booksRouter.use(express.json());
-const { getAll, getSingle, create, update, deleteB } = require('../controllers/booksController');
+const { getSingle, create, update, deleteB } = require('../controllers/booksController');
+const roleAuthorization = require('../middlewares/roleAuthorization');
 
-booksRouter.get('/', async (req, res) => {
-    try {
-        const books = await getAll(req.query.libraryId);
-        res.status(200).send(books);
-    } catch (error) {
-        res.status(500).send({ error: 'Failed to fetch books' });
-    }
-});
-
-booksRouter.get('/:bookId', async (req, res) => {
+booksRouter.get('/:bookId',roleAuthorization(["administrator","employee"]), async (req, res) => {
     try {
         const book = await getSingle(req.params.bookId);
         if (!book) {

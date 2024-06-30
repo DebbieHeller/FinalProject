@@ -50,7 +50,7 @@ function SignUp() {
       return;
     }
 
-    fetch("http://localhost:3000/users", {
+    fetch("http://localhost:3000/signUp", {
       method: "POST",
       body: JSON.stringify(formData),
       headers: {
