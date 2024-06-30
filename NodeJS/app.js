@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/images', express.static(path.join(__dirname, 'images')));
 
 const jwtAuthentication=require('./middlewares/jwtAuthentication')
-const cookiesEncryption=require('./middlewares/cookiesEncryption')
+const cookiesEncryption = require('./middlewares/cookiesEncryption');
 
 const users = require("./routes/usersRoute");
 const login = require("./routes/loginRoute");
@@ -26,6 +26,7 @@ const likes = require("./routes/likesRoute")
 
 app.use("/homeBooks",homeBooks);
 app.use("/likes", likes);
+
 
 app.use(cookiesEncryption)
 app.use("/login", login);

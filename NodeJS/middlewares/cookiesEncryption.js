@@ -1,32 +1,30 @@
+// middlewares/cookiesEncryption.js
 const jwt = require('jsonwebtoken');
+const cookie = require('cookie-parser');
 require('dotenv').config();
-const cookie = require('cookie');
 
-const cookiesEncryption = (res, userId,roleId)=> {
+const cookiesEncryption = (req, res, next) => {
+    const { username } = req.body; // Assuming user data is attached to request
+
+    if (!username) {
+        return res.status(400).send({ error: 'Username is required' });
+    }
+
     const tokenPayload = {
-        userId: userId,
-        roleId: roleId,
+        username: username,
     };
 
-    // יצירת הטוקן
     const token = jwt.sign(tokenPayload, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: '1h' // זמן תוקף של הטוקן
+        expiresIn: '1h'
     });
 
-
-    
-    // השמירה של הטוקן ב- cookie
     res.cookie('accessToken', token, {
-        httpOnly: true, // ניתן לגישה רק דרך השרת
-        secure: process.env.NODE_ENV === 'production', // ניתן לגישה רק על חיבורים מאובטחים בייצור
-        sameSite: 'strict' // ניתור עוגייה רק עם בקשות מאותו המקור
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
     });
-
-    console.log('Access token set in cookie');
+    console.log('Access token and test cookie set');
+    next();
 };
 
 module.exports = cookiesEncryption;
-
-
-
-
