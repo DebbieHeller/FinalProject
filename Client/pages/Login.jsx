@@ -7,7 +7,7 @@ function Login() {
   const [formData, setFormData] = useState({ username: '', password: '' });
   const libraryId = localStorage.getItem("libraryId");
   const navigate = useNavigate();
-  const { setUser } = useContext(userContext);
+  const { user, setUser } = useContext(userContext);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -40,7 +40,12 @@ function Login() {
           navigate('/sign-up');
         } else {
           setUser(data);
-          navigate('/home');
+          if(data.roleId == 4)
+            navigate('/home');
+          else if(data.roleId == 3)
+            navigate('/inspector-home');
+          else
+            navigate('/home');
         }
       })
       .catch(() =>

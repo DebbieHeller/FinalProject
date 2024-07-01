@@ -22,9 +22,6 @@ function NewBorrow() {
     const [ammountToBorrow, setAmmoutToBorrow] = useState(0);
     const [remainingBooksToBorrow, setRemainingBooksToBorrow] = useState(0);
 
-    
-
-
 
     useEffect(() => {
         fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`, {

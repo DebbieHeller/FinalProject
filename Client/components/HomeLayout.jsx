@@ -1,11 +1,11 @@
 import React from 'react'
-import HomeHeader from './HomeHeader'
+import Home from '../pages/Home'
 import { Outlet } from "react-router-dom"
 
 function HomeLayout() {
   return (
     <>
-    <HomeHeader />
+    <Home />
     <Outlet />
 </>
   )
