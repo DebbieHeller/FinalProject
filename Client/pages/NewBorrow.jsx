@@ -27,13 +27,13 @@ function NewBorrow() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`, {
+        fetch(`http://localhost:3000/borrows?userId=${user.id}`, {
             method: 'GET',
             credentials: 'include'
         })
             .then((res) => res.json())
             .then((data) => {
-                setUserBooks(data);
+                setUserBooks(data.length);
             })
             .catch((error) => console.error("Error fetching books:", error));
     }, [user.id]);
@@ -50,7 +50,9 @@ function NewBorrow() {
                 const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
                 if (userSubscription) {
                     setAmmoutToBorrow(userSubscription.ammountToBorrow);
-                    setRemainingBooksToBorrow(userSubscription.ammountToBorrow - userBooks.length);
+                    console.log(userSubscription.ammountToBorrow)
+                    setRemainingBooksToBorrow(userSubscription.ammountToBorrow - userBooks);
+                    console.log(remainingBooksToBorrow)
                 }
             })
             .catch((error) => console.error('Error fetching subscription types:', error));
@@ -97,7 +99,7 @@ function NewBorrow() {
                 } else {
                     setBooks(availableBooks);
                 }
-                setSearchResults(availableBooks); // Corrected to setSearchResults(availableBooks)
+                setSearchResults(availableBooks);
             })
             .catch((error) => console.error('Error fetching available books:', error));
     }, [libraryId, recommendedBooks]);
