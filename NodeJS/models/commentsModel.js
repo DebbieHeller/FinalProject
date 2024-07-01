@@ -2,7 +2,6 @@ const pool = require('../LibraryDB')
 
 async function getComments(bookId) {
     try {
-        console.log("fetch comments")
         const [rows] = await pool.query('SELECT * FROM Comments where bookId=?', [bookId]);
         return rows;
     } catch (err) {
