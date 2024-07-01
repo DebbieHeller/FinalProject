@@ -27,7 +27,10 @@ function NewBorrow() {
 
 
     useEffect(() => {
-        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`)
+        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`, {
+            method: 'GET',
+            credentials: 'include'
+        })
             .then((res) => res.json())
             .then((data) => {
                 setUserBooks(data);
@@ -37,7 +40,10 @@ function NewBorrow() {
     
 
     useEffect(() => {
-        fetch(`http://localhost:3000/subscriptionTypes`)
+        fetch(`http://localhost:3000/subscriptionTypes`, {
+            method: 'GET',
+            credentials: 'include'
+        })
             .then((res) => res.json())
             .then((subscriptionTypes) => {
                 setSubscriptionTypes(subscriptionTypes);
@@ -52,7 +58,10 @@ function NewBorrow() {
     
 
     useEffect(() => {
-        fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`)
+        fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`, {
+            method: 'GET',
+            credentials: 'include'
+        })
             .then((res) => res.json())
             .then((books) => {
                 setRecommendedBooks(books);
@@ -74,7 +83,10 @@ function NewBorrow() {
     }, [libraryId]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/availableBooks?libraryId=${libraryId}`)
+        fetch(`http://localhost:3000/availableBooks?libraryId=${libraryId}`, {
+            method: 'GET',
+            credentials: 'include' 
+        })
             .then((res) => res.json())
             .then((availableBooks) => {
                 if (recommendedBooks.length > 0) {
@@ -176,6 +188,7 @@ function NewBorrow() {
             };
             fetch('http://localhost:3000/borrows', {
                 method: 'POST',
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
                 },

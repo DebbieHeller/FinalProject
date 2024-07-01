@@ -8,7 +8,10 @@ function Messages() {
   const [selectedMessage, setSelectedMessage] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/messages?userId=${user.id}`)
+    fetch(`http://localhost:3000/messages?userId=${user.id}`, {
+      method: 'GET',
+      credentials: 'include'
+  })
       .then(response => response.json())
       .then(data => setMessages(data))
       .catch(error => console.error("Error fetching messages:", error));
@@ -25,6 +28,7 @@ function Messages() {
 
       fetch(`http://localhost:3000/messages/${message.id}`, {
         method: 'PUT',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json'
         },

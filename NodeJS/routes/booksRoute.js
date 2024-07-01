@@ -4,7 +4,7 @@ booksRouter.use(express.json());
 const { getSingle, create, update, deleteB } = require('../controllers/booksController');
 const roleAuthorization = require('../middlewares/roleAuthorization');
 
-booksRouter.get('/:bookId',roleAuthorization(["administrator","employee"]), async (req, res) => {
+booksRouter.get('/:bookId',roleAuthorization(1), async (req, res) => {
     try {
         const book = await getSingle(req.params.bookId);
         if (!book) {

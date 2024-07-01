@@ -20,10 +20,12 @@ function Login() {
     fetch('http://localhost:3000/login', {
       method: 'POST',
       body: JSON.stringify(formData),
+      credentials: "include",
       headers: {
         'Content-type': 'application/json; charset=UTF-8',
       },
     })
+
       .then(res => {
         if (res.status !== 201) {
           alert('The username or password is not correct');
@@ -33,7 +35,7 @@ function Login() {
         }
       })
       .then(data => {
-        if(data.libraryId != libraryId){
+        if (data.libraryId != libraryId) {
           alert("אינך רשום בספריה שלנו")
           navigate('/sign-up');
         } else {
@@ -41,7 +43,7 @@ function Login() {
           navigate('/home');
         }
       })
-      .catch(() => 
+      .catch(() =>
         console.log('error')
       );
   };

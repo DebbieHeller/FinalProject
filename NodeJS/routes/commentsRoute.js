@@ -1,6 +1,7 @@
 const express = require('express');
 const commentsRouter = express.Router();
 commentsRouter.use(express.json());
+const jwtAuthentication = require('../middlewares/jwtAuthentication')
 const { getAll, getSingle, create, update, deleteC } = require('../controllers/commentsController');
 
 commentsRouter.get('/', async (req, res) => {
@@ -12,7 +13,7 @@ commentsRouter.get('/', async (req, res) => {
     }
 });
 
-commentsRouter.post('/', async (req, res) => {
+commentsRouter.post('/', jwtAuthentication, async (req, res) => {
     try {
         const response = await create(
             req.body.title,
@@ -26,8 +27,8 @@ commentsRouter.post('/', async (req, res) => {
     }
 });
 
-commentsRouter.put('/:commentId', async (req, res) => {
-    try {
+commentsRouter.put('/:commentId', jwtAuthentication, async (req, res) => {
+    try { 
         await update(
             req.params.commentId,
             req.body.title,
@@ -41,7 +42,7 @@ commentsRouter.put('/:commentId', async (req, res) => {
     }
 });
 
-commentsRouter.delete('/:commentId', async (req, res) => {
+commentsRouter.delete('/:commentId', jwtAuthentication, async (req, res) => {
     try {
         await deleteC(req.params.commentId);
         res.sendStatus(204);

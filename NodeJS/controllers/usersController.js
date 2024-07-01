@@ -54,4 +54,4 @@ async function create(username, phone, email, address, subscriptionTypeId, roleI
 
 
 
-module.exports = { getSingle, getByUsername ,create, authenticateLogin }
+module.exports = { getSingle, getByUsername ,create, authenticateLogin}

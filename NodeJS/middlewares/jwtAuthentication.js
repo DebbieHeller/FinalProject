@@ -1,32 +1,20 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
-function jwtAuthentication (req, res, next) {
-    const token = req.cookies.token;
-    console.log('JWT in session:', token);
-    if (token) {
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-            if (err) {
-                console.error('JWT verification error:', err);
-                return res.sendStatus(403);
-            }
-            req.user = user;
-            next();
-        });
-    } else {
-        res.sendStatus(401);
-    }
+const jwtAuthentication = (req, res, next) => {
+    const cookieToken = req.cookies.accessToken;
+    if (!cookieToken) return res.status(401).json({ message: "Access token not found" });
+
+    jwt.verify(
+        cookieToken,
+        process.env.ACCESS_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err) return res.status(403).json({ message: "Invalid token" });
+            req.userId = decoded.userId; 
+            req.roleId = decoded.roleId; 
+            return next();
+        }
+    );
 };
 
 module.exports = jwtAuthentication;
-
-
-
-
-
-
-
-
-
-
-

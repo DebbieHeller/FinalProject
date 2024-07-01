@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { FaSearch, FaThumbsUp } from 'react-icons/fa';
 import { userContext } from "../src/App";
 import '../css/userBorrows.css';
+// const jwt = require('jsonwebtoken');
+// require('dotenv').config();
 
 function UserBorrows() {
     const libraryId = parseInt(localStorage.getItem('libraryId'));
@@ -17,15 +19,24 @@ function UserBorrows() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`)
-            .then((res) => res.json())
+        fetch(`http://localhost:3000/prevBorrows?userId=${user.id}`, {
+            method: 'GET',
+            credentials: 'include' 
+        })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return res.json();
+            })
             .then((data) => {
                 setBorrowedBooks(data);
                 setSearchResults(data);
             })
             .catch((error) => console.error("Error fetching books:", error));
     }, [user.id]);
-
+    
+    
     useEffect(() => {
         fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
             .then((res) => res.json())

@@ -1,15 +1,10 @@
 const express = require("express");
 const cors = require("cors");
 const path = require('path')
+const cookieParser = require("cookie-parser");
 const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use('/images', express.static(path.join(__dirname, 'images')));
 
-const jwtAuthentication=require('./middlewares/jwtAuthentication')
-const cookiesEncryption = require('./middlewares/cookiesEncryption');
-
+const jwtAuthentication = require('./middlewares/jwtAuthentication')
 const users = require("./routes/usersRoute");
 const login = require("./routes/loginRoute");
 const books = require("./routes/booksRoute");
@@ -24,19 +19,20 @@ const homeBooks=require('./routes/homeBooksRoute')
 const signUp=require('./routes/signUpRoute')
 const likes = require("./routes/likesRoute")
 
+app.use(cookieParser());
+app.use(express.json());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use("/homeBooks",homeBooks);
 app.use("/likes", likes);
-
-
-app.use(cookiesEncryption)
 app.use("/login", login);
 app.use("/signUp", signUp);
-
-
+app.use("/comments", comments);
 
 app.use(jwtAuthentication)
 app.use("/books", books);
-app.use("/comments", comments);
 app.use("/users", users);
 app.use("/borrows", borrows);
 app.use("/availableBooks", availableBooks);

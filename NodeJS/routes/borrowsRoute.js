@@ -2,8 +2,8 @@ const express = require('express');
 const borrowsRouter = express.Router();
 borrowsRouter.use(express.json());
 const { getAll, getSingle, update, create } = require('../controllers/borrowsController');
-//  const authorizeAdmin = require('../middlewares/authorizeAdmin');
-//  const verifyPermissions = require('../middleware/verifyPermissions');
+//const authorizeAdmin = require('../middlewares/authorizeAdmin');
+const roleAuthorization = require('../middlewares/roleAuthorization');
 
 borrowsRouter.get('/', async (req, res) => {
     try {
@@ -31,7 +31,7 @@ borrowsRouter.post('/', async (req, res) => {
     }
 });
 
-borrowsRouter.put('/:borrowId', async (req, res) => {
+borrowsRouter.put('/:borrowId', roleAuthorization([2]), async (req, res) => {
     try {
         await update(
             req.params.borrowId,

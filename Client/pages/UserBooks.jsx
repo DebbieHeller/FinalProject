@@ -17,7 +17,10 @@ function UserBooks() {
   const [daysLeftMap, setDaysLeftMap] = useState(new Map());
 
   useEffect(() => {
-    fetch(`http://localhost:3000/borrows?userId=${user.id}`)
+    fetch(`http://localhost:3000/borrows?userId=${user.id}`, {
+      method: 'GET',
+      credentials: 'include'
+  })
       .then((res) => res.json())
       .then((borrowedBooks) => {
         setBooks(borrowedBooks);
@@ -115,6 +118,7 @@ function UserBooks() {
   
       fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
         method: "PUT",
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json",
         },
@@ -132,8 +136,12 @@ function UserBooks() {
               updatedSelectedBooks.splice(selectedIndex, 1);
             }
             setSelectedBooksToReturn([...updatedSelectedBooks]);
-          } else {
-            console.error("Error returning book:", response.statusText);
+          } 
+          // else {
+          //   console.error("Error returning book:", response.statusText);
+          // }
+          if(response.status == 403){
+            alert("hghgfgfc")
           }
         })
         .catch((error) => console.error("Error returning book:", error));

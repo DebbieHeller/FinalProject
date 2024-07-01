@@ -52,6 +52,7 @@ function SignUp() {
 
     fetch("http://localhost:3000/signUp", {
       method: "POST",
+      credentials: 'include',
       body: JSON.stringify(formData),
       headers: {
         "Content-type": "application/json; charset=UTF-8",

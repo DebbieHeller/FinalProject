@@ -17,7 +17,8 @@ function UserBook() {
   const handleShowComments = (bookId) => {
     setShowComments(!showComments);
     if (comments.length==0) {
-      fetch(`http://localhost:3000/comments?bookId=${bookId}`)
+      fetch(`http://localhost:3000/comments?bookId=${bookId}`
+      )
         .then((res) => res.json())
         .then((bookComments) => {
           setComments(bookComments);
@@ -41,6 +42,7 @@ function UserBook() {
     };
     fetch(`http://localhost:3000/comments`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -72,6 +74,7 @@ function UserBook() {
 
     fetch(`http://localhost:3000/comments/${commentId}`, {
       method: 'PUT',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -96,7 +99,8 @@ function UserBook() {
     e.preventDefault();
 
     fetch(`http://localhost:3000/comments/${commentId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      credentials: 'include'
     })
       .then(response => {
         if (response.ok) {
