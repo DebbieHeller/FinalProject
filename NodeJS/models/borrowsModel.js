@@ -80,9 +80,24 @@ async function updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate
       SET copyBookId = ?, userId = ?, borrowDate = ?, returnDate = ?, status = ?, isReturned = ?, isIntact = ? WHERE id = ? `,
       [copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact, borrowId]
     )
-    // await pool.query(
-    //   `UPDATE copyBook SET isAvailable = ? WHERE id = ? `, [1, copyBookId]
-    // );
+    return rows;
+  } catch (err) {
+    console.error('Error updating borrow record:', err);
+    throw err;
+  }
+}
+
+async function updateBorrowByInspector(borrowId, copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) {
+  try {
+    const [rows] = await pool.query(
+      `UPDATE borrows
+      SET copyBookId = ?, userId = ?, borrowDate = ?, returnDate = ?, status = ?, isReturned = ?, isIntact = ? WHERE id = ? `,
+      [copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact, borrowId]
+    )
+    await pool.query(
+      `UPDATE copyBook SET isAvailable = ? WHERE id = ? `, [1, copyBookId]
+    );
+    
     return rows;
   } catch (err) {
     console.error('Error updating borrow record:', err);
@@ -108,4 +123,4 @@ async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, 
 
 
 
-module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows};
+module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows,updateBorrowByInspector};

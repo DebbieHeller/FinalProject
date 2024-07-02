@@ -31,7 +31,13 @@ async function getSingle(id) {
       throw err
   }
 }
-
+async function updateBorrowByInspector(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact) {
+  try {
+      return await model.updateBorrowByInspector(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact)
+  } catch (err) {
+      throw err
+  }
+}
 async function update(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact) {
   try {
       return await model.updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact)
@@ -48,4 +54,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector};
