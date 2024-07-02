@@ -16,6 +16,13 @@ async function getPrevBorrows(userId) {
   }
 }
 
+async function getInspectorBorrows() {
+  try {
+    return await model.getInspectorBorrows();
+  } catch (err) {
+    throw err;
+  }
+}
 
 async function getSingle(id) {
   try {
@@ -41,4 +48,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update, getSingle, create, getPrevBorrows};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows};

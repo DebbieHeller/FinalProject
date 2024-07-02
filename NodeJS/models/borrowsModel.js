@@ -22,7 +22,25 @@ async function getborrows(userId) {
     throw error;
   }
 }
-
+async function getInspectorBorrows() {
+  
+  try {
+    const [rows] = await pool.query(
+      `
+        SELECT borrows.id as borrowId, borrows.*, books.*
+        FROM borrows
+        JOIN copyBook ON borrows.copyBookId = copyBook.id
+        JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
+        JOIN books ON booksInLibrary.bookId = books.id
+        AND borrows.isIntact IS NULL;
+      `,
+    );
+    return rows;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 
 async function prevBorrows(userId) {
@@ -90,4 +108,4 @@ async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, 
 
 
 
-module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows};
+module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows};

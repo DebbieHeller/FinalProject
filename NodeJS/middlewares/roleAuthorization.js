@@ -1,5 +1,4 @@
 const roleAuthorization = (requiredRoles) => {
-    console.log(requiredRoles)
     return (req, res, next) => {
         if (!req.userId) {
             return res.status(401)

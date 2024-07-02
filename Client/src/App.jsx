@@ -46,8 +46,8 @@ function App() {
             
             <Route path="/inspector-home" element={<InspectorHomeLayout />}>
               <Route index element={<ReturnedBooks />} />
-              <Route path="retuened-books" element={<ReturnedBooks />} />
-              <Route path="borrows" element={<Borrows />} />
+              <Route path="returned-books" element={<ReturnedBooks />} />
+              <Route path="view-borrows" element={<Borrows />} />
               <Route path="logout" element={<Logout />} />
             </Route>
 
