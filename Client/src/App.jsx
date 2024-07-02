@@ -12,9 +12,12 @@ import UserBooks from "../pages/UserBooks";
 import NewBorrow from "../pages/NewBorrow";
 import Logout from "../components/Logout";
 import UserBook from "../pages/UserBook";
-import InspectorHomeLayout from "../components/InspectorHomeLayout"
 import ReturnedBooks from "../pages/ReturnedBooks"
 import Borrows from "../pages/Borrows"
+import Borrowers from "../pages/Borrowers";
+import Inspectors from "../pages/Inspectors";
+import AllBooks from "../pages/AllBooks";
+import Libraries from "../pages/Libraries";
 
 export const userContext = createContext();
 
@@ -44,10 +47,25 @@ function App() {
               <Route path="logout" element={<Logout />} />
             </Route>
             
-            <Route path="/inspector-home" element={<InspectorHomeLayout />}>
+            <Route path="/inspector-home" element={<HomeLayout />}>
               <Route index element={<ReturnedBooks />} />
-              <Route path="retuened-books" element={<ReturnedBooks />} />
+              <Route path="returned-books" element={<ReturnedBooks />} />
               <Route path="borrows" element={<Borrows />} />
+              <Route path="logout" element={<Logout />} />
+            </Route>
+
+            <Route path="/library-admin-home" element={<HomeLayout />}>
+              <Route index element={<Books />} />
+              <Route path="books" element={<Books />} />
+              <Route path="inspectors" element={<Inspectors />} />
+              <Route path="borrowers" element={<Borrowers />} />
+              <Route path="logout" element={<Logout />} />
+            </Route>
+
+            <Route path="/admin-home" element={<HomeLayout />}>
+              <Route index element={<Libraries />} />
+              <Route path="books" element={<AllBooks />} />
+              <Route path="libraries" element={<Libraries />} />
               <Route path="logout" element={<Logout />} />
             </Route>
 

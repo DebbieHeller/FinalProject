@@ -31,7 +31,7 @@ borrowsRouter.post('/', async (req, res) => {
     }
 });
 
-borrowsRouter.put('/:borrowId', roleAuthorization([1]), async (req, res) => {
+borrowsRouter.put('/:borrowId', roleAuthorization([4]), async (req, res) => {
     try {
         await update(
             req.params.borrowId,

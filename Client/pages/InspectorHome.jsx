@@ -1,10 +1,7 @@
-import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { userContext } from "../src/App";
 import "../css/home.css";
 
 function InspectorHome() {
-  const { user } = useContext(userContext);
 
   return (
     <div>
@@ -14,7 +11,7 @@ function InspectorHome() {
             <Link to="/inspector-home/logout">Logout</Link>
           </li>
           <li>
-            <Link to="/inspector-home/view-borrows" >צפייה בהשאלות</Link>
+            <Link to="/inspector-home/borrows" >צפייה בהשאלות</Link>
           </li>
           <li>
             <Link to="/inspector-home/returned-books">ספרים שהוחזרו</Link>

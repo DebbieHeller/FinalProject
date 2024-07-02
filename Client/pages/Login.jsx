@@ -44,8 +44,10 @@ function Login() {
             navigate('/home');
           else if(data.roleId == 3)
             navigate('/inspector-home');
-          else
-            navigate('/home');
+          else if(data.roleId == 2)
+            navigate('/library-admin-home');
+          else if(data.roleId == 1)
+            navigate('/admin-home');
         }
       })
       .catch(() =>

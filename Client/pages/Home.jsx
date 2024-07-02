@@ -1,10 +1,7 @@
-import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import { userContext } from "../src/App";
 import "../css/home.css";
 
 function Home() {
-  const { user } = useContext(userContext);
   return (
     <nav className="home-header-nav">
       <ul>

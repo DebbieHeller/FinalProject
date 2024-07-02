@@ -7,6 +7,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
 }
 .book-likes.liked {
     color: red; /* או כל צבע/סגנון אחר שיסמן שהספר נלחץ */
@@ -82,7 +83,7 @@
 
 .book-image {
     width: 80%;
-    height: 270px;
+    height: auto;
     object-fit: cover;
 }
 

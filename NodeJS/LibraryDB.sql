@@ -167,11 +167,11 @@ INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, 
 ('Bob', '987-654-3210', 'bob@example.com', '456 Elm St', 2, 2, 2, 2),
 ('Charlie', '555-555-5555', 'charlie@example.com', '789 Oak St', 1, 3, 1, 3),
 ('David', '222-222-2222', 'david@example.com', '321 Pine St', 2, 2, 2, 4),
-('Emma', '333-333-3333', 'emma@example.com', '456 Maple St', 1, 1, 3, 5),
+('Emma', '333-333-3333', 'emma@example.com', '456 Maple St', 1, 4, 3, 5),
 ('Frank', '444-444-4444', 'frank@example.com', '987 Cedar St', 1, 3, 1, 6),
-('Grace', '666-666-6666', 'grace@example.com', '654 Birch St', 2, 2, 2, 7),
+('Grace', '666-666-6666', 'grace@example.com', '654 Birch St', 2, 2, 1, 7),
 ('Henry', '777-777-7777', 'henry@example.com', '753 Walnut St', 1, 3, 3, 8),
-('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St', 1, 3, 1, 9),
+('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St', 1, 1, 1, 9),
 ('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 2, 2, 10);
 
 INSERT INTO books (nameBook, author, numOfPages, publishingYear, summary, image, category) VALUES 
@@ -226,7 +226,7 @@ INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isRetur
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
 (4, 1, '2024-05-10', '2024-06-15', 'Returned', TRUE, TRUE),
 (7, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, TRUE),
-(4, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
+(3, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
 (5, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
 (6, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),

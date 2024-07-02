@@ -19,7 +19,6 @@ function NewBorrow() {
     const [subscriptionTypes, setSubscriptionTypes] = useState([]);
     const [errorMessage, setErrorMessage] = useState('');
     const [userBooks, setUserBooks] = useState([]);
-    const [ammountToBorrow, setAmmoutToBorrow] = useState(0);
     const [remainingBooksToBorrow, setRemainingBooksToBorrow] = useState(0);
 
 
@@ -46,8 +45,6 @@ function NewBorrow() {
                 setSubscriptionTypes(subscriptionTypes);
                 const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
                 if (userSubscription) {
-                    setAmmoutToBorrow(userSubscription.ammountToBorrow);
-                    console.log(userSubscription.ammountToBorrow)
                     setRemainingBooksToBorrow(userSubscription.ammountToBorrow - userBooks);
                     console.log(remainingBooksToBorrow)
                 }
@@ -216,7 +213,7 @@ function NewBorrow() {
                         <p>Your cart is empty</p>
                     ) : (
                         cart.map(book => (
-                            <div key={book.id} className="cart-item">
+                            <div key={book.copyBookId} className="cart-item">
                                 <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="cart-image-small" />
                                 <div className="cart-item-details">
                                     <p>{book.nameBook}</p>
@@ -253,7 +250,7 @@ function NewBorrow() {
 
             <div className="books-grid">
                 {recommendedBooks.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                    <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                             <FaStar className="recommended-icon" />
@@ -265,7 +262,7 @@ function NewBorrow() {
                 ))}
 
                 {searchResults.map(book => (
-                    <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                    <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
                             <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
