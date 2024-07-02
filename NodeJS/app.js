@@ -18,6 +18,7 @@ const subscriptionTypes=require('./routes/subscriptionType')
 const homeBooks=require('./routes/homeBooksRoute')
 const signUp=require('./routes/signUpRoute')
 const likes = require("./routes/likesRoute")
+const inspectorBorrows=require('./routes/inspectorBorrowsRoute')
 
 app.use(cookieParser());
 app.use(express.json());
@@ -40,6 +41,7 @@ app.use("/recommends", recommends);
 app.use("/prevBorrows", prevBorrows);
 app.use("/messages", messages);
 app.use("/subscriptionTypes",subscriptionTypes);
+app.use("/inspectorBorrows",inspectorBorrows);
 
 
 const PORT = 3000;

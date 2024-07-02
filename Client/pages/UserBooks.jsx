@@ -141,7 +141,8 @@ function UserBooks() {
           //   console.error("Error returning book:", response.statusText);
           // }
           if(response.status == 403){
-            alert("hghgfgfc")
+            alert("אין לך הרשאה מתאימה,הכנס מחדש")
+            navigate('/logout');
           }
         })
         .catch((error) => console.error("Error returning book:", error));

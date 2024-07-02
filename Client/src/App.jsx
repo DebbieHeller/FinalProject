@@ -50,7 +50,7 @@ function App() {
             <Route path="/inspector-home" element={<HomeLayout />}>
               <Route index element={<ReturnedBooks />} />
               <Route path="returned-books" element={<ReturnedBooks />} />
-              <Route path="borrows" element={<Borrows />} />
+              <Route path="borrows" element={<Borrows />} />              
               <Route path="logout" element={<Logout />} />
             </Route>
 
