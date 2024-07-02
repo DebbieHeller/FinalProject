@@ -47,7 +47,7 @@
   
   .submit-button {
     padding: 10px 15px;
-    background-color: #007bff;
+    background-color: rgb(125,165,188);
     color: white;
     border: none;
     border-radius: 4px;
@@ -57,7 +57,7 @@
     transition: background-color 0.3s;
   }
   
-  .submit-button:hover {
+  /* .submit-button:hover {
     background-color: #0056b3;
-  }
+  } */
   

@@ -5,7 +5,6 @@ function Borrows() {
   const [borrows, setBorrows] = useState([]);
   const [selectedBorrows, setSelectedBorrows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
- 
 
   useEffect(() => {
     fetch('http://localhost:3000/inspectorBorrows', {
@@ -38,13 +37,23 @@ function Borrows() {
     }
     setSelectedBorrows(updatedSelectedBorrows);
   };
+
   const handleSubmitSelectedBorrows = () => {
+    if (selectedBorrows.length === 0) {
+      return;
+    }
+
     setIsLoading(true);
-  
+
+    const updatedBorrows = [...borrows];
+    const updatedSelectedBorrows = [...selectedBorrows];
+
     selectedBorrows.forEach((borrowBook) => {
-      const returnDate = new Date(borrowBook.returnDate).toISOString().split("T")[0];
-      const borrowDate = new Date(borrowBook.borrowDate).toISOString().split("T")[0];
-  
+      const returnDate = new Date().toISOString().split("T")[0];
+      const borrowDate = new Date(borrowBook.borrowDate)
+        .toISOString()
+        .split("T")[0];
+
       const updatedBorrow = {
         id: borrowBook.borrowId,
         copyBookId: borrowBook.copyBookId,
@@ -56,7 +65,7 @@ function Borrows() {
         isReturned: true,
         isIntact: true
       };
-  
+
       fetch(`http://localhost:3000/inspectorBorrows/${borrowBook.borrowId}`, {
         method: "PUT",
         credentials: 'include',
@@ -65,22 +74,28 @@ function Borrows() {
         },
         body: JSON.stringify(updatedBorrow),
       })
-      .then((response) => {
-        if (response.ok) {
-          const updatedSelectedBorrows = selectedBorrows.filter(b => b.borrowId !== borrowBook.borrowId);
-          setSelectedBorrows(updatedSelectedBorrows);
-          const updatedBorrows = borrows.filter(b => b.borrowId !== borrowBook.borrowId);
-          setBorrows(updatedBorrows);
-        } else {
-          throw new Error('Failed to update borrow record');
-        }
-      })
-      .catch((error) => console.error("Error updating borrow:", error));
+        .then((response) => {
+          if (response.ok) {
+            const index = updatedBorrows.findIndex((borrow) => borrow.borrowId === borrowBook.borrowId);
+            if (index > -1) {
+              updatedBorrows.splice(index, 1);
+            }
+            setBorrows([...updatedBorrows]);
+            const selectedIndex = updatedSelectedBorrows.findIndex((borrow) => borrow.borrowId === borrowBook.borrowId);
+            if (selectedIndex > -1) {
+              updatedSelectedBorrows.splice(selectedIndex, 1);
+            }
+            setSelectedBorrows([...updatedSelectedBorrows]);
+          } else {
+            console.error("Error updating borrow:", response.statusText);
+          }
+        })
+        .catch((error) => console.error("Error updating borrow:", error));
     });
-  
+
     setIsLoading(false);
   };
-  
+
   return (
     <div className="borrows-container">
       <h1>השאלות קודמות</h1>

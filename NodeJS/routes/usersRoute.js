@@ -2,17 +2,17 @@ const express = require('express')
 const usersRouter = express.Router()
 usersRouter.use(express.json())
 const { getSingle, create } = require('../controllers/usersController')
-const { getByUsername } = require('../models/usersModel')
+const { getByroleId } = require('../models/usersModel')
 
 usersRouter.get('/', async (req, res) => {
     try {
-        const user = await getByUsername(req.query.username)
+        const user = await getByroleId(req.query.roleId)
         console.log(user)
         if (user) {
-            res.status(409).send(user);
+            res.status(201).send(user);
 
         } else {
-            res.status(201).send(user)
+            res.status(404).send(user)
 
         }
     } catch (error) {

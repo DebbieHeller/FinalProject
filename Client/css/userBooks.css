@@ -20,7 +20,7 @@
   font-size: 1rem;
   display: flex;
   align-items: center;
-  color: #007bff;
+  color:rgb(125,165,188);
 }
 
 .comment-icon,
@@ -43,7 +43,7 @@
 }
 
 .comment-form button {
-  background-color: #007bff;
+  background-color:rgb(125,165,188);
   color: #fff;
   border: none;
   padding: 10px 20px;

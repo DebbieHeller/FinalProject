@@ -66,7 +66,7 @@
     width: 100%;
     padding: 10px;
     margin-top: 10px;
-    background-color: #007bff;
+    background-color: rgb(125,165,188);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -75,7 +75,7 @@
     text-align: center;
 }
 
-.cart-submit:hover {
+/* .cart-submit:hover {
     background-color: #0056b3;
-}
+} */
 

@@ -16,6 +16,23 @@ async function getUser(id) {
     }
 }
 
+
+async function getByroleId(id) {
+    try {
+        const sql = `SELECT *
+        FROM users
+        where roleId = ?`
+
+        const [rows] = await pool.query(sql, [id])
+        console.log(rows)
+        return rows
+
+    } catch (err) {
+        console.error('Error geting user:', err)
+        throw err
+    }
+}
+
 async function getByUsername(username) {
     try {
         const sql = `SELECT *
@@ -56,4 +73,4 @@ async function validateUsername(username) {
     }
 }
 
-module.exports = { getUser, getByUsername, createUser, validateUsername }
+module.exports = { getUser, getByUsername, createUser, validateUsername,getByroleId }
