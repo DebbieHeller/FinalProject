@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { useLocation } from 'react-router-dom';
 import { FaComment, FaPlus, FaEdit, FaTrash } from 'react-icons/fa'; // Import icons
 import { userContext } from "../src/App";
+import '../css/userBook.css';
 
 function UserBook() {
   const { user } = useContext(userContext);
@@ -16,9 +17,8 @@ function UserBook() {
 
   const handleShowComments = (bookId) => {
     setShowComments(!showComments);
-    if (comments.length==0) {
-      fetch(`http://localhost:3000/comments?bookId=${bookId}`
-      )
+    if (comments.length == 0) {
+      fetch(`http://localhost:3000/comments?bookId=${bookId}`)
         .then((res) => res.json())
         .then((bookComments) => {
           setComments(bookComments);
@@ -123,6 +123,7 @@ function UserBook() {
 
   return (
     <div className="book-details">
+      <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} />
       <h2>{book.nameBook}</h2>
       <p><strong>Author:</strong> {book.author}</p>
       <p><strong>Pages:</strong> {book.numOfPages}</p>
@@ -136,50 +137,44 @@ function UserBook() {
         <button className='toggle-comments' onClick={() => handleShowComments(book.id)}>
           <FaComment className="comment-icon" /> {showComments ? 'Hide Comments' : 'Show Comments'}
         </button>
-        <button className='toggle-add-comment' onClick={() => { setShowCommentForm(!showCommentForm), setCommentId(null) }}>
-          <FaPlus className="add-comment-icon" /> {showCommentForm ? 'Close Form' : 'Add Comment'}
+        <button className='toggle-add-comment' onClick={() => setShowCommentForm(!showCommentForm)}>
+          <FaPlus className="add-comment-icon" /> {showCommentForm ? 'Cancel' : 'Add Comment'}
         </button>
       </div>
 
       {showCommentForm && (
-        <form className="comment-form">
+        <form className='comment-form' onSubmit={(e) => commentId ? handleUpdateComment(e, commentId) : handleAddComment(e)}>
           <input
             type="text"
-            placeholder="Comment Title"
+            placeholder="Title"
             value={commentTitle}
             onChange={(e) => setCommentTitle(e.target.value)}
-            required
           />
           <textarea
-            placeholder="Comment Body"
+            placeholder="Comment"
             value={commentBody}
             onChange={(e) => setCommentBody(e.target.value)}
-            required
-          />
-          <button type="submit" onClick={(e) => (commentId ? handleUpdateComment(e, commentId) : handleAddComment(e))}>submit</button>
+          ></textarea>
+          <button type="submit">{commentId ? 'Update Comment' : 'Submit Comment'}</button>
         </form>
       )}
 
-      {showComments && comments && (
-        <div className="comments-section">
-          {comments.map(comment => (
-            <div key={comment.id} className="comment-card">
+      {showComments && (
+        <div className='comments-section'>
+          {comments.map((comment) => (
+            <div key={comment.id} className='comment-card'>
               <h4>{comment.title}</h4>
               <p>{comment.body}</p>
-              {/* Check if the comment is authored by the current user */}
-              {comment.userId === user.id && (
-                <div className="comment-actions">
-                  <button className="update-comment" onClick={() => startEditing(comment)}>
-                    <FaEdit className="edit-icon" /> Update
-                  </button>
-                  <button className="delete-comment" onClick={(e) => handleDeleteComment(e, comment.id)}>
-                    <FaTrash className="delete-icon" /> Delete
-                  </button>
-                </div>
-              )}
+              <div className='comment-actions'>
+                <button className="update-comment" onClick={() => startEditing(comment)}>
+                  <FaEdit className="edit-icon" /> Edit
+                </button>
+                <button className="delete-comment" onClick={(e) => handleDeleteComment(e, comment.id)}>
+                  <FaTrash className="delete-icon" /> Delete
+                </button>
+              </div>
             </div>
           ))}
-
         </div>
       )}
     </div>

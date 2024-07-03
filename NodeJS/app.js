@@ -14,11 +14,13 @@ const availableBooks = require("./routes/availableBooksRoute");
 const recommends = require("./routes/recommedBooksRoute");
 const prevBorrows = require("./routes/prevBorrowsRoute");
 const messages = require("./routes/messagesRoute")
-const subscriptionTypes=require('./routes/subscriptionType')
-const homeBooks=require('./routes/homeBooksRoute')
-const signUp=require('./routes/signUpRoute')
+const subscriptionTypes = require('./routes/subscriptionType')
+const homeBooks = require('./routes/homeBooksRoute')
+const signUp = require('./routes/signUpRoute')
 const likes = require("./routes/likesRoute")
-const inspectorBorrows=require('./routes/inspectorBorrowsRoute')
+const inspectorBorrows = require('./routes/inspectorBorrowsRoute')
+const libraries = require('./routes/librariesRoute')
+
 
 app.use(cookieParser());
 app.use(express.json());
@@ -40,8 +42,10 @@ app.use("/availableBooks", availableBooks);
 app.use("/recommends", recommends);
 app.use("/prevBorrows", prevBorrows);
 app.use("/messages", messages);
-app.use("/subscriptionTypes",subscriptionTypes);
-app.use("/inspectorBorrows",inspectorBorrows);
+app.use("/subscriptionTypes" ,subscriptionTypes);
+app.use("/inspectorBorrows", inspectorBorrows);
+app.use("/libraries", libraries);
+
 
 
 const PORT = 3000;
