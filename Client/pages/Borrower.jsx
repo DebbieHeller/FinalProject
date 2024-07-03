@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from 'react-router-dom';
-import './Borrower.css'; // Import your CSS file
+import '../css/borrower.css'; // Import your CSS file
 
 function Borrower() {
     const location = useLocation();
