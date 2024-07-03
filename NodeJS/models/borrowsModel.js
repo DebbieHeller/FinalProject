@@ -70,28 +70,28 @@ async function getInspectorBorrows(libraryId) {
 }
 
 async function getUnFixBorrows(libraryId) {
-  
   try {
-    const [rows] = await pool.query(
-      `
-        SELECT borrows.id as borrowId, borrows.*, books.*
-        FROM borrows
-        JOIN copyBook ON borrows.copyBookId = copyBook.id
-        JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
-        JOIN books ON booksInLibrary.bookId = books.id
-        WHERE booksInLibrary.libraryId=?
-        AND borrows.isIntact IS FALSE
-        AND borrows.status = 'Returned';
-      `,[libraryId]
-    );
-    console.log(libraryId)
-    console.log(rows)
-    return rows;
+      const [rows] = await pool.query(
+          `
+          SELECT borrows.id as borrowId, borrows.*, books.*, users.isWarned, users.userName
+          FROM borrows
+          JOIN copyBook ON borrows.copyBookId = copyBook.id
+          JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
+          JOIN books ON booksInLibrary.bookId = books.id
+          JOIN users ON borrows.userId = users.id
+          WHERE booksInLibrary.libraryId = ?
+          AND borrows.isIntact IS FALSE
+          AND borrows.status = 'Returned';
+          `,
+          [libraryId]
+      );
+      return rows;
   } catch (err) {
-    console.log(err);
-    throw err;
+      console.error('Error fetching unfix borrows:', err);
+      throw err;
   }
 }
+
 
 async function prevBorrows(userId) {
   try {

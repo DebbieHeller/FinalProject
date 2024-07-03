@@ -8,6 +8,14 @@ async function getUserMessages(userId) {
     }
 }
 
+async function create(userId,title,body,status,createdDate) {
+    try {
+        console.log(userId)
+        return await model.createMessage(userId,title,body,status,createdDate)
+    } catch (err) {
+        throw err
+    }
+}
 async function update(id, status, readDate) {
     try {
         return await model.updateMessage(id, status, readDate)
@@ -16,4 +24,4 @@ async function update(id, status, readDate) {
     }
 }
 
-module.exports = { getUserMessages, update };
+module.exports = { getUserMessages, update ,create};

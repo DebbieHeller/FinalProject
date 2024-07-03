@@ -10,6 +10,13 @@ async function getSingle(id) {
         throw err
     }
 }
+async function warningUser(userId) {
+    try {
+        return await model.warningUser(userId)
+    } catch (err) {
+        throw err
+    }
+}
 
 async function authenticateLogin(username, password) {
     try {
@@ -54,4 +61,4 @@ async function create(username, phone, email, address, subscriptionTypeId, roleI
 
 
 
-module.exports = { getSingle, getByUsername ,create, authenticateLogin}
+module.exports = { getSingle, getByUsername ,create, authenticateLogin,warningUser}
