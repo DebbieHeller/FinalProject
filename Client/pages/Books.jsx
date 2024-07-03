@@ -96,6 +96,7 @@ function Books() {
                     <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                         <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                         <div className="book-info">
+                            <p><strong>{book.nameBook}</strong></p>
                             <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
                                 <FaThumbsUp className="like-icon" /> {likes[book.id]}
                             </p>

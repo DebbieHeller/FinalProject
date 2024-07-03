@@ -1,0 +1,55 @@
+/* Libraries.css */
+
+/* Style for the Libraries component */
+.Libraries {
+    margin: 20px;
+  }
+  
+  /* Style for the header */
+  .Libraries h1 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Style for the add library button */
+  .Libraries button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  
+  .Libraries button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Style for the table */
+  .Libraries-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .Libraries-table th, .Libraries-table td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .Libraries-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    font-size: 1.1rem;
+  }
+  
+  .Libraries-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .Libraries-table tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+  

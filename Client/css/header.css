@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #f0f0f0;
+  background-color: rgb(125, 165, 188);
   position: relative; /* כדי לאפשר להקפיא את כיתוב כאשר הוא בעל תחתית נפילה */
 }
 
@@ -13,6 +13,9 @@
 }
 
 .header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   position: absolute;
   top: 0;
   right: 20px;
@@ -20,22 +23,20 @@
 
 .nav-header {
   display: flex;
-  gap: 20px;
+  gap: 10px;
 }
 
 .nav-link {
   text-decoration: none;
-  color: #333;
-  padding: 10px 20px;
-  border: 1px solid #333;
-  border-radius: 4px;
+  color: #fff;
+  padding: 8px 12px;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .nav-link:hover,
 .nav-link:focus {
-  background-color: #f0f0f0;
-  color: #333;
+  background-color: rgb(183, 185, 190);
+  color: #fff;
 }
 
 .active-link {

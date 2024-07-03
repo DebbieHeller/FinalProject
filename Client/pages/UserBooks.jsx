@@ -20,7 +20,7 @@ function UserBooks() {
     fetch(`http://localhost:3000/borrows?userId=${user.id}`, {
       method: 'GET',
       credentials: 'include'
-  })
+    })
       .then((res) => res.json())
       .then((borrowedBooks) => {
         setBooks(borrowedBooks);
@@ -96,16 +96,16 @@ function UserBooks() {
   const confirmReturnBooks = () => {
     setShowConfirmation(false);
     setIsLoading(true);
-  
+
     const updatedBooks = [...books];
     const updatedSelectedBooks = [...selectedBooksToReturn];
-  
+
     selectedBooksToReturn.forEach((borrowBook) => {
       const returnDate = new Date().toISOString().split("T")[0];
       const borrowDate = new Date(borrowBook.borrowDate)
         .toISOString()
         .split("T")[0];
-  
+
       const updatedBorrow = {
         id: borrowBook.borrowId,
         copyBookId: borrowBook.copyBookId,
@@ -115,7 +115,7 @@ function UserBooks() {
         returnDate: returnDate,
         status: "Returned",
       };
-  
+
       fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
         method: "PUT",
         credentials: 'include',
@@ -136,21 +136,21 @@ function UserBooks() {
               updatedSelectedBooks.splice(selectedIndex, 1);
             }
             setSelectedBooksToReturn([...updatedSelectedBooks]);
-          } 
+          }
           // else {
           //   console.error("Error returning book:", response.statusText);
           // }
-          if(response.status == 403){
+          if (response.status == 403) {
             alert("אין לך הרשאה מתאימה,הכנס מחדש")
             navigate('/logout');
           }
         })
         .catch((error) => console.error("Error returning book:", error));
     });
-  
+
     setIsLoading(false);
   };
-  
+
 
   return (
     <div className="user-books-container">
@@ -164,22 +164,6 @@ function UserBooks() {
               checked={selectedBooksToReturn.includes(book)}
               onChange={() => toggleBookSelection(book)}
             />
-            <div className="book-info">
-
-              <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                <FaThumbsUp className="like-icon" />
-                {likes[book.id]}
-              </p>
-              {daysLeftMap.get(book.id) < 0 ? (
-                <p className="overdue-message">
-                  באיחור של {Math.abs(daysLeftMap.get(book.id))} ימים
-                </p>
-              ) : (
-                <p className="days-left-message">
-                  נשארו {daysLeftMap.get(book.id)} ימים להחזיר
-                </p>
-              )}
-            </div>
             <Link
               to={`/home/user-books/${book.copyBookId}`}
               className="book-card-link"
@@ -190,6 +174,22 @@ function UserBooks() {
                 alt={book.nameBook}
                 className="book-image"
               />
+              <div className="book-info">
+                <p><strong>{book.nameBook}</strong></p>
+                <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
+                  <FaThumbsUp className="like-icon" />
+                  {likes[book.id]}
+                </p>
+                {daysLeftMap.get(book.id) < 0 ? (
+                  <p className="overdue-message">
+                    באיחור של {Math.abs(daysLeftMap.get(book.id))} ימים
+                  </p>
+                ) : (
+                  <p className="days-left-message">
+                    נשארו {daysLeftMap.get(book.id)} ימים להחזיר
+                  </p>
+                )}
+              </div>
             </Link>
           </div>
         ))}

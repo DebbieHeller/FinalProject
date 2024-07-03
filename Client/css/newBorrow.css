@@ -1,3 +1,7 @@
+.books-container {
+    direction: rtl;
+}
+
 .cart-icon-container {
     position: absolute;
     top: 40px;
@@ -96,5 +100,11 @@
 }
 
 .books-container.cart-visible {
-    margin-left: 250px; 
+    margin-left: 250px;
+    width: calc(100% - 270px);
+}
+
+.separator-line {
+    border: 0.5px solid #ccc; /* קו מפריד עם צבע אפור בהיר */
+    margin: 20px 0; /* מרווח מעליו ומתחתיו */
 }
