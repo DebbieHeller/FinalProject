@@ -89,4 +89,4 @@ async function validateUsername(username) {
     }
 }
 
-module.exports = { getAllUsers, getUser, getByUsername, createUser, validateUsername,getByroleId }
+module.exports = { getAllUsers, getUser, getByUsername, createUser, validateUsername, getByroleId, warningUser }
