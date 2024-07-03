@@ -1,10 +1,12 @@
 import React, { useContext, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { userContext } from "../src/App";
 import '../css/books.css';
 import '../css/newBorrow.css';
-import { FaSearch, FaThumbsUp, FaShoppingCart, FaTrash, FaStar } from 'react-icons/fa';
+import { FaSearch, FaTimes, FaThumbsUp, FaShoppingCart, FaTrash, FaStar } from 'react-icons/fa';
 
 function NewBorrow() {
+    const navigate = useNavigate();
     const libraryId = parseInt(localStorage.getItem('libraryId'));
     const [books, setBooks] = useState([]);
     const [comments, setComments] = useState({});
@@ -14,6 +16,7 @@ function NewBorrow() {
     const [searchResults, setSearchResults] = useState([]);
     const [recommendedBooks, setRecommendedBooks] = useState([]);
     const [cart, setCart] = useState([]);
+    const [isCartVisible, setIsCartVisible] = useState(false);
     const { user } = useContext(userContext);
     const [likes, setLikes] = useState({});
     const [subscriptionTypes, setSubscriptionTypes] = useState([]);
@@ -46,7 +49,6 @@ function NewBorrow() {
                 const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
                 if (userSubscription) {
                     setRemainingBooksToBorrow(userSubscription.ammountToBorrow - userBooks);
-                    console.log(remainingBooksToBorrow)
                 }
             })
             .catch((error) => console.error('Error fetching subscription types:', error));
@@ -129,6 +131,7 @@ function NewBorrow() {
             setCart([...cart, book]);
         }
         setSelectedBook(null);
+        setIsCartVisible(true); 
     };
 
     const removeFromCart = (bookId) => {
@@ -155,6 +158,10 @@ function NewBorrow() {
         setTimeout(() => {
             setErrorMessage('');
         }, 3000); // Clear error message after 3 seconds
+    };
+
+    const toggleCartVisibility = () => {
+        setIsCartVisible(!isCartVisible);
     };
 
     const handleCartSubmit = () => {
@@ -197,43 +204,49 @@ function NewBorrow() {
         setBooks(books.filter(book => !cart.some(cartItem => cartItem.id === book.id)));
         setCart([]);
         setRemainingBooksToBorrow(remainingBooksToBorrow - cart.length);
-        console.log(remainingBooksToBorrow)
-        alert('Books have been successfully added to the cart');
+        setIsCartVisible(false)
+        alert('ההשאלה התבצעה בהצלחה');
+        navigate("/home/user-books");
     };
     
     return (
-        <div className="books-container">
-            <div className="cart-icon-container">
+        <>
+            <div className="cart-icon-container" onClick={toggleCartVisibility}>
                 <FaShoppingCart className="cart-icon" />
             </div>
-            <div className="cart-container">
-                <div className="cart">
-                    <h3>Borrow Cart</h3>
-                    {cart.length === 0 ? (
-                        <p>Your cart is empty</p>
-                    ) : (
-                        cart.map(book => (
-                            <div key={book.copyBookId} className="cart-item">
-                                <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="cart-image-small" />
-                                <div className="cart-item-details">
-                                    <p>{book.nameBook}</p>
-                                    <FaTrash onClick={() => removeFromCart(book.id)} className="remove-icon" />
+            <div className={`books-container ${isCartVisible ? 'cart-visible' : ''}`}>
+            {isCartVisible && (
+                <div className="cart-container">
+                    <div className="cart">
+                        <div className="cart-header">
+                            <FaTimes onClick={toggleCartVisibility} className="close-icon" />
+                            <h3>סל ההשאלה</h3>
+                        </div>
+                        {cart.length === 0 ? (
+                            <p>הסל שלך ריק</p>
+                        ) : (
+                            cart.map(book => (
+                                <div key={book.copyBookId} className="cart-item">
+                                    <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="cart-image-small" />
+                                    <div className="cart-item-details">
+                                        <p>{book.nameBook}</p>
+                                        <FaTrash onClick={() => removeFromCart(book.id)} className="remove-icon" />
+                                    </div>
                                 </div>
-                            </div>
-                        ))
-                    )}
-                    {cart.length > 0 && (
-                        <button className="cart-submit" onClick={handleCartSubmit}>
-                            אישור
-                        </button>
-                    )}
-                </div>
-                {errorMessage && (
-                    <div className="error-message">
-                        {errorMessage}
+                            ))
+                        )}
+                        {cart.length > 0 && (
+                            <button className="cart-submit" onClick={handleCartSubmit}>
+                                אישור
+                            </button>
+                        )}
                     </div>
-                )}
-            </div>
+                    {errorMessage && (
+                        <div className="error-message">
+                            {errorMessage}
+                        </div>
+                    )}
+                </div>)}
 
             <form className="search-form">
                 <div className="search-input-container">
@@ -277,6 +290,7 @@ function NewBorrow() {
                 <div className="modal" onClick={() => setSelectedBook(null)}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <span className="close" onClick={() => setSelectedBook(null)}>&times;</span>
+                        <img src={`http://localhost:3000/images/${selectedBook.image}`} alt={selectedBook.nameBook} />
                         <h2>{selectedBook.nameBook}</h2>
                         <p><strong>Author:</strong> {selectedBook.author}</p>
                         <p><strong>Pages:</strong> {selectedBook.numOfPages}</p>
@@ -304,6 +318,7 @@ function NewBorrow() {
                 </div>
             )}
         </div>
+        </>
     );
 }
 

@@ -68,7 +68,7 @@
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: calc(33.333% - 20px);
+    width: calc(25% - 20px);
     box-sizing: border-box;
     transition: box-shadow 0.3s ease;
     display: flex;
@@ -165,13 +165,13 @@
 
 .modal-content.show-comments {
     max-height: 80vh; 
-    overflow: auto; 
+    overflow-y: auto; 
 }
 
 .modal-content img {
     width: 100%; 
     max-height: 200px; 
-    object-fit: cover; 
+    object-fit: contain; 
     border-radius: 10px; 
     margin-bottom: 15px; 
 }

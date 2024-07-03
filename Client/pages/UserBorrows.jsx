@@ -15,7 +15,6 @@ function UserBorrows() {
     const [selectedRow, setSelectedRow] = useState(null);
     const [startDate, setStartDate] = useState("");
     const [endDate, setEndDate] = useState("");
-    const [likes, setLikes] = useState({});
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -35,20 +34,6 @@ function UserBorrows() {
             })
             .catch((error) => console.error("Error fetching books:", error));
     }, [user.id]);
-    
-    
-    useEffect(() => {
-        fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
-            .then((res) => res.json())
-            .then((likes) => {
-                const likesObject = likes.reduce((acc, like) => {
-                    acc[like.bookId] = like.numLikes;
-                    return acc;
-                }, {});
-                setLikes(likesObject);
-            })
-            .catch((error) => console.error('Error fetching likes:', error));
-    }, [libraryId]);
 
     useEffect(() => {
         const query = searchQuery.toLowerCase();
@@ -80,24 +65,9 @@ function UserBorrows() {
         navigate(`${book.copyBookId}`, { state: { book } });
     };
 
-    const handleLike = (bookId) => {
-        fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then((res) => res.json())
-            .then(() => {
-                const prevLikes = likes[bookId];
-                setLikes({ ...likes, [bookId]: prevLikes + 1 });
-            })
-            .catch((error) => console.error('Error updating likes:', error));
-    };
-
     return (
         <div className="books-container">
-            <h1>Books Borrowed by {user.name}</h1>
+            <h1>השאלות קודמות</h1>
             <form className="search-form">
                 <div className="search-input-container">
                     <input
@@ -134,7 +104,6 @@ function UserBorrows() {
                         <th>Book Name</th>
                         <th>Author</th>
                         <th>Category</th>
-                        <th>Likes</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -150,9 +119,6 @@ function UserBorrows() {
                                 <td>{book.nameBook}</td>
                                 <td>{book.author}</td>
                                 <td>{book.category}</td>
-                                <td>
-                                    <FaThumbsUp className="like-icon" onClick={() => handleLike(book.id)} /> {likes[book.id]}
-                                </td>
                             </tr>
                         ))
                     ) : (

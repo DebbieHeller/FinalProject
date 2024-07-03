@@ -1,7 +1,7 @@
 .cart-icon-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
+    position: absolute;
+    top: 40px;
+    left: 45px;
     z-index: 100;
 }
 
@@ -13,15 +13,16 @@
 
 .cart-container {
     position: fixed;
-    top: 60px;
-    right: 20px;
-    z-index: 100;
-    background-color: #f2f2f2;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    max-height: calc(100vh - 120px);
-    overflow-y: auto;
+    left: 20px; 
+    top: 80px; 
+    width: 220px; 
+    height: 450px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
 }
 
 .cart {
@@ -75,7 +76,25 @@
     text-align: center;
 }
 
-/* .cart-submit:hover {
-    background-color: #0056b3;
-} */
+.cart-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
 
+.close-button {
+    background: none;
+    border: none;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.books-container.cart-visible {
+    margin-left: 250px; 
+}

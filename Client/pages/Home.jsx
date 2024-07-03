@@ -15,7 +15,7 @@ function Home() {
           <Link to="/home/user-borrows">השאלות קודמות</Link>
         </li>
         <li>
-          <Link to="/home/user-books">ספרים בבעלותך</Link>
+          <Link to="/home/user-books">ספרים בהשאלה</Link>
         </li>
         <li>
           <Link to="/home/new-borrow">השאלה חדשה</Link>

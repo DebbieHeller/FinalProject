@@ -154,7 +154,7 @@ function UserBooks() {
 
   return (
     <div className="user-books-container">
-      <h1>Your Borrowed Books</h1>
+      <h1>ספרים בהשאלה</h1>
       {isLoading && <div className="loading-message">מתבצעת החזרה...</div>}
       <div className="books-grid">
         {books.map((book) => (
