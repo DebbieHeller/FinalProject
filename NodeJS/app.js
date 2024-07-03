@@ -35,6 +35,8 @@ app.use("/likes", likes);
 app.use("/login", login);
 app.use("/signUp", signUp);
 app.use("/comments", comments);
+
+
 app.use(jwtAuthentication);
 app.use("/libraryAdmin", roleAuthorization([2]), libraryAdmin);
 app.use("/books", books);

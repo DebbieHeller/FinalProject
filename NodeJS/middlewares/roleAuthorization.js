@@ -7,8 +7,6 @@ const roleAuthorization = (requiredRoles) => {
         if (!requiredRoles.includes(req.roleId)) {
             return res.sendStatus(403)
         }
-
-        console.log(`User with role ID ${req.roleId} has access`);
         return next();
     };
 }

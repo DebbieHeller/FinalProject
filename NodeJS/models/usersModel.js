@@ -28,9 +28,7 @@ async function getByroleId(id) {
         const sql = `SELECT *
         FROM users
         where roleId = ?`
-
         const [rows] = await pool.query(sql, [id])
-        console.log(rows)
         return rows
 
     } catch (err) {
@@ -66,6 +64,18 @@ async function createUser(username, phone, email, address, subscriptionTypeId, r
         console.error('Error creating user:', err)
         throw err
     }
+}
+async function warningUser(userId) {
+    try {
+        const [rows] = await pool.query(
+          "UPDATE users SET isWarned = TRUE WHERE id = ?",
+          [userId]
+        );
+        return rows;
+      } catch (err) {
+        console.error('Error updating warning status:', err);
+        throw err;
+      }
 }
 
 async function validateUsername(username) {

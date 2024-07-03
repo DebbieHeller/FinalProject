@@ -1,7 +1,7 @@
 const express = require('express')
 const usersRouter = express.Router()
 usersRouter.use(express.json())
-const { getSingle, create, getUsers } = require('../controllers/usersController')
+const { getSingle, create, getUsers, warningUser } = require('../controllers/usersController')
 
 usersRouter.get('/', async (req, res) => {
     try {
@@ -32,5 +32,19 @@ usersRouter.post('/', async (req, res) => {
     }
 })
 
+
+usersRouter.put('/:userId', async (req, res) => {
+    try {
+        const response = await warningUser(req.params.userId)
+        if (response) {
+            res.status(201).json(response)
+        }
+        else {
+            res.sendStatus(501)
+        }
+    } catch (error) {
+        res.status(500).send({ error: 'Failed to fetch book' });
+    }
+})
 
 module.exports = usersRouter

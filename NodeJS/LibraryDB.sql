@@ -46,6 +46,7 @@ CREATE TABLE users (
   phone VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   address VARCHAR(50),
+  isWarned BOOLEAN DEFAULT FALSE,
   subscriptionTypeId INT default NULL,
   roleId INT NOT NULL,
   libraryId INT NOT NULL,
@@ -175,6 +176,7 @@ INSERT INTO users (username, phone, email, address, subscriptionTypeId, roleId, 
 ('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St', 1, 1, 1, 9),
 ('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St', 2, 4, 2, 10);
 
+
 INSERT INTO books (nameBook, author, numOfPages, publishingYear, summary, image, category) VALUES 
 ('המסע הארוך של נאן', 'לאה פריד', 200, '2020', 'Summary of Book 1', 'nahn.jpg', 'Fiction'),
 ('המצולע', 'יונה ספיר', 300, '2019', 'Summary of Book 2', 'metsula.jpg', 'Non-Fiction'),
@@ -226,11 +228,11 @@ INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES
 INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
 (1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
 (4, 1, '2024-05-10', '2024-06-15', 'Returned', TRUE, TRUE),
-(7, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, TRUE),
-(3, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(5, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(6, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(7, 7, '2024-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(7, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, FALSE),
+(3, 1, '2024-05-10', '2024-06-20',  'Returned', FALSE, FALSE),
+(5, 1, '2024-05-10', '2024-06-20',  'Returned', FALSE, FALSE),
+(6, 5, '2023-06-10', '2024-06-20', 'Returned', FALSE, FALSE),
+(7, 7, '2024-06-10', '2024-06-20',  'Returned', FALSE, FALSE),
 (8, 8, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (9, 9, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);

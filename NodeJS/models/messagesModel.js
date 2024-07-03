@@ -28,4 +28,20 @@ async function updateMessage(id, status, readDate) {
     }
 }
 
-module.exports = { getMessages, updateMessage }
+async function createMessage(userId, title, body, status, createdDate) {
+    try {
+
+        const [rows] = await pool.query(
+            "INSERT INTO messages (userId, title, body, status, createdDate) VALUES (?, ?, ?, ?, ?)",
+            [userId, title, body, status, createdDate]
+        );
+        return rows;
+    } catch (err) {
+        console.error('Error inserting message:', err);
+        throw err;
+    }
+}
+
+
+
+module.exports = { getMessages, updateMessage ,createMessage}

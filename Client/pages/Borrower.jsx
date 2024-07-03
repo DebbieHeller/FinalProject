@@ -10,10 +10,11 @@ function Borrower() {
         userId: borrow.userId,
         title: '',
         body: '',
-        status: 'draft', // Assuming default status is 'draft'
-        createdDate: new Date().toISOString(), // Current date/time
-        readDate: null // Initially null, assuming message is unread
+        status: 'לא נקראה',
+        createdDate:new Date().toISOString().split("T")[0],
+        readDate: null
     });
+    const [showModal, setShowModal] = useState(false); // State for modal visibility
 
     useEffect(() => {
         fetch(`http://localhost:3000/libraryAdmin?userId=${borrow.userId}`, {
@@ -27,74 +28,95 @@ function Borrower() {
         .catch((error) => console.error('Error fetching books:', error));
     }, [borrow.userId]);
 
-    const sendMessage = (bookId, isIntact) => {
-        let messageBody = '';
+    const openModal = () => {
+        setShowModal(true);
+    };
 
-        if (!isIntact) {
-            messageBody = 'החזרת ספר לא תקין, הנך באזהרה';
-        } else {
-            // Handle other conditions if needed
-        }
+    const closeModal = () => {
+        setShowModal(false);
+    };
 
-        setMessage({
+    const handleSubmitMessage = (e) => {
+        e.preventDefault(); // Prevent default form submission
+        
+        const fullMessage = {
             ...message,
-            title: `Message regarding Book ID: ${bookId}`,
-            body: messageBody
-        });
-
-        // Now you can send the message to the server
-        console.log(`Sending message for book with ID: ${bookId}`);
-        console.log(message); // This will contain the message details to send
-        // Implement your fetch logic to send message to server (POST request)
-        // Example:
-        /*
-        fetch('http://localhost:3000/sendMessage', {
+            status: 'לא נקראה', // Or set status as needed
+            createdDate:new Date().toISOString().split("T")[0],
+            readDate: null
+        };
+    
+        fetch('http://localhost:3000/messages', {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
-            body: JSON.stringify(message)
+            body: JSON.stringify(fullMessage)
         })
         .then((res) => res.json())
         .then((response) => {
             console.log('Message sent:', response);
-            // Optionally update state or show success message
+            setShowModal(false); // Close the modal after sending
         })
         .catch((error) => console.error('Error sending message:', error));
-        */
     };
-
+    
     return (
         <div>
-            <h1>Borrower Details for User ID: {borrow.userId}</h1>
+            <h1>Borrower Details for: {borrow.userName}</h1>
             <table className="borrow-details">
                 <thead>
                     <tr>
-                        <th>Copy Book ID</th>
-                        <th>Borrow Date</th>
-                        <th>Return Date</th>
-                        <th>Status</th>
-                        <th>Returned</th>
-                        <th>Intact</th>
-                        <th>Send Message</th> {/* New column header */}
+                        <th>תאריך השאלה</th>
+                        <th>תאריך החזרה</th>
+                        <th>סטטוס</th>
+                        <th>הוחזר</th>
+                        <th>תקין</th>
                     </tr>
                 </thead>
                 <tbody>
                     {books.map((book) => (
                         <tr key={book.borrowId}>
-                            <td>{book.copyBookId}</td>
                             <td>{book.borrowDate}</td>
                             <td>{book.returnDate}</td>
                             <td>{book.status}</td>
                             <td>{book.isReturned ? 'Yes' : 'No'}</td>
                             <td>{book.isIntact ? 'Yes' : 'No'}</td>
-                            <td>
-                                <button onClick={() => sendMessage(book.copyBookId, book.isIntact)}>Send Message</button>
-                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <button onClick={openModal}>Send Message</button>
+            <button onClick={() => blockUser(borrow.userId)}>Block User</button>
+    
+            {/* Modal for sending message */}
+            {showModal && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h2>Send Message</h2>
+                        <form onSubmit={handleSubmitMessage}>
+                            <label htmlFor="message-title">Title:</label>
+                            <input
+                                type="text"
+                                id="message-title"
+                                value={message.title}
+                                onChange={(e) => setMessage({ ...message, title: e.target.value })}
+                            />
+                            <label htmlFor="message-body">Body:</label>
+                            <textarea
+                                id="message-body"
+                                value={message.body}
+                                onChange={(e) => setMessage({ ...message, body: e.target.value })}
+                            ></textarea>
+                            <div className="modal-buttons">
+                                <button type="submit">אישור</button>
+                                <button type="button" onClick={closeModal}>Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

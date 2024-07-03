@@ -12,6 +12,7 @@ function Inspectors() {
     })
       .then((res) => res.json())
       .then((data) => {
+        
         setUsers(data);
       })
       .catch((error) => console.error("Error fetching users:", error));
