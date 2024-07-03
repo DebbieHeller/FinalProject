@@ -3,6 +3,16 @@ const bcrypt = require('bcrypt')
 const { confirmPassword } = require('./passwordsController')
 const saltRounds = 10
 
+async function getUsers(roleId) {
+    try {
+        if(roleId)
+            return await model.getByroleId(roleId)
+        return await model.getAllUsers()
+    } catch (err) {
+        throw err
+    }
+}
+
 async function getSingle(id) {
     try {
         return await model.getUser(id)
@@ -54,4 +64,4 @@ async function create(username, phone, email, address, subscriptionTypeId, roleI
 
 
 
-module.exports = { getSingle, getByUsername ,create, authenticateLogin}
+module.exports = { getUsers, getSingle, getByUsername ,create, authenticateLogin}

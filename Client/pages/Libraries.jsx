@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import "../css/libraries.css";
 
 function Libraries() {
+  const navigate = useNavigate();
   const [libraries, setLibraries] = useState([]);
 
   useEffect(() => {
@@ -17,9 +19,7 @@ function Libraries() {
   }, []);
 
   const handleAddLibrary = () => {
-    // פתיחת קומפוננטה להוספת ספריה
-    // כאן תוכל להוסיף לוגיקה לפתיחת דיאלוג או קומפוננטה שתציג טופס להוספת ספריה
-    alert('Opening add library component');
+    navigate('/admin-home/new-library');
   };
 
   return (

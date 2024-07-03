@@ -19,6 +19,7 @@ import Inspectors from "../pages/Inspectors";
 import AllBooks from "../pages/AllBooks";
 import Libraries from "../pages/Libraries";
 import Borrower from "../pages/Borrower";
+import NewLibrary from "../pages/NewLibrary";
 
 export const userContext = createContext();
 
@@ -68,6 +69,7 @@ function App() {
               <Route index element={<Libraries />} />
               <Route path="books" element={<AllBooks />} />
               <Route path="libraries" element={<Libraries />} />
+              <Route path="new-library" element={<NewLibrary />} />
               <Route path="logout" element={<Logout />} />
             </Route>
 

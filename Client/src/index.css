@@ -19,6 +19,10 @@ a {
   text-decoration: inherit;
 }
 
+td {
+  cursor: pointer;
+}
+
 body {
   margin: 0;
   display: flex;

@@ -1,13 +1,20 @@
 const pool = require('../LibraryDB')
 const bcrypt = require('bcrypt')
 
+async function getAllUsers() {
+    try {
+        const [rows] = await pool.query(`SELECT * FROM users`)
+        return rows
+
+    } catch (err) {
+        console.error('Error geting users:', err)
+        throw err
+    }
+}
+
 async function getUser(id) {
     try {
-        const sql = `SELECT *
-        FROM users
-        where id = ?`
-
-        const [rows] = await pool.query(sql, [id])
+        const [rows] = await pool.query(`SELECT * FROM users where id = ?`, [id])
         return rows[0]
 
     } catch (err) {
@@ -15,7 +22,6 @@ async function getUser(id) {
         throw err
     }
 }
-
 
 async function getByroleId(id) {
     try {
@@ -73,4 +79,4 @@ async function validateUsername(username) {
     }
 }
 
-module.exports = { getUser, getByUsername, createUser, validateUsername,getByroleId }
+module.exports = { getAllUsers, getUser, getByUsername, createUser, validateUsername,getByroleId }
