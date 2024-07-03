@@ -22,7 +22,32 @@ async function getborrows(userId) {
     throw error;
   }
 }
-async function getInspectorBorrows() {
+
+
+async function getTerriableUser(userId) {
+  try {
+    const [rows] = await pool.query(
+      `
+        SELECT bor.*, bor.id as borrowId, b.*, bil.isNew, cb.id as copyBookId
+        FROM booksInLibrary bil
+        JOIN books b ON bil.bookId = b.id
+        JOIN copyBook cb ON cb.bookInLibraryId = bil.id
+        JOIN borrows bor ON bor.copyBookId = cb.id
+        WHERE bor.userId = ?
+        AND (bor.isIntact = FALSE OR bor.isReturned = FALSE)
+        AND bor.returnDate IS NOT NULL
+      `,
+      [userId]
+    );
+    return rows;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+}
+
+
+async function getInspectorBorrows(libraryId) {
   
   try {
     const [rows] = await pool.query(
@@ -32,8 +57,10 @@ async function getInspectorBorrows() {
         JOIN copyBook ON borrows.copyBookId = copyBook.id
         JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
         JOIN books ON booksInLibrary.bookId = books.id
-        AND borrows.isIntact IS NULL;
-      `,
+        WHERE booksInLibrary.libraryId=?
+        AND borrows.isIntact IS NULL
+        AND borrows.status ='Returned';
+      `,[libraryId]
     );
     return rows;
   } catch (err) {
@@ -42,6 +69,29 @@ async function getInspectorBorrows() {
   }
 }
 
+async function getUnFixBorrows(libraryId) {
+  
+  try {
+    const [rows] = await pool.query(
+      `
+        SELECT borrows.id as borrowId, borrows.*, books.*
+        FROM borrows
+        JOIN copyBook ON borrows.copyBookId = copyBook.id
+        JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
+        JOIN books ON booksInLibrary.bookId = books.id
+        WHERE booksInLibrary.libraryId=?
+        AND borrows.isIntact IS FALSE
+        AND borrows.status = 'Returned';
+      `,[libraryId]
+    );
+    console.log(libraryId)
+    console.log(rows)
+    return rows;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
 
 async function prevBorrows(userId) {
   try {
@@ -123,4 +173,4 @@ async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, 
 
 
 
-module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows,updateBorrowByInspector};
+module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser};

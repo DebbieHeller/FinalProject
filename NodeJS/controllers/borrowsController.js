@@ -15,10 +15,24 @@ async function getPrevBorrows(userId) {
     throw err;
   }
 }
-
-async function getInspectorBorrows() {
+async function getUnFixBorrows(libraryId) {
   try {
-    return await model.getInspectorBorrows();
+    return await model.getUnFixBorrows(libraryId);
+  } catch (err) {
+    throw err;
+  }
+}
+
+async function getTerriableUser(userId) {
+  try {
+    return await model.getTerriableUser(userId);
+  } catch (err) {
+    throw err;
+  }
+}
+async function getInspectorBorrows(libraryId) {
+  try {
+    return await model.getInspectorBorrows(libraryId);
   } catch (err) {
     throw err;
   }
@@ -54,4 +68,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser};

@@ -5,7 +5,7 @@ const { getInspectorBorrows, updateBorrowByInspector } = require('../controllers
 
 inspectorBorrowsRouter.get('/', async (req, res) => {
     try {
-        const books = await getInspectorBorrows();
+        const books = await getInspectorBorrows(req.query.libraryId);
         res.status(200).send(books);
     } catch (error) {
         res.status(500).send({ error: 'Failed to fetch books' });

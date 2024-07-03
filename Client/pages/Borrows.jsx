@@ -5,9 +5,10 @@ function Borrows() {
   const [borrows, setBorrows] = useState([]);
   const [selectedBorrows, setSelectedBorrows] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const libraryId = parseInt(localStorage.getItem("libraryId"));
 
   useEffect(() => {
-    fetch('http://localhost:3000/inspectorBorrows', {
+    fetch(`http://localhost:3000/inspectorBorrows?libraryId=${libraryId}`, {
       method: 'GET',
       credentials: 'include'
     })

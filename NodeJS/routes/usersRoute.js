@@ -7,7 +7,6 @@ const { getByroleId } = require('../models/usersModel')
 usersRouter.get('/', async (req, res) => {
     try {
         const user = await getByroleId(req.query.roleId)
-        console.log(user)
         if (user) {
             res.status(201).send(user);
 

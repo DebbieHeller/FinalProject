@@ -1,0 +1,35 @@
+
+
+.borrow-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .borrow-table th, .borrow-table td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+  
+  .borrow-table th {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  .borrow-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .borrow-table tbody tr:hover {
+    background-color: #e3e3e3;
+  }
+  
+  .borrow-table td {
+    font-size: 14px;
+  }
+  
+  .borrow-table th:first-child,
+  .borrow-table td:first-child {
+    text-align: left;
+  }
+  

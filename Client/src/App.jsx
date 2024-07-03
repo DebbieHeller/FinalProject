@@ -18,6 +18,7 @@ import Borrowers from "../pages/Borrowers";
 import Inspectors from "../pages/Inspectors";
 import AllBooks from "../pages/AllBooks";
 import Libraries from "../pages/Libraries";
+import Borrower from "../pages/Borrower";
 
 export const userContext = createContext();
 
@@ -59,6 +60,7 @@ function App() {
               <Route path="books" element={<Books />} />
               <Route path="inspectors" element={<Inspectors />} />
               <Route path="borrowers" element={<Borrowers />} />
+              <Route path="borrowers/:id" element={<Borrower />}/>
               <Route path="logout" element={<Logout />} />
             </Route>
 
