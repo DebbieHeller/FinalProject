@@ -3,10 +3,12 @@ const bcrypt = require('bcrypt')
 const { confirmPassword } = require('./passwordsController')
 const saltRounds = 10
 
-async function getUsers(roleId) {
+async function getUsers(roleId, userId) {
     try {
         if(roleId)
             return await model.getByroleId(roleId)
+        else if(userId)
+            return await model.getSingle(userId)
         return await model.getAllUsers()
     } catch (err) {
         throw err

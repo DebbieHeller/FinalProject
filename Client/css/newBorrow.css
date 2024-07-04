@@ -104,7 +104,26 @@
     width: calc(100% - 270px);
 }
 
-.separator-line {
-    border: 0.5px solid #ccc; /* קו מפריד עם צבע אפור בהיר */
-    margin: 20px 0; /* מרווח מעליו ומתחתיו */
+.new-borrow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px; /* Add some space between sections */
 }
+
+.new-borrow-container h3 {
+    text-align: center; /* Center the headers */
+}
+
+.book-section {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; /* Center the book cards within each section */
+    gap: 20px; /* Add space between book cards */
+}
+
+.separator-line {
+    width: 100%;
+    border: 1px solid #ccc;
+    margin: 20px 0;
+}
+

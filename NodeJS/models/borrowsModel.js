@@ -17,6 +17,7 @@ async function getborrows(userId) {
       [userId]
     );
     return rows;
+    
   } catch (error) {
     console.error(error);
     throw error;

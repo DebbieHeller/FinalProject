@@ -62,6 +62,25 @@ async function getNewBooks(libraryId) {
     }
 }
 
+async function getfilteredBooks(query, libraryId) {
+    try {
+        const sql = `
+            SELECT b.*
+            FROM books b
+            JOIN booksInLibrary bil ON b.id = bil.bookId
+            WHERE bil.libraryId = ?
+              AND (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+        `;
+        const wildcardQuery = `%${query}%`;
+        const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery]);
+        console.log(rows)
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 async function getBook(id) {
     try {
         const [rows] = await pool.query('SELECT * FROM Books WHERE id=?', [id]);
@@ -174,5 +193,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName};
+module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks};
 

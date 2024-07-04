@@ -66,10 +66,10 @@ function NewLibrary() {
   );
 
   return (
-    <div className="NewLibrary">
+    <div className="newLibrary-container">
       <h1>הוספת ספרייה חדשה</h1>
       <form onSubmit={handleSubmit}>
-        <div className="form-group">
+        <div className="newLibrary-form-group">
           <label htmlFor="libraryName">שם ספרייה</label>
           <input
             type="text"
@@ -79,7 +79,7 @@ function NewLibrary() {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="newLibrary-form-group">
           <label htmlFor="address">כתובת</label>
           <input
             type="text"
@@ -89,7 +89,7 @@ function NewLibrary() {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="newLibrary-form-group">
           <label htmlFor="phone">טלפון</label>
           <input
             type="text"
@@ -99,7 +99,7 @@ function NewLibrary() {
             required
           />
         </div>
-        <div className="form-group">
+        <div className="newLibrary-form-group">
           <label>מנהל ספרייה</label>
           <button type="button" onClick={() => setShowManagerModal(true)}>
             בחירת מנהל ספרייה
@@ -114,9 +114,9 @@ function NewLibrary() {
       </form>
 
       {showManagerModal && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={() => setShowManagerModal(false)}>
+        <div className="newLibrary-modal">
+          <div className="newLibrary-modal-content">
+            <span className="newLibrary-close" onClick={() => setShowManagerModal(false)}>
               &times;
             </span>
             <h2>בחירת מנהל ספרייה</h2>

@@ -35,6 +35,9 @@ function Login() {
         }
       })
       .then(data => {
+        if(data.roleId==1){
+          navigate('/admin-home')
+        }
         if (data.libraryId != libraryId) {
           alert("אינך רשום בספריה שלנו")
           navigate('/sign-up');
@@ -46,8 +49,7 @@ function Login() {
             navigate('/inspector-home');
           else if(data.roleId == 2)
             navigate('/library-admin-home');
-          else if(data.roleId == 1)
-            navigate('/admin-home');
+          
         }
       })
       .catch(() =>

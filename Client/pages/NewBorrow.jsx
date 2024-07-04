@@ -247,7 +247,7 @@ function NewBorrow() {
                             </div>
                         )}
                     </div>)}
-
+    
                 <form className="search-form">
                     <div className="search-input-container">
                         <input
@@ -260,42 +260,42 @@ function NewBorrow() {
                         <FaSearch className="search-icon" />
                     </div>
                 </form>
-
-                <div className="books-grid">
-                    {/* ספרים מומלצים */}
+    
+                <div className="new-borrow-container">
                     <h3>מומלצים עבורך</h3>
-                    {recommendedBooks.map(book => (
-                        <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-                            <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
-                            <div className="book-info">
-                                <p><strong>{book.nameBook}</strong></p>
-                                <FaStar className="recommended-icon" />
-                                <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                    <FaThumbsUp className="like-icon" /> {likes[book.id]}
-                                </p>
+                    <div className="book-section">
+                        {recommendedBooks.map(book => (
+                            <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                                <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
+                                <div className="book-info">
+                                    <p><strong>{book.nameBook}</strong></p>
+                                    <FaStar className="recommended-icon" />
+                                    <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
+                                        <FaThumbsUp className="like-icon" /> {likes[book.id]}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-
-                    {/* קו מפריד */}
+                        ))}
+                    </div>
+    
                     <hr className="separator-line" />
-
-                    {/* ספרים זמינים */}
+    
                     <h3>זמינים עבורך</h3>
-                    {availableBooks.map(book => (
-                        <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-                            <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
-                            <div className="book-info">
-                                <p><strong>{book.nameBook}</strong></p>
-                                <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                    <FaThumbsUp className="like-icon" /> {likes[book.id]}
-                                </p>
+                    <div className="book-section">
+                        {availableBooks.map(book => (
+                            <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                                <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
+                                <div className="book-info">
+                                    <p><strong>{book.nameBook}</strong></p>
+                                    <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
+                                        <FaThumbsUp className="like-icon" /> {likes[book.id]}
+                                    </p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
-
-
+    
                 {selectedBook && (
                     <div className="modal" onClick={() => setSelectedBook(null)}>
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -330,6 +330,7 @@ function NewBorrow() {
             </div>
         </>
     );
+    
 }
 
 export default NewBorrow;
