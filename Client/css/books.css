@@ -7,8 +7,53 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    
+    margin: 20px;
 }
+
+.add-book-button {
+    margin: 20px 0;
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.add-book-button:hover {
+    background-color: #45a049;
+}
+
+.add-book-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-book-form input,
+.add-book-form textarea {
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.add-book-form button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.add-book-form button:hover {
+    background-color: #45a049;
+}
+
 .book-likes.liked {
     color: red; /* או כל צבע/סגנון אחר שיסמן שהספר נלחץ */
 }

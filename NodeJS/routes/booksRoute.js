@@ -1,10 +1,22 @@
 const express = require('express');
+const multer = require('multer');
 const booksRouter = express.Router();
-booksRouter.use(express.json());
 const { getSingle, create, update, deleteB } = require('../controllers/booksController');
 const roleAuthorization = require('../middlewares/roleAuthorization');
+const jwtAuthentication = require('../middlewares/jwtAuthentication');
+booksRouter.use(express.json());
 
-booksRouter.get('/:bookId',roleAuthorization(1), async (req, res) => {
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
+booksRouter.get('/:bookId', async (req, res) => {
     try {
         const book = await getSingle(req.params.bookId);
         if (!book) {
@@ -17,20 +29,21 @@ booksRouter.get('/:bookId',roleAuthorization(1), async (req, res) => {
     }
 });
 
-booksRouter.post('/', async (req, res) => {
+booksRouter.post('/', jwtAuthentication, roleAuthorization([1]), upload.single('image'), async (req, res) => {
     try {
+        const imageUrl = req.file ? req.file.filename : null;
         const response = await create(
             req.body.nameBook,
             req.body.author,
             req.body.numOfPages,
             req.body.publishingYear,
             req.body.summary,
-            req.body.image,
+            imageUrl,
             req.body.category
         );
         res.status(201).send(await getSingle(response));
     } catch (error) {
-        res.status(500).send({ error: 'Failed to create book' });
+        res.sendStatus(500);
     }
 });
 

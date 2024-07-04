@@ -16,7 +16,6 @@ import ReturnedBooks from "../pages/ReturnedBooks"
 import Borrows from "../pages/Borrows"
 import Borrowers from "../pages/Borrowers";
 import Inspectors from "../pages/Inspectors";
-import AllBooks from "../pages/AllBooks";
 import Libraries from "../pages/Libraries";
 import Borrower from "../pages/Borrower";
 import NewLibrary from "../pages/NewLibrary";
@@ -67,7 +66,7 @@ function App() {
 
             <Route path="/admin-home" element={<HomeLayout />}>
               <Route index element={<Libraries />} />
-              <Route path="books" element={<AllBooks />} />
+              <Route path="books" element={<Books />} />
               <Route path="libraries" element={<Libraries />} />
               <Route path="new-library" element={<NewLibrary />} />
               <Route path="logout" element={<Logout />} />

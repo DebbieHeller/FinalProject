@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import '../css/books.css';
 import { FaSearch, FaThumbsUp } from 'react-icons/fa';
+import { userContext } from "../src/App";
 
 function Books() {
+    const { user } = useContext(userContext);
     const libraryId = parseInt(localStorage.getItem('libraryId'));
     const [books, setBooks] = useState([]);
     const [likes, setLikes] = useState({});
@@ -11,6 +13,16 @@ function Books() {
     const [showComments, setShowComments] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
+    const [showAddBookModal, setShowAddBookModal] = useState(false);
+    const [newBook, setNewBook] = useState({
+        nameBook: '',
+        author: '',
+        numOfPages: 0,
+        publishingYear: 0,
+        summary: '',
+        image: null,
+        category: '',
+    });
 
     useEffect(() => {
         fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}`)
@@ -76,6 +88,40 @@ function Books() {
             .catch((error) => console.error('Error updating likes:', error));
     };
 
+    const handleAddBookChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setNewBook(prevState => ({
+            ...prevState,
+            [name]: type === 'checkbox' ? checked : value
+        }));
+    };
+
+    const handleAddBookSubmit = () => {
+        const formData = new FormData();
+        for (const key in newBook) {
+            formData.append(key, newBook[key]);
+        }
+        fetch('http://localhost:3000/books', {
+            method: 'POST',
+            credentials: 'include',
+            body: formData
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setBooks([...books, data]);
+                setSearchResults([...books, data]);
+                setShowAddBookModal(false);
+            })
+            .catch((error) => console.error('Error adding book:', error));
+    };    
+
+    const handleImageChange = (e) => {
+        setNewBook(prevState => ({
+            ...prevState,
+            image: e.target.files[0]
+        }));
+    };
+
     return (
         <div className="books-container">
             <h1>Books</h1>
@@ -91,6 +137,7 @@ function Books() {
                     <FaSearch className="search-icon" />
                 </div>
             </form>
+            {user && user.roleId == 1 &&<button className="add-book-button" onClick={() => setShowAddBookModal(true)}>Add Book</button>}
             <div className="books-grid">
                 {searchResults.map(book => (
                     <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
@@ -115,7 +162,6 @@ function Books() {
                         <p><strong>Published:</strong> {selectedBook.publishingYear}</p>
                         <p><strong>Summary:</strong> {selectedBook.summary}</p>
                         <p><strong>Category:</strong> {selectedBook.category}</p>
-                        <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>
                         <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id) }}>
                             {showComments ? 'Hide Comments' : 'Show Comments'}
                         </button>
@@ -129,6 +175,64 @@ function Books() {
                                 ))}
                             </div>
                         )}
+                    </div>
+                </div>
+            )}
+            {showAddBookModal && (
+                <div className="modal">
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <span className="close" onClick={() => setShowAddBookModal(false)}>&times;</span>
+                        <h2>Add a New Book</h2>
+                        <form className="add-book-form">
+                            <input
+                                type="text"
+                                name="nameBook"
+                                placeholder="Book Name"
+                                value={newBook.nameBook}
+                                onChange={handleAddBookChange}
+                            />
+                            <input
+                                type="text"
+                                name="author"
+                                placeholder="Author"
+                                value={newBook.author}
+                                onChange={handleAddBookChange}
+                            />
+                            <input
+                                type="number"
+                                name="numOfPages"
+                                placeholder="Number of Pages"
+                                value={newBook.numOfPages}
+                                onChange={handleAddBookChange}
+                            />
+                            <input
+                                type="number"
+                                name="publishingYear"
+                                placeholder="Publishing Year"
+                                value={newBook.publishingYear}
+                                onChange={handleAddBookChange}
+                            />
+                            <textarea
+                                name="summary"
+                                placeholder="Summary"
+                                value={newBook.summary}
+                                onChange={handleAddBookChange}
+                            />
+                            <input
+                                type="text"
+                                name="category"
+                                placeholder="Category"
+                                value={newBook.category}
+                                onChange={handleAddBookChange}
+                            />
+                            <input
+                                type="file"
+                                name="image"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                            />
+                            <button type="button" onClick={handleAddBookSubmit}>Add Book</button>
+                        </form>
                     </div>
                 </div>
             )}
