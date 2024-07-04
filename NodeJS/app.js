@@ -5,7 +5,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 
 const jwtAuthentication = require('./middlewares/jwtAuthentication');
-const roleAuthorization = require('./middlewares/roleAuthorization'); // Make sure this path is correct
+const roleAuthorization = require('./middlewares/roleAuthorization'); 
 const users = require("./routes/usersRoute");
 const login = require("./routes/loginRoute");
 const books = require("./routes/booksRoute");
@@ -22,7 +22,6 @@ const likes = require("./routes/likesRoute")
 const inspectorBorrows=require('./routes/inspectorBorrowsRoute')
 const libraryAdmin = require('./routes/libraryAdminRoute');
 const libraries = require('./routes/librariesRoute')
-
 
 app.use(cookieParser());
 app.use(express.json());

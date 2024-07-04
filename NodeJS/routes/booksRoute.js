@@ -1,20 +1,22 @@
-const express = require("express");
+const express = require('express');
+const multer = require('multer');
 const booksRouter = express.Router();
+const { getSingle, create, update, deleteB } = require('../controllers/booksController');
+const roleAuthorization = require('../middlewares/roleAuthorization');
+const jwtAuthentication = require('../middlewares/jwtAuthentication');
 booksRouter.use(express.json());
-const {
-  getSingle,
-  create,
-  update,
-  deleteB,
-  getfilteredBooks,
-} = require("../controllers/booksController");
-const roleAuthorization = require("../middlewares/roleAuthorization");
 
-booksRouter.get('/', async (req, res) => {
-  console.log("query");
-  const { query, libraryId, bookId } = req.query;
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'images');
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
 
-  if (bookId) {
+booksRouter.get('/:bookId', async (req, res) => {
     try {
       const book = await getSingle(req.params.bookId);
       if (!book) {
@@ -28,21 +30,22 @@ booksRouter.get('/', async (req, res) => {
   } 
 });
 
-booksRouter.post("/", async (req, res) => {
-  try {
-    const response = await create(
-      req.body.nameBook,
-      req.body.author,
-      req.body.numOfPages,
-      req.body.publishingYear,
-      req.body.summary,
-      req.body.image,
-      req.body.category
-    );
-    res.status(201).send(await getSingle(response));
-  } catch (error) {
-    res.status(500).send({ error: "Failed to create book" });
-  }
+booksRouter.post('/', jwtAuthentication, roleAuthorization([1]), upload.single('image'), async (req, res) => {
+    try {
+        const imageUrl = req.file ? req.file.filename : null;
+        const response = await create(
+            req.body.nameBook,
+            req.body.author,
+            req.body.numOfPages,
+            req.body.publishingYear,
+            req.body.summary,
+            imageUrl,
+            req.body.category
+        );
+        res.status(201).send(await getSingle(response));
+    } catch (error) {
+        res.sendStatus(500);
+    }
 });
 
 booksRouter.put("/:bookId", async (req, res) => {
