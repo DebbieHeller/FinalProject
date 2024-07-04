@@ -142,7 +142,12 @@ function Books() {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="search-input"
                     />
-                    <FaSearch className="search-icon" />
+            <button
+            className="search-icon"
+            onClick={() => handleSearch(searchQuery)}
+          >
+            <FaSearch />
+          </button>
                 </div>
             </form>
             {user && user.roleId == 1 &&<button className="add-book-button" onClick={() => setShowAddBookModal(true)}>Add Book</button>}

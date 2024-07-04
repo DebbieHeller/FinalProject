@@ -1,254 +1,255 @@
 .books-container {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    width: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
 }
 
 .add-book-button {
-    margin: 20px 0;
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+  margin: 20px 0;
+  padding: 10px 20px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 .add-book-button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 .add-book-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .add-book-form input,
 .add-book-form textarea {
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .add-book-form button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
 }
 
 .add-book-form button:hover {
-    background-color: #45a049;
+  background-color: #45a049;
 }
 
 .book-likes.liked {
-    color: red; /* או כל צבע/סגנון אחר שיסמן שהספר נלחץ */
+  color: red; /* או כל צבע/סגנון אחר שיסמן שהספר נלחץ */
 }
 
 .search-form {
-    width: auto;
-    display: flex;
-    justify-content: flex-end;
-    padding: 10px;
-    position: relative; /* Add relative positioning to the search form */
+  width: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+  position: relative; /* Add relative positioning to the search form */
 }
 
 .search-input-container {
-    position: relative;
-    margin-right: 20px;
+  position: relative;
+  margin-right: 20px;
 }
 
 .search-input {
-    width: 320px;
-    height: 40px;
-    padding: 10px 40px 10px 20px;
-    margin: 10px;
-    margin-right: 0%;
-    border-radius: 25px;
-    border: 1px solid #ccc;
-    font-size: 16px;
-    outline: none;
-    transition: all 0.3s ease;
-    box-sizing: border-box;
+  width: 320px;
+  height: 40px;
+  padding: 10px 40px 10px 20px;
+  margin: 10px;
+  margin-right: 0%;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .search-input:focus {
-    border-color: #007BFF;
-    box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+  border-color: #007bff;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
 }
 
 .search-icon {
-    position: absolute;
-    top: 50%;
-    left: calc(100% - 30px); 
-    transform: translateY(-50%);
-    font-size: 18px;
-    color: #888;
-    padding-right: 2px;
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 30px);
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #888;
+  padding-right: 2px;
 }
 
 .books-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    width: 100%;
-    justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
 }
 
 .book-card {
-    background-color: #ffffff;
-    border: 2px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: calc(20% - 20px);
-    box-sizing: border-box;
-    transition: box-shadow 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
+  background-color: #ffffff;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: calc(20% - 20px);
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
 }
 
 .book-card:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .book-image {
-    width: 80%;
-    height: auto;
-    object-fit: cover;
+  width: 80%;
+  height: auto;
+  object-fit: cover;
 }
 
 .book-info {
-    padding: 15px;
-    text-align: center;
+  padding: 15px;
+  text-align: center;
 }
 
 .book-likes {
-    font-size: 1.1em;
-    color: #ff6600;
-    margin: 10px 0;
+  font-size: 1.1em;
+  color: #ff6600;
+  margin: 10px 0;
 }
 
 .like-button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.1em;
-    color: #41aef7;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1em;
+  color: #41aef7;
 }
 
 .like-button:hover {
-    color: #41aef7;
+  color: #41aef7;
 }
 
 .singleBook {
-    background-color: #41aef7;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    margin: 10px 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+  background-color: #41aef7;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  margin: 10px 0;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.book-details, .comments-section {
-    margin-top: 15px;
-    width: 100%;
-    text-align: left;
-    padding: 10px;
-    border-top: 1px solid #eee;
+.book-details,
+.comments-section {
+  margin-top: 15px;
+  width: 100%;
+  text-align: left;
+  padding: 10px;
+  border-top: 1px solid #eee;
 }
 
 .comment-card {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin-bottom: 10px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
 }
 
 .modal {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }
 
 .modal-content {
-    position: relative;
-    background-color: white;
-    padding: 20px;
-    border-radius: 5px;
-    width: 90%;
-    max-width: 800px;
-    max-height: 600px; 
-    overflow-y: auto; 
-    overflow-x: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+  background-color: white;
+  padding: 20px;
+  border-radius: 5px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 600px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
 }
 
 .modal-content.show-comments {
-    max-height: 80vh; 
-    overflow-y: auto; 
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .modal-content img {
-    width: 100%; 
-    max-height: 200px; 
-    object-fit: contain; 
-    border-radius: 10px; 
-    margin-bottom: 15px; 
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-bottom: 15px;
 }
 
 .modal-content h2 {
-    margin-top: 0;
-    color: #333;
+  margin-top: 0;
+  color: #333;
 }
 
 .modal-content p {
-    margin: 10px 0;
-    color: #555;
+  margin: 10px 0;
+  color: #555;
 }
 
 .close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #333;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
