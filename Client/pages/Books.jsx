@@ -4,7 +4,7 @@ import { FaSearch, FaThumbsUp } from "react-icons/fa";
 import { userContext } from "../src/App";
 
 function Books() {
-    const { user } = useContext(userContext);
+  const { user } = useContext(userContext);
   const libraryId = parseInt(localStorage.getItem("libraryId"));
   const [books, setBooks] = useState([]);
   const [likes, setLikes] = useState({});
@@ -13,8 +13,8 @@ function Books() {
   const [showComments, setShowComments] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-    const [showAddBookModal, setShowAddBookModal] = useState(false);
-    const [newBook, setNewBook] = useState({
+  const [showAddBookModal, setShowAddBookModal] = useState(false);
+  const [newBook, setNewBook] = useState({
         nameBook: '',
         author: '',
         numOfPages: 0,
@@ -25,7 +25,9 @@ function Books() {
     });
 
   useEffect(() => {
-    fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}`)
+    const booksApi =   user && user.roleId == 1 ? `http://localhost:3000/homeBooks`
+    : `http://localhost:3000/homeBooks?libraryId=${libraryId}`
+    fetch(booksApi)
       .then((res) => {
         if (!res.ok) {
           throw new Error("Network response was not ok");
@@ -37,10 +39,11 @@ function Books() {
         setSearchResults(books);
       })
       .catch((error) => console.error("Error fetching books:", error));
-  }, [libraryId]);
 
-  useEffect(() => {
-    fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
+      const likesApi =   user && user.roleId == 1 ? `http://localhost:3000/likes`
+    : `http://localhost:3000/likes?libraryId=${libraryId}`
+
+      fetch(likesApi)
       .then((res) => res.json())
       .then((likes) => {
         const likesObject = likes.reduce((acc, like) => {
@@ -51,6 +54,7 @@ function Books() {
       })
       .catch((error) => console.error("Error fetching likes:", error));
   }, [libraryId]);
+
 
   const handleShowComments = (bookId) => {
     setShowComments(!showComments);
@@ -175,6 +179,7 @@ function Books() {
                         <p><strong>Published:</strong> {selectedBook.publishingYear}</p>
                         <p><strong>Summary:</strong> {selectedBook.summary}</p>
                         <p><strong>Category:</strong> {selectedBook.category}</p>
+                        {(!user || user.libraryId) &&<p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>}
                         <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id) }}>
                             {showComments ? 'Hide Comments' : 'Show Comments'}
                         </button>
@@ -251,114 +256,6 @@ function Books() {
             )}
         </div>
     );
-  return (
-    <div className="books-container">
-      <h1>Books</h1>
-      <form className="search-form">
-        <div className="search-input-container">
-          <input
-            type="text"
-            placeholder="Search by name, author or category"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="search-input"
-          />
-          <button
-            className="search-icon"
-            onClick={() => handleSearch(searchQuery)}
-          >
-            <FaSearch />
-          </button>
-        </div>
-      </form>
-      <div className="books-grid">
-        {searchResults.map((book) => (
-          <div
-            key={book.id}
-            className="book-card"
-            onClick={() => {
-              setShowComments(false);
-              setSelectedBook(book);
-            }}
-          >
-            <img
-              src={`http://localhost:3000/images/${book.image}`}
-              alt={book.nameBook}
-              className="book-image"
-            />
-            <div className="book-info">
-              <p>
-                <strong>{book.nameBook}</strong>
-              </p>
-              <p
-                className="book-likes"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleLike(book.id);
-                }}
-              >
-                <FaThumbsUp className="like-icon" /> {likes[book.id]}
-              </p>
-            </div>
-          </div>
-        ))}
-      </div>
-      {selectedBook && (
-        <div className="modal" onClick={() => setSelectedBook(null)}>
-          <div
-            className={`modal-content ${showComments ? "show-comments" : ""}`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <span className="close" onClick={() => setSelectedBook(null)}>
-              &times;
-            </span>
-            <img
-              src={`http://localhost:3000/images/${selectedBook.image}`}
-              alt={selectedBook.nameBook}
-            />
-            <h2>{selectedBook.nameBook}</h2>
-            <p>
-              <strong>Author:</strong> {selectedBook.author}
-            </p>
-            <p>
-              <strong>Pages:</strong> {selectedBook.numOfPages}
-            </p>
-            <p>
-              <strong>Published:</strong> {selectedBook.publishingYear}
-            </p>
-            <p>
-              <strong>Summary:</strong> {selectedBook.summary}
-            </p>
-            <p>
-              <strong>Category:</strong> {selectedBook.category}
-            </p>
-            <p>
-              <strong>New:</strong> {selectedBook.isNew ? "Yes" : "No"}
-            </p>
-            <button
-              className="singleBook"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleShowComments(selectedBook.id);
-              }}
-            >
-              {showComments ? "Hide Comments" : "Show Comments"}
-            </button>
-            {showComments && comments[selectedBook.id] && (
-              <div className="comments-section">
-                {comments[selectedBook.id].map((comment) => (
-                  <div key={comment.id} className="comment-card">
-                    <h4>{comment.title}</h4>
-                    <p>{comment.body}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
 }
 
 export default Books;

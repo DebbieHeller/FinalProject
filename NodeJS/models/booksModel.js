@@ -2,6 +2,18 @@ const mysql = require('mysql2');
 const path = require('path');
 const pool = require('../LibraryDB');  
 
+
+async function getBooksForAdmin() {
+    try {
+        console.log("******")
+        const [rows] = await pool.query(`SELECT * FROM books`);
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
@@ -11,7 +23,7 @@ async function getBooks(libraryId) {
              WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
-        console.log(err);
+        console.log(err);//????
         throw err;
     }
 }
@@ -34,7 +46,7 @@ async function getAvailableBooks(libraryId) {
         );
         return rows;
     } catch (err) {
-        console.log(err);
+        console.log(err);//???
         throw err;
     }
 }
@@ -193,5 +205,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks};
+module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks, getBooksForAdmin};
 

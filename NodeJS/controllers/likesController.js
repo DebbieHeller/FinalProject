@@ -2,7 +2,9 @@ const model = require("../models/likesModel");
 
 async function getAll(libraryId) {
     try {
-        return await model.getlikes(libraryId)
+        const response = libraryId? await model.getlikes(libraryId)
+        :await await model.getAlllikes()
+        return response
     } catch (err) {
         throw err
     }

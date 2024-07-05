@@ -49,7 +49,7 @@ CREATE TABLE users (
   isWarned BOOLEAN DEFAULT FALSE,
   subscriptionTypeId INT default NULL,
   roleId INT NOT NULL,
-  libraryId INT NOT NULL,
+  libraryId INT DEFAULT NULL,
   passwordId INT NOT NULL,
   FOREIGN KEY (subscriptionTypeId) REFERENCES subscriptionTypes(id),
   FOREIGN KEY (roleId) REFERENCES roles(id),
@@ -64,7 +64,7 @@ CREATE TABLE books (
   numOfPages INT NOT NULL,
   publishingYear YEAR NOT NULL,
   summary VARCHAR(255) NOT NULL,
-  image VARCHAR(50) NOT NULL,
+  image VARCHAR(200) NOT NULL,
   category VARCHAR(50) NOT NULL
 );
 
@@ -166,14 +166,14 @@ INSERT INTO passwords (password) VALUES
 
 INSERT INTO users (username, phone, email, address,isWarned, subscriptionTypeId, roleId, libraryId, passwordId) VALUES 
 ('Alice', '123-456-7890', 'alice@example.com', '123 Main St',FALSE, 1, 4, 1, 1),
-('Bob', '987-654-3210', 'bob@example.com', '456 Elm St',FALSE, 2, 1, 2, 2),
+('Bob', '987-654-3210', 'bob@example.com', '456 Elm St',FALSE, 2, 4, 2, 2),
 ('Charlie', '555-555-5555', 'charlie@example.com', '789 Oak St',FALSE, 1, 3, 1, 3),
 ('David', '222-222-2222', 'david@example.com', '321 Pine St',FALSE, 2, 2,3, 4),
 ('Emma', '333-333-3333', 'emma@example.com', '456 Maple St',FALSE, 1, 4, 3, 5),
 ('Frank', '444-444-4444', 'frank@example.com', '987 Cedar St',FALSE, 1, 2,1, 6),
 ('Grace', '666-666-6666', 'grace@example.com', '654 Birch St',FALSE, 2, 4, 3, 7),
 ('Henry', '777-777-7777', 'henry@example.com', '753 Walnut St',FALSE, 1, 3, 3, 8),
-('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St',FALSE, 1, 1, 1, 9),
+('Ivy', '888-888-8888', 'ivy@example.com', '147 Cherry St',FALSE, 1, 1, null, 9),
 ('Jack', '999-999-9999', 'jack@example.com', '369 Spruce St',FALSE, 2, 4, 2, 10);
 
 

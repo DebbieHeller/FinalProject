@@ -1,12 +1,7 @@
 const express = require("express");
 const multer = require("multer");
 const booksRouter = express.Router();
-const {
-  getSingle,
-  create,
-  update,
-  deleteB,
-} = require("../controllers/booksController");
+const { getSingle, create, update, deleteB } = require("../controllers/booksController");
 const roleAuthorization = require("../middlewares/roleAuthorization");
 const jwtAuthentication = require("../middlewares/jwtAuthentication");
 booksRouter.use(express.json());

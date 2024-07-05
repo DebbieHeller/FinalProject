@@ -280,7 +280,6 @@ function NewBorrow() {
     
                     <hr className="separator-line" />
     
-                    <h3>זמינים עבורך</h3>
                     <div className="book-section">
                         {availableBooks.map(book => (
                             <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>

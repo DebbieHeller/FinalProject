@@ -1,5 +1,17 @@
 const pool = require('../LibraryDB')
 
+async function getAlllikes() {
+    try {
+        const [rows] = await pool.query(
+            `SELECT likes.* 
+            FROM likes 
+            JOIN booksInLibrary ON likes.bookId = booksInLibrary.bookId`);
+        return rows;
+    } catch (err) {
+        throw err;
+    }
+}
+
 async function getlikes(libraryId) {
     try {
         const [rows] = await pool.query(
@@ -30,4 +42,4 @@ async function updateLikes(bookId) {
 }
 
 
-module.exports = { getlikes, updateLikes }
+module.exports = { getAlllikes, getlikes, updateLikes }

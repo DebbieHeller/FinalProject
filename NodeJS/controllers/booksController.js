@@ -1,8 +1,12 @@
 const model = require('../models/booksModel')
 
-async function getAll(libraryId) {
+async function getAll(libraryId, query) {
     try {
-        return await model.getBooks(libraryId)
+        const response = libraryId? query? await model.getfilteredBooks(query, libraryId)
+        :await model.getBooks(libraryId)
+        :await model.getBooksForAdmin();
+        return response
+        
     } catch (err) {
         throw err
     }
@@ -38,14 +42,7 @@ async function getSingle(id) {
         throw err
     }
 }
-async function getfilteredBooks(query,libraryId) {
-    try {
-        console.log(query)
-        return await model.getfilteredBooks(query,libraryId)
-    } catch (err) {
-        throw err
-    }
-}
+
 async function getSingleByUserName(namebook) {
     try {
         return await model.getSingleByUserName(namebook)
@@ -78,4 +75,4 @@ async function deleteB(id) {
     }
 }
 
-module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou, getSingleByUserName ,getfilteredBooks}
+module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou, getSingleByUserName }

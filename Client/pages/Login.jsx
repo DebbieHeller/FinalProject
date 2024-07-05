@@ -35,10 +35,11 @@ function Login() {
         }
       })
       .then(data => {
-        if(data.roleId==1){
+        if(data.roleId == 1){
           navigate('/admin-home')
+          setUser(data)
         }
-        if (data.libraryId != libraryId) {
+        else if (data.libraryId != libraryId) {
           alert("אינך רשום בספריה שלנו")
           navigate('/sign-up');
         } else {
@@ -49,7 +50,6 @@ function Login() {
             navigate('/inspector-home');
           else if(data.roleId == 2)
             navigate('/library-admin-home');
-          
         }
       })
       .catch(() =>

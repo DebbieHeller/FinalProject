@@ -51,7 +51,6 @@ function Messages() {
         <thead>
           <tr>
             <th>כותרת</th>
-            <th>תוכן</th>
             <th>תאריך יצירה</th>
             <th>סטטוס</th>
           </tr>
@@ -65,7 +64,6 @@ function Messages() {
                 onDoubleClick={() => handleDoubleClick(message)}
               >
                 <td>{message.title}</td>
-                <td>{message.body}</td>
                 <td>{new Date(message.createdDate).toLocaleDateString()}</td>
                 <td>{message.status}</td>
               </tr>
