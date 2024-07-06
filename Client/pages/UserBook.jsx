@@ -1,8 +1,14 @@
 import React, { useContext, useState } from "react";
 import { useLocation } from 'react-router-dom';
-import { FaComment, FaPlus, FaEdit, FaTrash } from 'react-icons/fa'; // Import icons
+import { FaComment, FaPlus, FaEdit, FaTrash } from 'react-icons/fa';
 import { userContext } from "../src/App";
 import '../css/userBook.css';
+import {
+  handleShowComments,
+  handleAddComment,
+  handleUpdateComment,
+  handleDeleteComment
+} from './commentFunction';
 
 function UserBook() {
   const { user } = useContext(userContext);
@@ -14,105 +20,6 @@ function UserBook() {
   const [commentId, setCommentId] = useState(null);
   const location = useLocation();
   const { book } = location.state;
-
-  const handleShowComments = (bookId) => {
-    setShowComments(!showComments);
-    if (comments.length == 0) {
-      fetch(`http://localhost:3000/comments?bookId=${bookId}`)
-        .then((res) => res.json())
-        .then((bookComments) => {
-          setComments(bookComments);
-        })
-        .catch((error) => console.error("Error fetching comments:", error));
-    }
-  };
-
-  const handleAddComment = (e) => {
-    e.preventDefault();
-    if (!commentTitle || !commentBody) {
-      alert('Please enter both title and body for the comment.');
-      return;
-    }
-
-    const newComment = {
-      title: commentTitle,
-      body: commentBody,
-      userId: user.id,
-      bookId: book.id
-    };
-    fetch(`http://localhost:3000/comments`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(newComment),
-    })
-      .then((res) => res.json())
-      .then((createdComment) => {
-        setComments([...comments, createdComment]);
-        setShowCommentForm(false);
-        setCommentTitle('');
-        setCommentBody('');
-      })
-      .catch((error) => console.error('Error adding comment:', error));
-  };
-
-  const handleUpdateComment = (e, commentId) => {
-    e.preventDefault();
-
-    if (!commentTitle || !commentBody) {
-      alert('Please enter both title and body for the comment.');
-      return;
-    }
-    const updatedBody = {
-      title: commentTitle,
-      body: commentBody,
-      userId: user.id,
-      bookId: book.id
-    };
-
-    fetch(`http://localhost:3000/comments/${commentId}`, {
-      method: 'PUT',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(updatedBody),
-    })
-      .then(response => {
-        if (response.ok) {
-          setComments(comments.map(comment => comment.id === commentId ? { ...comment, ...updatedBody } : comment));
-          setShowCommentForm(false);
-          setCommentTitle('');
-          setCommentBody('');
-        } else {
-          console.error('Error updating comment:', response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error updating comment:', error.message);
-      });
-  };
-
-  const handleDeleteComment = (e, commentId) => {
-    e.preventDefault();
-
-    fetch(`http://localhost:3000/comments/${commentId}`, {
-      method: 'DELETE',
-      credentials: 'include'
-    })
-      .then(response => {
-        if (response.ok) {
-          setComments(comments.filter(comment => comment.id !== commentId));
-        } else {
-          console.error('Error deleting comment:', response.statusText);
-        }
-      })
-      .catch(error => {
-        console.error('Error deleting comment:', error.message);
-      });
-  };
 
   const startEditing = (comment) => {
     setCommentId(comment.id)
@@ -134,7 +41,7 @@ function UserBook() {
       <p><strong>New:</strong> {book.isNew ? 'Yes' : 'No'}</p>
 
       <div className="comments-controls">
-        <button className='toggle-comments' onClick={() => handleShowComments(book.id)}>
+        <button className='toggle-comments' onClick={() => handleShowComments(book.id, comments, setComments, showComments, setShowComments)}>
           <FaComment className="comment-icon" /> {showComments ? 'Hide Comments' : 'Show Comments'}
         </button>
         <button className='toggle-add-comment' onClick={() => setShowCommentForm(!showCommentForm)}>
@@ -143,7 +50,7 @@ function UserBook() {
       </div>
 
       {showCommentForm && (
-        <form className='comment-form' onSubmit={(e) => commentId ? handleUpdateComment(e, commentId) : handleAddComment(e)}>
+        <form className='comment-form' onSubmit={(e) => commentId ? handleUpdateComment(e, commentId, commentTitle, commentBody, user, book, comments, setComments, setShowCommentForm, setCommentTitle, setCommentBody) : handleAddComment(e, commentTitle, commentBody, user, book, comments, setComments, setShowCommentForm, setCommentTitle, setCommentBody)}>
           <input
             type="text"
             placeholder="Title"
@@ -169,7 +76,7 @@ function UserBook() {
                 <button className="update-comment" onClick={() => startEditing(comment)}>
                   <FaEdit className="edit-icon" /> Edit
                 </button>
-                <button className="delete-comment" onClick={(e) => handleDeleteComment(e, comment.id)}>
+                <button className="delete-comment" onClick={(e) => handleDeleteComment(e, comment.id, comments, setComments)}>
                   <FaTrash className="delete-icon" /> Delete
                 </button>
               </div>
