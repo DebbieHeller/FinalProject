@@ -4,7 +4,8 @@
   align-items: center;
   padding: 10px 20px;
   background-color: rgb(125, 165, 188);
-  position: relative; /* כדי לאפשר להקפיא את כיתוב כאשר הוא בעל תחתית נפילה */
+  position: fixed;
+  width: 100%;
 }
 
 .header-left {

@@ -14,7 +14,7 @@ function SignUp() {
     email: "",
     address: "",
     subscriptionTypeId: 1,
-    roleId: 1,
+    roleId: 4,
     libraryId: libraryId,
     password: "",
     passwordVerify: "",

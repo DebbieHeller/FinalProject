@@ -1,19 +1,20 @@
 #root {
   width:100%;
   margin: 0 auto;
-  padding: 2rem;
   text-align: center;
+  overflow-x: hidden;
 }
 
 .logo {
-  height: 6em;
-  padding: 1.5em;
+  position: fixed;
+  right: 0px;
+  top: 0px;
+  height: 4em;
+  width: 6em;
   will-change: filter;
   transition: filter 300ms;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }

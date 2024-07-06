@@ -13,7 +13,6 @@ function UserBooks() {
   const [selectedBooksToReturn, setSelectedBooksToReturn] = useState([]);
   const [showErrorMessage, setShowErrorMessage] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [daysLeftMap, setDaysLeftMap] = useState(new Map());
   
 
@@ -96,16 +95,13 @@ function UserBooks() {
 
   const confirmReturnBooks = () => {
     setShowConfirmation(false);
-    setIsLoading(true);
 
     const updatedBooks = [...books];
     const updatedSelectedBooks = [...selectedBooksToReturn];
 
     selectedBooksToReturn.forEach((borrowBook) => {
       const returnDate = new Date().toISOString().split("T")[0];
-      const borrowDate = new Date(borrowBook.borrowDate)
-        .toISOString()
-        .split("T")[0];
+      const borrowDate = new Date(borrowBook.borrowDate).toISOString().split("T")[0];
 
       const updatedBorrow = {
         id: borrowBook.borrowId,
@@ -142,14 +138,12 @@ function UserBooks() {
           //   console.error("Error returning book:", response.statusText);
           // }
           if (response.status == 403) {
-            alert("אין לך הרשאה מתאימה,הכנס מחדש")
+            alert("אין לך הרשאה מתאימה, הכנס מחדש")
             navigate('/logout');
           }
         })
         .catch((error) => console.error("Error returning book:", error));
     });
-
-    setIsLoading(false);
   };
   const refreshUserFromCookie = async () => {
 
@@ -194,7 +188,7 @@ function UserBooks() {
     <div className="user-books-container">
       <button onClick={refreshUserFromCookie}></button>
       <h1>ספרים בהשאלה</h1>
-      {isLoading && <div className="loading-message">מתבצעת החזרה...</div>}
+      {books.length == 0 && <div className="no-books-message">אין כרגע ספרים בהשאלתך</div>}
       <div className="books-grid">
         {books.map((book) => (
           <div key={book.copyBookId} className="book-card">

@@ -25,7 +25,7 @@ function Header() {
             </div>
             <div className="header-right">
                 <NavLink to="/" className="site-logo">
-                    Our Library
+                    <img className="logo" src="https://www.jerusalem.muni.il/media/41271/library_wp.png" alt="עמוד הבית" />
                 </NavLink>
             </div>
         </header>

@@ -17,9 +17,10 @@ async function getBooksForAdmin() {
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-            `SELECT b.*, bil.isNew
+            `SELECT b.*, bil.isNew, cb.isAvailable
              FROM booksInLibrary bil
              JOIN books b ON bil.bookId = b.id
+             JOIN copyBook cb ON cb.bookInLibraryId = bil.id
              WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
@@ -136,7 +137,7 @@ async function getRecommendedCategory(userId) {
 async function getRecommendedBooksForYou(libraryId, category) {
     try {
         const [booksRows] = await pool.query(
-        `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
+        `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable, 1 as numAvailableCopyBooks
         FROM booksInLibrary bil
         JOIN books b ON bil.bookId = b.id
         JOIN copyBook cb ON bil.id = cb.bookInLibraryId

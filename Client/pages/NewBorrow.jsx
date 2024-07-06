@@ -13,7 +13,7 @@ function NewBorrow() {
     const [selectedBook, setSelectedBook] = useState(null);
     const [showComments, setShowComments] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [availableBooks, setAvailableBooks] = useState([]);
+    // const [availableBooks, setAvailableBooks] = useState([]);
     const [recommendedBooks, setRecommendedBooks] = useState([]);
     const [cart, setCart] = useState([]);
     const [isCartVisible, setIsCartVisible] = useState(false);
@@ -68,23 +68,25 @@ function NewBorrow() {
     }, [libraryId, user.id]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/availableBooks?libraryId=${libraryId}`, {
+        fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}`, {
             method: 'GET',
             credentials: 'include'
         })
             .then((res) => res.json())
-            .then((availableBooks) => {
-                if (recommendedBooks.length > 0) {
-                    const filteredBooks = availableBooks.filter(
-                        availableBook => !recommendedBooks.some(recommendedBook => recommendedBook.id === availableBook.id)
-                    );
-                    setBooks(filteredBooks);
-                } else {
-                    setBooks(availableBooks);
-                }
-                setAvailableBooks(availableBooks);
+            .then((books) => {
+                // if (recommendedBooks.length > 0) {
+                //     const filteredBooks = availableBooks.filter(
+                //         availableBook => !recommendedBooks.some(recommendedBook => recommendedBook.id === availableBook.id)
+                //     );
+                //     setBooks(filteredBooks);
+                // } else {
+                //     setBooks(availableBooks);
+                // }
+                
+                // setAvailableBooks(availableBooks);
+                setBooks(books)
             })
-            .catch((error) => console.error('Error fetching available books:', error));
+            .catch((error) => console.error('Error fetching books:', error));
     }, [libraryId, recommendedBooks]);
 
     useEffect(() => {
@@ -103,14 +105,14 @@ function NewBorrow() {
     useEffect(() => {
         const query = searchQuery.toLowerCase();
         if (query === '') {
-            setAvailableBooks(books);
+            setBooks(books);
         } else {
             const filteredBooks = books.filter(book =>
                 book.nameBook.toLowerCase().includes(query) ||
                 book.author.toLowerCase().includes(query) ||
                 book.category.toLowerCase().includes(query)
             );
-            setAvailableBooks(filteredBooks);
+            setBooks(filteredBooks);
         }
     }, [searchQuery, books]);
 
@@ -252,7 +254,7 @@ function NewBorrow() {
                     <div className="search-input-container">
                         <input
                             type="text"
-                            placeholder="Search by name, author or category"
+                            placeholder="חיפוש לפי שם ספר, סופר, או קטגוריה"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="search-input"
@@ -281,7 +283,7 @@ function NewBorrow() {
                     <hr className="separator-line" />
     
                     <div className="book-section">
-                        {availableBooks.map(book => (
+                        {books.map(book => (
                             <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                                 <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
                                 <div className="book-info">
@@ -320,9 +322,10 @@ function NewBorrow() {
                                     ))}
                                 </div>
                             )}
-                            <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
+                            {selectedBook.isAvailable == true? <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
                                 להשאלה
                             </button>
+                            : <p>הספר אינו זמין להשאלה</p>}
                         </div>
                     </div>
                 )}

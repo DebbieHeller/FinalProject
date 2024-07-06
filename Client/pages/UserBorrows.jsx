@@ -29,8 +29,8 @@ function UserBorrows() {
                 return res.json();
             })
             .then((data) => {
-                setBorrowedBooks(data);
-                setSearchResults(data);
+                setBorrowedBooks([...data].sort((a, b) => new Date(b.returnDate) - new Date(a.returnDate)));
+                setSearchResults(borrowedBooks);
             })
             .catch((error) => console.error("Error fetching books:", error));
     }, [user.id]);
@@ -72,7 +72,7 @@ function UserBorrows() {
                 <div className="search-input-container">
                     <input
                         type="text"
-                        placeholder="Search by name, author or category"
+                        placeholder="חיפוש לפי שם ספר, סופר, או קטגוריה"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
                         className="search-input"
@@ -80,14 +80,15 @@ function UserBorrows() {
                     <FaSearch className="search-icon" />
                 </div>
                 <div className="filter-container">
-                    <label>Search by Date:</label>
+                    <label>חיפוש לפי תאריך</label>
+                    <span>מ-</span>
                     <input
                         type="date"
                         value={startDate}
                         onChange={(e) => setStartDate(e.target.value)}
                         className="date-input"
                     />
-                    <span>to</span>
+                    <span>עד-</span>
                     <input
                         type="date"
                         value={endDate}
@@ -123,7 +124,7 @@ function UserBorrows() {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="6">No books borrowed yet.</td>
+                            <td colSpan="6">עדיין לא השאלת ספרים</td>
                         </tr>
                     )}
                 </tbody>

@@ -75,8 +75,8 @@
   color: #dc3545;
   margin-bottom: 10px;
 }
-.loading-message {
-  position: fixed;
+.no-books-message {
+  position: relative;
   top: 10%;
   left: 50%;
   transform: translate(-50%, -50%);

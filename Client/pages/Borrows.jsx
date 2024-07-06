@@ -100,7 +100,7 @@ function Borrows() {
   return (
     <div className="borrows-container">
       <h1>השאלות קודמות</h1>
-      {isLoading && <div className="loading-message">Updating...</div>}
+      {isLoading && <div className="no-books-message">Updating...</div>}
       <table className="borrows-table">
         <thead>
           <tr>
