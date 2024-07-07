@@ -5,7 +5,6 @@ const { getAll } = require('../controllers/booksController');
 
 
 homeBooksRouter.get('/', async (req, res) => {
-  console.log("req.query.libraryId   "+req.query.libraryId)
     try {
       const books = await getAll(req.query.libraryId, req.query.query, req.query.userId);
       if (!books)

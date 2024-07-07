@@ -104,12 +104,12 @@ function Borrows() {
       <table className="borrows-table">
         <thead>
           <tr>
-            <th>Book</th>
-            <th>Borrow Date</th>
-            <th>Return Date</th>
-            <th>Status</th>
-            <th>Is Returned</th>
-            <th>Is Intact</th>
+            <th>שם ספר</th>
+            <th>תאריך השאלה</th>
+            <th>תאריך החזרה</th>
+            <th>סטטוס</th>
+            <th>האם הוחזר?</th>
+            <th>האם תקין?</th>
           </tr>
         </thead>
         <tbody>
@@ -123,7 +123,6 @@ function Borrows() {
                 <input
                   type="checkbox"
                   checked={borrow.isReturned}
-                  readOnly
                 />
               </td>
               <td>

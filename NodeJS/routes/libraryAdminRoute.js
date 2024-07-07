@@ -8,7 +8,6 @@ libraryAdminRouter.get('/', async (req, res) => {
     if (libraryId) {
         // מחיקת השאלה לפי borrowId
         try {
-            console.log(req.query.libraryId);
             const books = await getUnFixBorrows(req.query.libraryId);
             res.status(200).send(books);
         } catch (error) {

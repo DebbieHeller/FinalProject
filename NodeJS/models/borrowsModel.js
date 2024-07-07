@@ -47,19 +47,19 @@ async function getTerriableUser(userId) {
   }
 }
 
-
 async function getInspectorBorrows(libraryId) {
   
   try {
     const [rows] = await pool.query(
       `
-        SELECT borrows.id as borrowId, borrows.*, books.*
+        SELECT books.*, borrows.*, borrows.id as borrowId 
         FROM borrows
         JOIN copyBook ON borrows.copyBookId = copyBook.id
         JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
         JOIN books ON booksInLibrary.bookId = books.id
         WHERE booksInLibrary.libraryId=?
         AND borrows.isIntact IS NULL
+        AND borrows.isReturned IS NULL
         AND borrows.status ='Returned';
       `,[libraryId]
     );

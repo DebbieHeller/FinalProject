@@ -2,19 +2,22 @@ const model = require('../models/booksModel')
 
 async function getAll(libraryId, query, userId) {
     try {
-        const response = libraryId? query? await model.getfilteredBooks(query, libraryId)
-        : userId? await model.getBooksForUser(libraryId)
-        :await model.getBooks(libraryId)
-        :await model.getBooksForAdmin();
-        return response
+        //books
+        if(libraryId && !query && !userId)
+            return await model.getBooks(libraryId);
+        if(!libraryId && !query && !userId)
+            return await model.getBooksForAdmin();
+        if(libraryId && !query && userId)
+            return await model.getBooksForUser(libraryId);
         
-    } catch (err) {
-        throw err
-    }
-}
-async function getAvailableBooks(libraryId) {
-    try {
-        return await model.getAvailableBooks(libraryId)
+        //filtered books
+        if(libraryId && query && !userId)
+            return await model.getfilteredBooks(query, libraryId);
+        if(!libraryId && query && !userId)
+            return await model.getfilteredBooksForAdmin(query);
+        if(libraryId && query && userId)
+            return await model.getfilteredBooksForUser(query, libraryId);
+        
     } catch (err) {
         throw err
     }
@@ -76,4 +79,4 @@ async function deleteB(id) {
     }
 }
 
-module.exports = { getAll, getSingle, create, update, deleteB, getAvailableBooks, getRecommendedForYou, getSingleByUserName }
+module.exports = { getAll, getSingle, create, update, deleteB, getRecommendedForYou, getSingleByUserName }

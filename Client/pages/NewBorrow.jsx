@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import { userContext } from "../src/App";
 import Cart from "../components/Cart";
+import BookCard from "../components/BookCard";
 import '../css/books.css';
 import '../css/newBorrow.css';
-import { FaSearch, FaThumbsUp, FaShoppingCart, FaStar } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart } from 'react-icons/fa';
 
 function NewBorrow() {
     const libraryId = parseInt(localStorage.getItem('libraryId'));
@@ -12,11 +13,11 @@ function NewBorrow() {
     const [selectedBook, setSelectedBook] = useState(null);
     const [showComments, setShowComments] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isSearching, setIsSearching] = useState(false);
     const [recommendedBooks, setRecommendedBooks] = useState([]);
     const [cart, setCart] = useState([]);
     const [isCartVisible, setIsCartVisible] = useState(false);
     const { user } = useContext(userContext);
-    const [likes, setLikes] = useState({});
 
     useEffect(() => {
         fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`, {
@@ -31,50 +32,41 @@ function NewBorrow() {
     }, [libraryId, user.id]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}`, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then((res) => res.json())
-            .then((books) => {
-                if (recommendedBooks.length > 0) {
-                    const filteredBooks = books.filter(
-                        book => !recommendedBooks.some(recommendedBook => recommendedBook.id === book.id)
-                    );
-                    setBooks(filteredBooks);
-                } else {
-                    setBooks(books);
-                }
+        if (searchQuery === '') {
+            fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}`, {
+                method: 'GET',
+                credentials: 'include'
             })
-            .catch((error) => console.error('Error fetching books:', error));
-    }, [libraryId, recommendedBooks]);
-
-    useEffect(() => {
-        fetch(`http://localhost:3000/likes?libraryId=${libraryId}`)
-            .then((res) => res.json())
-            .then((likes) => {
-                const likesObject = likes.reduce((acc, like) => {
-                    acc[like.bookId] = like.numLikes;
-                    return acc;
-                }, {});
-                setLikes(likesObject);
-            })
-            .catch((error) => console.error('Error fetching likes:', error));
-    }, [libraryId]);
-
-    useEffect(() => {
-        const query = searchQuery.toLowerCase();
-        if (query === '') {
-            setBooks(books);
-        } else {
-            const filteredBooks = books.filter(book =>
-                book.nameBook.toLowerCase().includes(query) ||
-                book.author.toLowerCase().includes(query) ||
-                book.category.toLowerCase().includes(query)
-            );
-            setBooks(filteredBooks);
+                .then((res) => res.json())
+                .then((books) => {
+                    if (recommendedBooks.length > 0) {
+                        const filteredBooks = books.filter(
+                            book => !recommendedBooks.some(recommendedBook => recommendedBook.id === book.id)
+                        );
+                        setBooks(filteredBooks);
+                    } else {
+                        setBooks(books);
+                    }
+                    setIsSearching(false);
+                })
+                .catch((error) => console.error('Error fetching books:', error));
         }
-    }, [searchQuery, books]);
+    }, [libraryId, user.id, recommendedBooks, searchQuery]);
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+        if (query.trim() === '') {
+            setIsSearching(false);
+            return;
+        }
+        setIsSearching(true);
+        fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}&query=${query}&userId=${user.id}`)
+            .then((res) => res.json())
+            .then((data) => {
+                setBooks(data);
+            })
+            .catch((error) => console.error("Error searching books:", error));
+    };
 
     const handleShowComments = (bookId) => {
         setShowComments(!showComments);
@@ -86,21 +78,6 @@ function NewBorrow() {
                 })
                 .catch((error) => console.error('Error fetching comments:', error));
         }
-    };
-
-    const handleLike = (bookId) => {
-        fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            }
-        })
-            .then((res) => res.json())
-            .then(() => {
-                const prevLikes = likes[bookId];
-                setLikes({ ...likes, [bookId]: prevLikes + 1 });
-            })
-            .catch((error) => console.error('Error updating likes:', error));
     };
 
     const handleAddToCart = (book) => {
@@ -116,12 +93,9 @@ function NewBorrow() {
             <div className="cart-icon-container" onClick={() => setIsCartVisible(!isCartVisible)}>
                 <FaShoppingCart className="cart-icon" />
             </div>
-            {isCartVisible && <Cart setIsCartVisible={setIsCartVisible} cart={cart} setCart={setCart} setBooks={setBooks} setRecommendedBooks={setRecommendedBooks}/>}
-
+            {isCartVisible && <Cart setIsCartVisible={setIsCartVisible} cart={cart} setCart={setCart} setBooks={setBooks} setRecommendedBooks={setRecommendedBooks} />}
             <div className={`books-container ${isCartVisible ? 'cart-visible' : ''}`}>
-                
-
-                <form className="search-form">
+                <form className="search-form" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery) }}>
                     <div className="search-input-container">
                         <input
                             type="text"
@@ -130,39 +104,34 @@ function NewBorrow() {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="search-input"
                         />
-                        <FaSearch className="search-icon" />
+                        <button
+                            type="submit"
+                            className="search-icon"
+                        >
+                            <FaSearch />
+                        </button>
                     </div>
                 </form>
 
                 <div className="new-borrow-container">
-                    <h3>מומלצים עבורך</h3>
-                    <div className="book-section">
-                        {recommendedBooks.map(book => (
-                            <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-                                <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
-                                <div className="book-info">
-                                    <p><strong>{book.nameBook}</strong></p>
-                                    <FaStar className="recommended-icon" />
-                                    <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                        <FaThumbsUp className="like-icon" /> {likes[book.id]}
-                                    </p>
-                                </div>
+                    {!isSearching && (
+                        <>
+                            <h3>מומלצים עבורך</h3>
+                            <div className="book-section">
+                                {recommendedBooks.map(book => (
+                                    <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                                        <BookCard book={book} />
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
 
-                    <hr className="separator-line" />
-
+                            <hr className="separator-line" />
+                        </>
+                    )}
                     <div className="book-section">
                         {books.map(book => (
                             <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-                                <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
-                                <div className="book-info">
-                                    <p><strong>{book.nameBook}</strong></p>
-                                    <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                                        <FaThumbsUp className="like-icon" /> {likes[book.id]}
-                                    </p>
-                                </div>
+                                <BookCard book={book} />
                             </div>
                         ))}
                     </div>
@@ -203,7 +172,5 @@ function NewBorrow() {
             </div>
         </>
     );
-
 }
-
 export default NewBorrow;

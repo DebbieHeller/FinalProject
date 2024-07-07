@@ -1,18 +1,17 @@
 import React, { useEffect, useState, useContext } from "react";
 import "../css/books.css";
-import { FaSearch, FaThumbsUp } from "react-icons/fa";
+import { FaSearch } from "react-icons/fa";
+import BookCard from "../components/BookCard";
 import { userContext } from "../src/App";
 
 function Books() {
   const { user } = useContext(userContext);
   const libraryId = parseInt(localStorage.getItem("libraryId"));
   const [books, setBooks] = useState([]);
-  const [likes, setLikes] = useState({});
   const [comments, setComments] = useState({});
   const [selectedBook, setSelectedBook] = useState(null);
   const [showComments, setShowComments] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const [showAddBookModal, setShowAddBookModal] = useState(false);
   const [newBook, setNewBook] = useState({
     nameBook: '',
@@ -25,35 +24,22 @@ function Books() {
   });
 
   useEffect(() => {
-    const booksApi = user && user.roleId == 1 ? `http://localhost:3000/homeBooks`
-      : `http://localhost:3000/homeBooks?libraryId=${libraryId}`
-    fetch(booksApi)
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
-      .then((books) => {
-        setBooks(books);
-        setSearchResults(books);
-      })
-      .catch((error) => console.error("Error fetching books:", error));
-
-    const likesApi = user && user.roleId == 1 ? `http://localhost:3000/likes`
-      : `http://localhost:3000/likes?libraryId=${libraryId}`
-
-    fetch(likesApi)
-      .then((res) => res.json())
-      .then((likes) => {
-        const likesObject = likes.reduce((acc, like) => {
-          acc[like.bookId] = like.numLikes;
-          return acc;
-        }, {});
-        setLikes(likesObject);
-      })
-      .catch((error) => console.error("Error fetching likes:", error));
-  }, [libraryId]);
+    if (searchQuery === '') {
+      const booksApi = user && user.roleId == 1 ? `http://localhost:3000/homeBooks`//?זה בעיה שלא נבדק הקוקיז בפטש הזה?
+        : `http://localhost:3000/homeBooks?libraryId=${libraryId}`
+      fetch(booksApi)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return res.json();
+        })
+        .then((books) => {
+          setBooks(books);
+        })
+        .catch((error) => console.error("Error fetching books:", error));
+    }
+  }, [libraryId, searchQuery]);
 
 
   const handleShowComments = (bookId) => {
@@ -68,25 +54,10 @@ function Books() {
     }
   };
 
-  const handleLike = (bookId) => {
-    fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then(() => {
-        const prevLikes = likes[bookId];
-        setLikes({ ...likes, [bookId]: prevLikes + 1 });
-      })
-      .catch((error) => console.error("Error updating likes:", error));
-  };
-
   const handleSearch = (searchQuery) => {
-    fetch(
-      `http://localhost:3000/homeBooks?libraryId=${libraryId}&query=${searchQuery}`
-    )
+    const filteredBooksApi = user && user.roleId == 1 ? `http://localhost:3000/homeBooks?query=${searchQuery}`
+      : `http://localhost:3000/homeBooks?libraryId=${libraryId}&query=${searchQuery}`
+    fetch(filteredBooksApi)
       .then((res) => {
         if (!res.ok) {
           alert(searchQuery);
@@ -95,7 +66,7 @@ function Books() {
         return res.json();
       })
       .then((data) => {
-        alert(data);
+        setBooks(data);
       })
       .catch((error) => console.error("Error searching books:", error));
   };
@@ -121,7 +92,6 @@ function Books() {
       .then((res) => res.json())
       .then((data) => {
         setBooks([...books, data]);
-        setSearchResults([...books, data]);
         setShowAddBookModal(false);
       })
       .catch((error) => console.error('Error adding book:', error));
@@ -136,8 +106,7 @@ function Books() {
 
   return (
     <div className="books-container">
-      <h1>Books</h1>
-      <form className="search-form">
+      <form className="search-form" onSubmit={(e) => { e.preventDefault(); handleSearch(searchQuery); }}>
         <div className="search-input-container">
           <input
             type="text"
@@ -147,24 +116,19 @@ function Books() {
             className="search-input"
           />
           <button
+            type="submit"
             className="search-icon"
-            onClick={() => handleSearch(searchQuery)}
           >
             <FaSearch />
           </button>
         </div>
       </form>
+
       {user && user.roleId == 1 && <button className="add-book-button" onClick={() => setShowAddBookModal(true)}>הוספת ספר</button>}
       <div className="books-grid">
-        {searchResults.map(book => (
+        {books.map(book => (
           <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-            <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="book-image" />
-            <div className="book-info">
-              <p><strong>{book.nameBook}</strong></p>
-              <p className="book-likes" onClick={(e) => { e.stopPropagation(); handleLike(book.id); }}>
-                <FaThumbsUp className="like-icon" /> {likes[book.id]}
-              </p>
-            </div>
+            <BookCard book={book} />
           </div>
         ))}
       </div>

@@ -2,18 +2,6 @@ const mysql = require('mysql2');
 const path = require('path');
 const pool = require('../LibraryDB');  
 
-
-async function getBooksForAdmin() {
-    try {
-        console.log("******")
-        const [rows] = await pool.query(`SELECT * FROM books`);
-        return rows;
-    } catch (err) {
-        console.log(err);
-        throw err;
-    }
-}
-
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
@@ -23,7 +11,17 @@ async function getBooks(libraryId) {
              WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
-        console.log(err);//????
+        console.log(err);
+        throw err;
+    }
+}
+
+async function getBooksForAdmin() {
+    try {
+        const [rows] = await pool.query(`SELECT * FROM books`);
+        return rows;
+    } catch (err) {
+        console.log(err);
         throw err;
     }
 }
@@ -38,52 +36,6 @@ async function getBooksForUser(libraryId) {
              WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
-        console.log(err);//????
-        throw err;
-    }
-}
-
-async function getAvailableBooks(libraryId) {
-    try {
-        const [rows] = await pool.query(//?
-            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
-            FROM booksInLibrary bil
-            JOIN books b ON bil.bookId = b.id
-            JOIN copyBook cb ON bil.id = cb.bookInLibraryId
-            WHERE cb.id = (
-            SELECT cb2.id
-            FROM copyBook cb2
-            WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
-            LIMIT 1
-            ) AND bil.libraryId = ? AND cb.isAvailable = TRUE
-            `,
-            [libraryId]
-        );
-        return rows;
-    } catch (err) {
-        console.log(err);//???
-        throw err;
-    }
-}
-
-async function getNewBooks(libraryId) {
-    try {
-        const [rows] = await pool.query(//1 as num...?
-            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
-            FROM booksInLibrary bil
-            JOIN books b ON bil.bookId = b.id
-            JOIN copyBook cb ON bil.id = cb.bookInLibraryId
-            WHERE cb.id = (
-            SELECT cb2.id
-            FROM copyBook cb2
-            WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
-            LIMIT 1
-            ) AND bil.libraryId = ? AND cb.isAvailable = TRUE AND bil.isNew = TRUE
-            `,
-            [libraryId]
-        );
-        return rows;
-    } catch (err) {
         console.log(err);
         throw err;
     }
@@ -96,11 +48,67 @@ async function getfilteredBooks(query, libraryId) {
             FROM books b
             JOIN booksInLibrary bil ON b.id = bil.bookId
             WHERE bil.libraryId = ?
-              AND (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+            AND (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
         `;
         const wildcardQuery = `%${query}%`;
         const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery]);
-        console.log(rows)
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+async function getfilteredBooksForAdmin(query) {
+    try {
+        const sql = `
+            SELECT * FROM books b
+            WHERE (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+        `;
+        const wildcardQuery = `%${query}%`;
+        const [rows] = await pool.query(sql, [wildcardQuery, wildcardQuery, wildcardQuery]);
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+
+async function getfilteredBooksForUser(query, libraryId) {
+    try {
+        const sql = `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable
+        FROM booksInLibrary bil
+        JOIN books b ON bil.bookId = b.id   
+        JOIN copyBook cb ON cb.bookInLibraryId = bil.id      
+        WHERE bil.libraryId = ?
+        AND (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+        `;
+        const wildcardQuery = `%${query}%`;
+        const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery]);
+        return rows;
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
+async function getNewBooks(libraryId) {
+    try {
+        const [rows] = await pool.query(
+            `SELECT b.*, bil.isNew, cb.id as copyBookId
+            FROM booksInLibrary bil
+            JOIN books b ON bil.bookId = b.id
+            JOIN copyBook cb ON bil.id = cb.bookInLibraryId
+            WHERE cb.id = (
+            SELECT cb2.id
+            FROM copyBook cb2
+            WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
+            LIMIT 1
+            ) AND bil.libraryId = ? AND cb.isAvailable = TRUE AND bil.isNew = TRUE
+            `,
+            [libraryId]
+        );
         return rows;
     } catch (err) {
         console.log(err);
@@ -151,7 +159,7 @@ async function getRecommendedCategory(userId) {
 async function getRecommendedBooksForYou(libraryId, category) {
     try {
         const [booksRows] = await pool.query(
-        `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable, 1 as numAvailableCopyBooks
+        `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable, 1 as recommended
         FROM booksInLibrary bil
         JOIN books b ON bil.bookId = b.id
         JOIN copyBook cb ON bil.id = cb.bookInLibraryId
@@ -168,8 +176,6 @@ async function getRecommendedBooksForYou(libraryId, category) {
         throw err;
     }
 }
-
-
 
 async function createBook(nameBook, author, numOfPages, publishingYear, summary, image, category) {
     try {
@@ -219,6 +225,5 @@ async function deleteBook(id) {
     }
 }
 
-
-module.exports = { getBooks, getBooksForUser, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks, getBooksForAdmin};
+module.exports = { getBooks, getBooksForAdmin, getBooksForUser, getfilteredBooks, getfilteredBooksForAdmin, getfilteredBooksForUser, getNewBooks, getBook, createBook, updateBook, deleteBook, getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName};
 

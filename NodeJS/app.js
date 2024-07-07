@@ -11,7 +11,6 @@ const login = require("./routes/loginRoute");
 const books = require("./routes/booksRoute");
 const comments = require("./routes/commentsRoute");
 const borrows = require("./routes/borrowsRoute");
-const availableBooks = require("./routes/availableBooksRoute");
 const recommends = require("./routes/recommedBooksRoute");
 const prevBorrows = require("./routes/prevBorrowsRoute");
 const messages = require("./routes/messagesRoute")
@@ -41,7 +40,6 @@ app.use("/libraryAdmin", roleAuthorization([2]), libraryAdmin);
 app.use("/books", books);
 app.use("/users", users);
 app.use("/borrows", borrows);
-app.use("/availableBooks", availableBooks);
 app.use("/recommends", recommends);
 app.use("/prevBorrows", prevBorrows);
 app.use("/messages", messages);
