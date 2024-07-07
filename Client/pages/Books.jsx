@@ -117,7 +117,6 @@ function Books() {
           />
           <button
             type="submit"
-            type="submit"
             className="search-icon"
           >
             <FaSearch />
@@ -194,26 +193,37 @@ function Books() {
               <input
                 type="number"
                 name="publishingYear"
-                placeholder="שנת פרסום"
+                placeholder="שנת הוצאה לאור"
                 value={newBook.publishingYear}
                 onChange={handleAddBookChange}
                 required
               />
               <textarea
                 name="summary"
-                placeholder="סיכום"
+                placeholder="תקציר"
                 value={newBook.summary}
                 onChange={handleAddBookChange}
                 required
               />
-              <input
-                type="text"
+              <select
                 name="category"
-                placeholder="קטגוריה"
                 value={newBook.category}
                 onChange={handleAddBookChange}
                 required
-              />
+              >
+                <option value="">בחר קטגוריה</option>
+                <option value="fiction">סיפורת</option>
+                <option value="non-fiction">עיון</option>
+                <option value="fantasy">פנטזיה</option>
+                <option value="mystery">מסתורין</option>
+                <option value="biography">ביוגרפיה</option>
+                <option value="science-fiction">מדע בדיוני</option>
+                <option value="history">היסטוריה</option>
+                <option value="romance">רומן</option>
+                <option value="self-help">עזרה עצמית</option>
+                <option value="other">אחר</option>
+              </select>
+              <label>תמונה</label>
               <input
                 type="file"
                 name="image"
@@ -221,7 +231,7 @@ function Books() {
                 onChange={handleImageChange}
                 required
               />
-              <button type="submit">הוסף ספר</button>
+              <button type="submit">אישור</button>
             </form>
           </div>
         </div>
