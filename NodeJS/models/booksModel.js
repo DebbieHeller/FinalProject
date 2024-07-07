@@ -43,28 +43,6 @@ async function getBooksForUser(libraryId) {
     }
 }
 
-async function getAvailableBooks(libraryId) {
-    try {
-        const [rows] = await pool.query(//?
-            `SELECT b.*, bil.isNew, cb.id as copyBookId, 1 as numAvailableCopyBooks
-            FROM booksInLibrary bil
-            JOIN books b ON bil.bookId = b.id
-            JOIN copyBook cb ON bil.id = cb.bookInLibraryId
-            WHERE cb.id = (
-            SELECT cb2.id
-            FROM copyBook cb2
-            WHERE cb2.bookInLibraryId = cb.bookInLibraryId AND cb2.isAvailable = TRUE
-            LIMIT 1
-            ) AND bil.libraryId = ? AND cb.isAvailable = TRUE
-            `,
-            [libraryId]
-        );
-        return rows;
-    } catch (err) {
-        console.log(err);//???
-        throw err;
-    }
-}
 
 async function getNewBooks(libraryId) {
     try {
@@ -220,5 +198,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getBooksForUser, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks, getBooksForAdmin};
+module.exports = { getBooks, getBooksForUser, getNewBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks, getBooksForAdmin};
 

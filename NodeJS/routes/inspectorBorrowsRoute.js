@@ -1,15 +1,29 @@
 const express = require('express');
 const inspectorBorrowsRouter = express.Router();
 inspectorBorrowsRouter.use(express.json());
-const { getInspectorBorrows, updateBorrowByInspector } = require('../controllers/borrowsController');
+const { getInspectorBorrows, updateBorrowByInspector,getLateBorrows } = require('../controllers/borrowsController');
 
 inspectorBorrowsRouter.get('/', async (req, res) => {
-    try {
-        const books = await getInspectorBorrows(req.query.libraryId);
-        res.status(200).send(books);
-    } catch (error) {
-        res.status(500).send({ error: 'Failed to fetch books' });
+    const libraryId = req.query.libraryId;
+    const date = req.query.date;
+    if(!date){
+        try {
+            const books = await getInspectorBorrows(libraryId);
+            res.status(200).send(books);
+        } catch (error) {
+            res.status(500).send({ error: 'Failed to fetch books' });
+        }
     }
+    else if(date){
+        try {
+            const books = await getLateBorrows(req.query.libraryId,req.query.date);
+            res.status(200).send(books);
+        } catch (error) {
+            res.status(500).send({ error: 'Failed to fetch books' });
+        }
+    }
+        
+   
 });
 
 

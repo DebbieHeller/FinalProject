@@ -16,6 +16,7 @@ async function getborrows(userId) {
       `,
       [userId]
     );
+    console.log(rows)
     return rows;
     
   } catch (error) {
@@ -63,7 +64,35 @@ async function getInspectorBorrows(libraryId) {
         AND borrows.status ='Returned';
       `,[libraryId]
     );
-    console.log(rows)
+    return rows;
+  } catch (err) {
+    console.log(err);
+    throw err;
+  }
+}
+
+
+
+async function getLateBorrows(libraryId, date) {
+  // יצירת אובייקט Date לפני שבועיים
+  const deadlineForBorrow = new Date();
+  deadlineForBorrow.setDate(deadlineForBorrow.getDate() - 14);
+
+  const formattedDate = deadlineForBorrow.toISOString().slice(0, 19).replace('T', ' ');
+
+  try {
+    const [rows] = await pool.query(
+      `
+        SELECT borrows.id as borrowId, borrows.*, books.nameBook
+        FROM borrows
+        JOIN copyBook ON borrows.copyBookId = copyBook.id
+        JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
+        JOIN books ON booksInLibrary.bookId = books.id
+        WHERE booksInLibrary.libraryId = ?
+        AND borrows.status='Borrowed'
+        AND borrows.borrowDate < ?;
+      `, [libraryId, formattedDate]
+    );
     return rows;
   } catch (err) {
     console.log(err);
@@ -175,4 +204,4 @@ async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, 
 
 
 
-module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser};
+module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser,getLateBorrows};
