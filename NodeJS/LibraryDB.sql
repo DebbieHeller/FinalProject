@@ -228,8 +228,8 @@ INSERT INTO booksInLibrary (libraryId, bookId, unitsInStock, isNew) VALUES
 (1, 5, 100, FALSE),
 (3, 6, 65, TRUE),
 (1, 7, 55, FALSE),
-(2, 8, 80, TRUE),
-(3, 9, 85, FALSE),
+(1, 8, 80, TRUE),
+(1, 9, 85, FALSE),
 (1, 10, 70, TRUE),
 (1,11,3,TRUE),
 (1,12,4,TRUE),
@@ -271,10 +271,10 @@ INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isRetur
 (7, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, FALSE),
 (3, 1, '2024-05-10', '2024-06-20',  'Returned', FALSE, FALSE),
 (5, 1, '2024-05-10', '2024-06-20',  'Returned', FALSE, FALSE),
-(6, 5, '2023-06-10', '2024-06-20', 'Returned', FALSE, FALSE),
+(6, 1, '2023-06-10', '2024-06-20', 'Returned', FALSE, FALSE),
 (7, 7, '2024-06-10', '2024-06-20',  'Returned', FALSE, FALSE),
-(8, 8, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(9, 9, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(8, 1, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
+(9, 1, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
 (2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);
 
 INSERT INTO comments (title, body, userId, bookId) VALUES 

@@ -38,6 +38,15 @@ async function getInspectorBorrows(libraryId) {
   }
 }
 
+async function getLateBorrows(libraryId,date) {
+  try {
+    return await model.getLateBorrows(libraryId,date);
+  } catch (err) {
+    throw err;
+  }
+}
+
+
 async function getSingle(id) {
   try {
       return await model.getBorrow(id)
@@ -68,4 +77,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser,getLateBorrows};

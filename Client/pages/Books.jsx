@@ -117,6 +117,7 @@ function Books() {
           />
           <button
             type="submit"
+            type="submit"
             className="search-icon"
           >
             <FaSearch />
@@ -138,12 +139,12 @@ function Books() {
             <span className="close" onClick={() => setSelectedBook(null)}>&times;</span>
             <img src={`http://localhost:3000/images/${selectedBook.image}`} alt={selectedBook.nameBook} />
             <h2>{selectedBook.nameBook}</h2>
-            <p><strong>Author:</strong> {selectedBook.author}</p>
-            <p><strong>Pages:</strong> {selectedBook.numOfPages}</p>
-            <p><strong>Published:</strong> {selectedBook.publishingYear}</p>
-            <p><strong>Summary:</strong> {selectedBook.summary}</p>
-            <p><strong>Category:</strong> {selectedBook.category}</p>
-            {(!user || user.libraryId) && <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>}
+            <p><strong>סופר</strong> {selectedBook.author}</p>
+            <p><strong>מס דפים</strong> {selectedBook.numOfPages}</p>
+            <p><strong>התפרסם</strong> {selectedBook.publishingYear}</p>
+            <p><strong>תקציר</strong> {selectedBook.summary}</p>
+            <p><strong>קטגוריה</strong> {selectedBook.category}</p>
+            {(!user || user.libraryId) && <p><strong>חדש</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>}
             <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id) }}>
               {showComments ? 'Hide Comments' : 'Show Comments'}
             </button>
@@ -193,37 +194,26 @@ function Books() {
               <input
                 type="number"
                 name="publishingYear"
-                placeholder="שנת הוצאה לאור"
+                placeholder="שנת פרסום"
                 value={newBook.publishingYear}
                 onChange={handleAddBookChange}
                 required
               />
               <textarea
                 name="summary"
-                placeholder="תקציר"
+                placeholder="סיכום"
                 value={newBook.summary}
                 onChange={handleAddBookChange}
                 required
               />
-              <select
+              <input
+                type="text"
                 name="category"
+                placeholder="קטגוריה"
                 value={newBook.category}
                 onChange={handleAddBookChange}
                 required
-              >
-                <option value="">בחר קטגוריה</option>
-                <option value="fiction">סיפורת</option>
-                <option value="non-fiction">עיון</option>
-                <option value="fantasy">פנטזיה</option>
-                <option value="mystery">מסתורין</option>
-                <option value="biography">ביוגרפיה</option>
-                <option value="science-fiction">מדע בדיוני</option>
-                <option value="history">היסטוריה</option>
-                <option value="romance">רומן</option>
-                <option value="self-help">עזרה עצמית</option>
-                <option value="other">אחר</option>
-              </select>
-              <label>תמונה</label>
+              />
               <input
                 type="file"
                 name="image"
@@ -231,7 +221,7 @@ function Books() {
                 onChange={handleImageChange}
                 required
               />
-              <button type="submit">אישור</button>
+              <button type="submit">הוסף ספר</button>
             </form>
           </div>
         </div>

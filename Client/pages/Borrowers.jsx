@@ -90,8 +90,8 @@ function Borrowers() {
               onDoubleClick={() => handleRowDoubleClick(index, borrow)}
             >
               <td>{borrow.nameBook}</td>
-              <td>{borrow.borrowDate}</td>
-              <td>{borrow.returnDate}</td>
+              <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
+              <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
               <td>{borrow.status}</td>
               <td>{borrow.isReturned ? "Yes" : "No"}</td>
               <td>{borrow.isIntact ? "Yes" : "No"}</td>
