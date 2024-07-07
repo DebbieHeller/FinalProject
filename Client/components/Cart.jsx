@@ -1,9 +1,7 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { userContext } from '../src/App';
 import { useNavigate } from "react-router-dom";
 import { FaTimes, FaTrash } from 'react-icons/fa';
-import '../css/books.css';
-import '../css/newBorrow.css';
 
 function Cart({ setIsCartVisible, cart, setCart, setBooks, setRecommendedBooks }) {
     const { user } = useContext(userContext);

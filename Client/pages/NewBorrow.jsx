@@ -108,6 +108,7 @@ function NewBorrow() {
             setCart([...cart, book]);
         }
         setSelectedBook(null);
+        setIsCartVisible(true);
     };
 
     return (
@@ -115,10 +116,10 @@ function NewBorrow() {
             <div className="cart-icon-container" onClick={() => setIsCartVisible(!isCartVisible)}>
                 <FaShoppingCart className="cart-icon" />
             </div>
-            {console.log(isCartVisible)}
+            {isCartVisible && <Cart setIsCartVisible={setIsCartVisible} cart={cart} setCart={setCart} setBooks={setBooks} setRecommendedBooks={setRecommendedBooks}/>}
+
             <div className={`books-container ${isCartVisible ? 'cart-visible' : ''}`}>
                 
-                {isCartVisible && <Cart setIsCartVisible={setIsCartVisible} cart={cart} setCart={setCart} setBooks={setBooks} setRecommendedBooks={setRecommendedBooks}/>}
 
                 <form className="search-form">
                     <div className="search-input-container">
