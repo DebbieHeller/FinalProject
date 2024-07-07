@@ -131,8 +131,7 @@
 }
 
 .book-card:hover {
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  width: calc(20% - 18px);
+  box-shadow: 12px 12px 12px rgba(0, 0, 0, 0.2);
 }
 
 .book-image {

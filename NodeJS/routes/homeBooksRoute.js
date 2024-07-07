@@ -7,7 +7,7 @@ const { getAll } = require('../controllers/booksController');
 homeBooksRouter.get('/', async (req, res) => {
   console.log("req.query.libraryId   "+req.query.libraryId)
     try {
-      const books = await getAll(req.query.libraryId, req.query.query);
+      const books = await getAll(req.query.libraryId, req.query.query, req.query.userId);
       if (!books)
         res.sendStatus(404)
       res.status(200).send(books);

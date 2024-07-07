@@ -199,7 +199,7 @@ function Books() {
       {showAddBookModal && (
         <div className="modal">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-for-new" onClick={() => setShowAddBookModal(false)}>&times;</span>
+            <span className="close-right" onClick={() => setShowAddBookModal(false)}>&times;</span>
             <h2>הוספת ספר חדש</h2>
             <form className="add-book-form" onSubmit={(e) => { e.preventDefault(); handleAddBookSubmit(); }}>
               <input

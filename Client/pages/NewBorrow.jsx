@@ -1,59 +1,22 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { userContext } from "../src/App";
+import Cart from "../components/Cart";
 import '../css/books.css';
 import '../css/newBorrow.css';
-import { FaSearch, FaTimes, FaThumbsUp, FaShoppingCart, FaTrash, FaStar } from 'react-icons/fa';
+import { FaSearch, FaThumbsUp, FaShoppingCart, FaStar } from 'react-icons/fa';
 
 function NewBorrow() {
-    const navigate = useNavigate();
     const libraryId = parseInt(localStorage.getItem('libraryId'));
     const [books, setBooks] = useState([]);
     const [comments, setComments] = useState({});
     const [selectedBook, setSelectedBook] = useState(null);
     const [showComments, setShowComments] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    // const [availableBooks, setAvailableBooks] = useState([]);
     const [recommendedBooks, setRecommendedBooks] = useState([]);
     const [cart, setCart] = useState([]);
     const [isCartVisible, setIsCartVisible] = useState(false);
     const { user } = useContext(userContext);
     const [likes, setLikes] = useState({});
-    const [subscriptionTypes, setSubscriptionTypes] = useState([]);
-    const [errorMessage, setErrorMessage] = useState('');
-    const [userBooks, setUserBooks] = useState([]);
-    const [remainingBooksToBorrow, setRemainingBooksToBorrow] = useState(0);
-
-
-    useEffect(() => {
-        fetch(`http://localhost:3000/borrows?userId=${user.id}`, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                setUserBooks(data.length);
-            })
-            .catch((error) => console.error("Error fetching books:", error));
-    }, [user.id]);
-
-
-    useEffect(() => {
-        fetch(`http://localhost:3000/subscriptionTypes`, {
-            method: 'GET',
-            credentials: 'include'
-        })
-            .then((res) => res.json())
-            .then((subscriptionTypes) => {
-                setSubscriptionTypes(subscriptionTypes);
-                const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
-                if (userSubscription) {
-                    setRemainingBooksToBorrow(userSubscription.ammountToBorrow - userBooks);
-                }
-            })
-            .catch((error) => console.error('Error fetching subscription types:', error));
-    }, [user.subscriptionTypeId, userBooks.length]);
-
 
     useEffect(() => {
         fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`, {
@@ -68,23 +31,20 @@ function NewBorrow() {
     }, [libraryId, user.id]);
 
     useEffect(() => {
-        fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}`, {
+        fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}`, {
             method: 'GET',
             credentials: 'include'
         })
             .then((res) => res.json())
             .then((books) => {
-                // if (recommendedBooks.length > 0) {
-                //     const filteredBooks = availableBooks.filter(
-                //         availableBook => !recommendedBooks.some(recommendedBook => recommendedBook.id === availableBook.id)
-                //     );
-                //     setBooks(filteredBooks);
-                // } else {
-                //     setBooks(availableBooks);
-                // }
-                
-                // setAvailableBooks(availableBooks);
-                setBooks(books)
+                if (recommendedBooks.length > 0) {
+                    const filteredBooks = books.filter(
+                        book => !recommendedBooks.some(recommendedBook => recommendedBook.id === book.id)
+                    );
+                    setBooks(filteredBooks);
+                } else {
+                    setBooks(books);
+                }
             })
             .catch((error) => console.error('Error fetching books:', error));
     }, [libraryId, recommendedBooks]);
@@ -128,19 +88,6 @@ function NewBorrow() {
         }
     };
 
-    const handleAddToCart = (book) => {
-        if (!cart.some(cartItem => cartItem.id === book.id)) {
-            setCart([...cart, book]);
-        }
-        setSelectedBook(null);
-        setIsCartVisible(true);
-    };
-
-    const removeFromCart = (bookId) => {
-        setCart(cart.filter(cartItem => cartItem.id !== bookId));
-        setErrorMessage(''); // Clear error message when item is removed from the cart
-    };
-
     const handleLike = (bookId) => {
         fetch(`http://localhost:3000/likes?bookId=${bookId}`, {
             method: 'PUT',
@@ -156,100 +103,23 @@ function NewBorrow() {
             .catch((error) => console.error('Error updating likes:', error));
     };
 
-    const clearErrorMessage = () => {
-        setTimeout(() => {
-            setErrorMessage('');
-        }, 3000); // Clear error message after 3 seconds
-    };
-
-    const toggleCartVisibility = () => {
-        setIsCartVisible(!isCartVisible);
-    };
-
-    const handleCartSubmit = () => {
-        const userSubscription = subscriptionTypes.find(subscription => subscription.id === user.subscriptionTypeId);
-
-        if (!userSubscription) {
-            setErrorMessage('User subscription information not found.');
-            clearErrorMessage();
-            return;
+    const handleAddToCart = (book) => {
+        if (!cart.some(cartItem => cartItem.id === book.id)) {
+            setCart([...cart, book]);
         }
-
-        if (cart.length > remainingBooksToBorrow) {
-            setErrorMessage(`You cannot borrow more than ${remainingBooksToBorrow} books.`);
-            clearErrorMessage();
-            return;
-        }
-
-        cart.forEach(book => {
-            const newBorrow = {
-                copyBookId: book.copyBookId,
-                userId: user.id,
-                borrowDate: new Date().toISOString().split('T')[0],
-                returnDate: null,
-                status: 'Borrowed',
-                isReturned: false,
-                isIntact: null
-            };
-            fetch('http://localhost:3000/borrows', {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newBorrow),
-            })
-                .catch((error) => console.error('Error adding books to cart:', error));
-        });
-
-        setRecommendedBooks(recommendedBooks.filter(recommendedBook => !cart.some(cartItem => cartItem.id === recommendedBook.id)));
-        setBooks(books.filter(book => !cart.some(cartItem => cartItem.id === book.id)));
-        setCart([]);
-        setRemainingBooksToBorrow(remainingBooksToBorrow - cart.length);
-        setIsCartVisible(false)
-        alert('ההשאלה התבצעה בהצלחה');
-        navigate("/home/user-books");
+        setSelectedBook(null);
     };
 
     return (
         <>
-            <div className="cart-icon-container" onClick={toggleCartVisibility}>
+            <div className="cart-icon-container" onClick={() => setIsCartVisible(!isCartVisible)}>
                 <FaShoppingCart className="cart-icon" />
             </div>
+            {console.log(isCartVisible)}
             <div className={`books-container ${isCartVisible ? 'cart-visible' : ''}`}>
-                {isCartVisible && (
-                    <div className="cart-container">
-                        <div className="cart">
-                            <div className="cart-header">
-                                <FaTimes onClick={toggleCartVisibility} className="close-icon" />
-                                <h3>סל ההשאלה</h3>
-                            </div>
-                            {cart.length === 0 ? (
-                                <p>הסל שלך ריק</p>
-                            ) : (
-                                cart.map(book => (
-                                    <div key={book.copyBookId} className="cart-item">
-                                        <img src={`http://localhost:3000/images/${book.image}`} alt={book.nameBook} className="cart-image-small" />
-                                        <div className="cart-item-details">
-                                            <p>{book.nameBook}</p>
-                                            <FaTrash onClick={() => removeFromCart(book.id)} className="remove-icon" />
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                            {cart.length > 0 && (
-                                <button className="cart-submit" onClick={handleCartSubmit}>
-                                    אישור
-                                </button>
-                            )}
-                        </div>
-                        {errorMessage && (
-                            <div className="error-message">
-                                {errorMessage}
-                            </div>
-                        )}
-                    </div>)}
-    
+                
+                {isCartVisible && <Cart setIsCartVisible={setIsCartVisible} cart={cart} setCart={setCart} setBooks={setBooks} setRecommendedBooks={setRecommendedBooks}/>}
+
                 <form className="search-form">
                     <div className="search-input-container">
                         <input
@@ -262,7 +132,7 @@ function NewBorrow() {
                         <FaSearch className="search-icon" />
                     </div>
                 </form>
-    
+
                 <div className="new-borrow-container">
                     <h3>מומלצים עבורך</h3>
                     <div className="book-section">
@@ -279,9 +149,9 @@ function NewBorrow() {
                             </div>
                         ))}
                     </div>
-    
+
                     <hr className="separator-line" />
-    
+
                     <div className="book-section">
                         {books.map(book => (
                             <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
@@ -296,7 +166,7 @@ function NewBorrow() {
                         ))}
                     </div>
                 </div>
-    
+
                 {selectedBook && (
                     <div className="modal" onClick={() => setSelectedBook(null)}>
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>
@@ -322,17 +192,17 @@ function NewBorrow() {
                                     ))}
                                 </div>
                             )}
-                            {selectedBook.isAvailable == true? <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
+                            {selectedBook.isAvailable == true ? <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
                                 להשאלה
                             </button>
-                            : <p>הספר אינו זמין להשאלה</p>}
+                                : <p>הספר אינו זמין להשאלה</p>}
                         </div>
                     </div>
                 )}
             </div>
         </>
     );
-    
+
 }
 
 export default NewBorrow;

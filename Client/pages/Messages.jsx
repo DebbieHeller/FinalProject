@@ -79,7 +79,7 @@ function Messages() {
       {selectedMessage && (
         <div className="modal">
           <div className="modal-content">
-            <span className="close" onClick={() => setSelectedMessage(null)}>&times;</span>
+            <span className="close-right" onClick={() => setSelectedMessage(null)}>&times;</span>
             <h2>{selectedMessage.title}</h2>
             <p>{selectedMessage.body}</p>
           </div>

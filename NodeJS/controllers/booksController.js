@@ -1,8 +1,9 @@
 const model = require('../models/booksModel')
 
-async function getAll(libraryId, query) {
+async function getAll(libraryId, query, userId) {
     try {
         const response = libraryId? query? await model.getfilteredBooks(query, libraryId)
+        : userId? await model.getBooksForUser(libraryId)
         :await model.getBooks(libraryId)
         :await model.getBooksForAdmin();
         return response

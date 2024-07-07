@@ -17,10 +17,24 @@ async function getBooksForAdmin() {
 async function getBooks(libraryId) {
     try {
         const [rows] = await pool.query(
-            `SELECT b.*, bil.isNew, cb.isAvailable
+            `SELECT b.*, bil.isNew
              FROM booksInLibrary bil
-             JOIN books b ON bil.bookId = b.id
-             JOIN copyBook cb ON cb.bookInLibraryId = bil.id
+             JOIN books b ON bil.bookId = b.id         
+             WHERE bil.libraryId = ?`, [libraryId]);
+        return rows;
+    } catch (err) {
+        console.log(err);//????
+        throw err;
+    }
+}
+
+async function getBooksForUser(libraryId) {
+    try {
+        const [rows] = await pool.query(
+            `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable
+             FROM booksInLibrary bil
+             JOIN books b ON bil.bookId = b.id   
+             JOIN copyBook cb ON cb.bookInLibraryId = bil.id      
              WHERE bil.libraryId = ?`, [libraryId]);
         return rows;
     } catch (err) {
@@ -206,5 +220,5 @@ async function deleteBook(id) {
 }
 
 
-module.exports = { getBooks, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks, getBooksForAdmin};
+module.exports = { getBooks, getBooksForUser, getNewBooks, getAvailableBooks, getBook, createBook, updateBook, deleteBook,getRecommendedCategory, getRecommendedBooksForYou, getSingleByUserName,getfilteredBooks, getBooksForAdmin};
 

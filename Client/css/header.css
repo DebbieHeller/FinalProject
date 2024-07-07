@@ -6,6 +6,7 @@
   background-color: rgb(125, 165, 188);
   position: fixed;
   width: 100%;
+  z-index: 1000;
 }
 
 .header-left {
