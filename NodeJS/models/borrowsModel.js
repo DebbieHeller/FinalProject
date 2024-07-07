@@ -53,7 +53,7 @@ async function getInspectorBorrows(libraryId) {
   try {
     const [rows] = await pool.query(
       `
-        SELECT borrows.id as borrowId, borrows.*, books.*
+        SELECT borrows.id as borrowId, borrows.*,books.nameBook
         FROM borrows
         JOIN copyBook ON borrows.copyBookId = copyBook.id
         JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
@@ -63,6 +63,7 @@ async function getInspectorBorrows(libraryId) {
         AND borrows.status ='Returned';
       `,[libraryId]
     );
+    console.log(rows)
     return rows;
   } catch (err) {
     console.log(err);

@@ -111,6 +111,8 @@ function UserBooks() {
         borrowDate: borrowDate,
         returnDate: returnDate,
         status: "Returned",
+        isReturned:null,
+        isIntact:null,
       };
 
       fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
@@ -122,6 +124,7 @@ function UserBooks() {
         body: JSON.stringify(updatedBorrow),
       })
         .then((response) => {
+          console.log(response)
           if (response.ok) {
             const index = updatedBooks.findIndex((book) => book.borrowId === borrowBook.borrowId);
             if (index > -1) {
@@ -145,48 +148,10 @@ function UserBooks() {
         .catch((error) => console.error("Error returning book:", error));
     });
   };
-  const refreshUserFromCookie = async () => {
-
-    const cookies = document.cookie.split("; ");
-    console.log("All cookies:", cookies);
-    
-    const accessToken = cookies.find((c) => c.startsWith("accessToken="));
-    console.log("Access token cookie:", accessToken);
-    if (!accessToken) return;
-    alert(accessToken)
-
-    const jwt_decode = (await import('jwt-decode')).default;
-
-    try {
-      const decoded = jwt_decode(accessToken.split("=")[1]); // Decode token
-      const userId = decoded.userId;
-
-      fetch(`http://localhost:3000/user/${userId}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-          Authorization: `Bearer ${accessToken.split("=")[1]}`, // Include token in Authorization header
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          alert("Data from server:", data.id); // Print the entire data received from the server
-          if (data.user) {
-            setUser(data.user);
-            console.log("User set to context:", data.user); // Print the user being set in the context
-          }
-        })
-        .catch((error) => {
-          console.error("Error fetching user:", error);
-        });
-    } catch (error) {
-      console.error("Error decoding token:", error);
-    }
-  };
-
+ 
   return (
     <div className="user-books-container">
-      <button onClick={refreshUserFromCookie}></button>
+     
       <h1>ספרים בהשאלה</h1>
       {books.length == 0 && <div className="no-books-message">אין כרגע ספרים בהשאלתך</div>}
       <div className="books-grid">
