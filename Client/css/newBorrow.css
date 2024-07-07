@@ -6,7 +6,7 @@
     position: fixed;
     top: 20px;
     left: 45px;
-    z-index: 100;
+    z-index: 1000;
 }
 
 .cart-icon {
@@ -27,10 +27,8 @@
     padding: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-}
-
-.cart {
-    margin-bottom: 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .cart h3 {
@@ -108,18 +106,18 @@
 .new-borrow-container {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Add some space between sections */
+    gap: 20px;
 }
 
 .new-borrow-container h3 {
-    text-align: center; /* Center the headers */
+    text-align: center;
 }
 
 .book-section {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center; /* Center the book cards within each section */
-    gap: 20px; /* Add space between book cards */
+    justify-content: center; 
+    gap: 20px; 
 }
 
 .separator-line {
