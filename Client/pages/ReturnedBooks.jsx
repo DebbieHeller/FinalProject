@@ -1,84 +1,154 @@
 import React, { useState, useEffect } from "react";
-import { FaComment } from 'react-icons/fa'; // Import icon
-import "../css/inspectorBorrows.css"; // Import CSS file for styling
+import '../css/inspectorBorrows.css';
 
 function ReturnedBooks() {
-  const libraryId = parseInt(localStorage.getItem("libraryId"));
-  const deadlineForBorrow = new Date();
-  deadlineForBorrow.setDate(deadlineForBorrow.getDate() - 14);
   const [borrows, setBorrows] = useState([]);
-  const [message, setMessage] = useState('');
-  
+  const [checkboxData, setCheckboxData] = useState([]);
+  const libraryId = parseInt(localStorage.getItem("libraryId"));
+
   useEffect(() => {
-    fetch(`http://localhost:3000/inspectorBorrows?libraryId=${libraryId}&date=${deadlineForBorrow}`, {
+    fetch(`http://localhost:3000/inspectorBorrows?libraryId=${libraryId}`, {
       method: 'GET',
       credentials: 'include'
     })
       .then((res) => res.json())
       .then((data) => {
         setBorrows(data);
+        setCheckboxData(data.map(() => ({
+          borrowId: '',
+          isReturned: '',
+          isIntact: ''
+        })));
       })
       .catch((error) => console.error("Error fetching borrows:", error));
-  }, [libraryId, deadlineForBorrow]);
+  }, [libraryId]);
 
-  const handleSendMessage = (borrow) => {
-    
-    let title = 'איחור בהחזרת הספר';
-    let body = 'אתה מחזיק בספר כך וכך ימים מעל המותר,כל יום גורר איתו קנס,החזר בהקדם';
-    if (title && body) {
-      const createdDate = new Date().toISOString().split("T")[0];
-      const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
-      
-      fetch('http://localhost:3000/messages', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(messageData),
-      })
-      .then(response => response.json())
-      .then(data => {
-        setMessage('הודעה נשלחה בהצלחה');
-        console.log(data);
-      })
-      .catch(error => {
-        setMessage('נכשל בשליחת הודעה');
-        console.error('Error sending message:', error);
-      });
+  const handleCheckboxChange = (index, type) => {
+    const updatedData = {...checkboxData}
+
+    if (type === 'isReturned') {
+      updatedData[index].isReturned = !updatedData[index].isReturned;
+      updatedData[index].isIntact = '';
     }
+    else{
+      if (type === 'isIntact') {
+        updatedData[index].isIntact = updatedData[index].isIntact === 'intact' ? '' : 'intact';
+      } else if (type === 'isNotIntact') {
+        updatedData[index].isIntact = updatedData[index].isIntact === 'notIntact' ? '' : 'notIntact';
+      }
+      updatedData[index].isReturned = ''
+    }    
+    setCheckboxData(updatedData);
   };
 
+  const handleSubmit = () => {
+    try {
+      const updatedBorrows = borrows
+        .filter((borrow, index) => checkboxData[index].isReturned || checkboxData[index].isIntact !== '')
+        .map((borrow, index) => ({
+          borrowId: borrow.borrowId,
+          copyBookId: borrow.copyBookId,
+          isReturned: checkboxData[index].isReturned == '' ? true : false,
+          isIntact: checkboxData[index].isIntact === 'intact',
+        }));
+  
+      let allRequestsSucceeded = true;
+  
+      updatedBorrows.forEach(updatedBorrow => {
+        fetch(`http://localhost:3000/inspectorBorrows/${updatedBorrow.borrowId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            copyBookId: updatedBorrow.copyBookId,
+            isReturned: updatedBorrow.isReturned,
+            isIntact: updatedBorrow.isIntact,
+          }),
+          credentials: 'include',
+        })
+          .then(response => {
+            if (!response.ok) {
+              allRequestsSucceeded = false;
+              throw new Error('Network response was not ok');
+            }
+          })
+          .catch(error => {
+            console.error("Error updating borrow:", error);
+            allRequestsSucceeded = false;
+          });
+      });
+  
+      if (allRequestsSucceeded) {
+        const updatedBorrowsIds = updatedBorrows.map(borrow => borrow.borrowId);
+        console.log(updatedBorrowsIds)
+        setBorrows(borrows.filter(borrow => !updatedBorrowsIds.includes(borrow.borrowId)));
+
+        console.log(checkboxData)
+      } else {
+        console.error("Not all requests succeeded, please try again.");
+      }
+  
+    } catch (error) {
+      console.error("Error updating borrows:", error);
+    }
+  };
+  
+  
+  
+  
   return (
     <div className="borrows-container">
       <h1>השאלות קודמות</h1>
-    
       <table className="borrows-table">
         <thead>
           <tr>
-            <th>ספר</th>
-            <th>תאריך השאלה</th>
-            <th>תאריך החזרה תקין</th>
-            <th>סטטוס</th>
-            <th>שלח הודעה</th>
+            <th>קוד ספר</th>
+            <th>שם ספר</th>
+            <th>שם סופר</th>
+            <th>לא הוחזר</th>
+            <th>תקין</th>
+            <th>לא תקין</th>
           </tr>
         </thead>
         <tbody>
-          {borrows.map((borrow, index) => (
-            <tr key={index}>
-              <td>{borrow.nameBook}</td>
-              <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
-              <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
-              <td>{borrow.status}</td>
-              <td>
-                <button onClick={() => handleSendMessage(borrow)}>
-                  <FaComment /> שלח הודעה
-                </button>
-              </td>
+          {borrows.length === 0 ? (
+            <tr>
+              <td colSpan="6">אין ספרים שהושאלו</td>
             </tr>
-          ))}
+          ) : (
+            borrows.map((borrow, index) => (
+              <tr key={borrow.borrowId}>
+                <td>{borrow.copyBookId}</td>
+                <td>{borrow.nameBook}</td>
+                <td>{borrow.author}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={checkboxData[index].isReturned}
+                    onChange={() => handleCheckboxChange(index, 'isReturned')}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={checkboxData[index].isIntact === 'intact'}
+                    onChange={() => handleCheckboxChange(index, 'isIntact')}
+                  />
+                </td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={checkboxData[index].isIntact === 'notIntact'}
+                    onChange={() => handleCheckboxChange(index, 'isNotIntact')}
+                  />
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+      <button onClick={handleSubmit}>Submit</button>
     </div>
   );
 }

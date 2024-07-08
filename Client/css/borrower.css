@@ -46,3 +46,88 @@
   .buttons-container button:hover {
     background-color: #0056b3;
   }
+  /* Modal backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
+  }
+  
+  /* Modal content */
+  .modal-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 10px;
+    width: 450px;
+    max-width: 90%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+  }
+  
+  .modal-header {
+    margin-top: 0;
+    font-size: 28px;
+    text-align: center;
+    color: #333;
+  }
+  
+  .modal-label {
+    display: block;
+    margin-top: 15px;
+    font-weight: bold;
+    color: #444;
+  }
+  
+  .modal-input,
+  .modal-textarea {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  
+  .modal-textarea {
+    resize: vertical;
+    height: 120px;
+  }
+  
+  .modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 25px;
+  }
+  
+  .modal-actions button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .modal-actions .submit-button {
+    background-color: #4caf50;
+    color: #fff;
+  }
+  
+  .modal-actions .cancel-button {
+    background-color: #f44336;
+    color: #fff;
+  }
+  
+  .modal-actions button:hover {
+    opacity: 0.8;
+  }
+  

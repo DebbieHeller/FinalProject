@@ -23,7 +23,7 @@ messagesRouter.put('/:messageId', async (req, res) => {
 
 messagesRouter.post('/', async (req, res) => {
     try {
-        console.log("in create")
+        
         res.status(200).send(await create( req.body.userId, req.body.title,req.body.body,req.body.status,req.body.createdDate,)); 
     } catch (error) {
         res.status(500).send({ error: 'Failed to update message' });

@@ -168,16 +168,19 @@ async function updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate
   }
 }
 
-async function updateBorrowByInspector(borrowId, copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) {
+async function updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact) {
   try {
     const [rows] = await pool.query(
       `UPDATE borrows
-      SET copyBookId = ?, userId = ?, borrowDate = ?, returnDate = ?, status = ?, isReturned = ?, isIntact = ? WHERE id = ? `,
-      [copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact, borrowId]
+      SET isReturned = ?, isIntact = ? WHERE id = ? `,
+      [isReturned, isIntact, borrowId]
     )
-    await pool.query(
+    if(isIntact===true){
+      await pool.query(
       `UPDATE copyBook SET isAvailable = ? WHERE id = ? `, [1, copyBookId]
     );
+    }
+    
     
     return rows;
   } catch (err) {

@@ -57,7 +57,7 @@ function Borrower() {
       .then((res) => res.json())
       .then((response) => {
         console.log("Message sent:", response);
-        setShowModal(false); // Close the modal after sending
+        closeModal(); // Close the modal after sending
       })
       .catch((error) => console.error("Error sending message:", error));
   };
@@ -101,8 +101,8 @@ function Borrower() {
         <tbody>
           {books.map((book) => (
             <tr key={book.borrowId}>
-              <td>{book.borrowDate}</td>
-              <td>{book.returnDate}</td>
+              <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
+              <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
               <td>{book.status}</td>
               <td>{book.isReturned ? "Yes" : "No"}</td>
               <td>{book.isIntact ? "Yes" : "No"}</td>
@@ -116,12 +116,13 @@ function Borrower() {
 
       {/* Modal for sending message */}
       {showModal && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <h2>Send Message</h2>
+        <div className="modal-backdrop">
+          <div className="modal-container">
+            <h2 className="modal-header">Send Message</h2>
             <form onSubmit={handleSubmitMessage}>
-              <label htmlFor="message-title">Title:</label>
+              <label className="modal-label" htmlFor="message-title">Title:</label>
               <input
+                className="modal-input"
                 type="text"
                 id="message-title"
                 value={message.title}
@@ -129,17 +130,18 @@ function Borrower() {
                   setMessage({ ...message, title: e.target.value })
                 }
               />
-              <label htmlFor="message-body">Body:</label>
+              <label className="modal-label" htmlFor="message-body">Body:</label>
               <textarea
+                className="modal-textarea"
                 id="message-body"
                 value={message.body}
                 onChange={(e) =>
                   setMessage({ ...message, body: e.target.value })
                 }
               ></textarea>
-              <div className="modal-buttons">
-                <button type="submit">אישור</button>
-                <button type="button" onClick={closeModal}>
+              <div className="modal-actions">
+                <button className="submit-button" type="submit">אישור</button>
+                <button className="cancel-button" type="button" onClick={closeModal}>
                   Cancel
                 </button>
               </div>

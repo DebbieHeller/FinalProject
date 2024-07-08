@@ -36,10 +36,10 @@ function Borrowers() {
     let body = '';
     if (!borrow.isIntact && borrow.isReturned) {
       title = "ספר לא תקין";
-      body = "החזרת ספר לא תקין תחוייב בקנס";
+      body = `החזרת ספר ${borrow.nameBook} לא תקין תחוייב בקנס` ;
     } else if (!borrow.isReturned) {
       title = "ספר לא הוחזר";
-      body = "הינך נדרש להחזיר את הספר שנשאל";
+      body = `${borrow.nameBook} הינך נדרש להחזיר את הספר שנשאל`;
     }
 
     if (title && body) {
@@ -57,7 +57,6 @@ function Borrowers() {
       .then(response => response.json())
       .then(data => {
         setMessage('Message sent successfully');
-        console.log(data);
       })
       .catch(error => {
         setMessage('Failed to send message');
@@ -73,13 +72,14 @@ function Borrowers() {
       <table className="borrow-table">
         <thead>
           <tr>
+            <td>שם משאיל</td>
             <th>שם ספר</th>
-            <th>תאריך השאלה Date</th>
-            <th>תאריך החזרה Date</th>
+            <th>תאריך השאלה</th>
+            <th>תאריך החזרה</th>
             <th>סטטוס</th>
             <th>החזר</th>
             <th>תקין</th>
-            <th>שלח הודעה</th>
+            <th>שליחת הודעה</th>
           </tr>
         </thead>
         <tbody>
@@ -89,6 +89,7 @@ function Borrowers() {
               className={selectedRow === index ? "selected-row" : ""}
               onDoubleClick={() => handleRowDoubleClick(index, borrow)}
             >
+              <td>{borrow.userName}</td>
               <td>{borrow.nameBook}</td>
               <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
               <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
@@ -96,7 +97,7 @@ function Borrowers() {
               <td>{borrow.isReturned ? "Yes" : "No"}</td>
               <td>{borrow.isIntact ? "Yes" : "No"}</td>
               <td>
-                <button onClick={() => handleSendMessage(borrow)}>Send Message</button>
+                <button onClick={() => handleSendMessage(borrow)}>שלח הודעה</button>
               </td>
             </tr>
           ))}

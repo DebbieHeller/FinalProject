@@ -124,7 +124,6 @@ function UserBooks() {
         body: JSON.stringify(updatedBorrow),
       })
         .then((response) => {
-          console.log(response)
           if (response.ok) {
             const index = updatedBooks.findIndex((book) => book.borrowId === borrowBook.borrowId);
             if (index > -1) {

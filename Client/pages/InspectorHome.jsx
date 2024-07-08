@@ -11,10 +11,10 @@ function InspectorHome() {
             <Link to="/inspector-home/logout">Logout</Link>
           </li>
           <li>
-            <Link to="/inspector-home/borrows" >צפייה בהשאלות</Link>
+            <Link to="/inspector-home/not-returned-books">ספרים שלא הוחזרו</Link>
           </li>
           <li>
-            <Link to="/inspector-home/returned-books">ספרים שהוחזרו</Link>
+            <Link to="/inspector-home/returned-books" >ספרים שהוחזרו</Link>
           </li>
         </ul>
       </nav>

@@ -54,9 +54,9 @@ async function getSingle(id) {
       throw err
   }
 }
-async function updateBorrowByInspector(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact) {
+async function updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact) {
   try {
-      return await model.updateBorrowByInspector(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact)
+      return await model.updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact)
   } catch (err) {
       throw err
   }

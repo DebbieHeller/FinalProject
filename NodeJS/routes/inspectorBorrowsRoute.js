@@ -30,14 +30,12 @@ inspectorBorrowsRouter.get('/', async (req, res) => {
 
 
 inspectorBorrowsRouter.put('/:borrowId', async (req, res) => {
+    console.log(req.body)
     try {
+       
         await updateBorrowByInspector(
             req.params.borrowId,
             req.body.copyBookId,
-            req.body.userId,
-            req.body.borrowDate,
-            req.body.returnDate,
-            req.body.status,
             req.body.isReturned,
             req.body.isIntact
         );
