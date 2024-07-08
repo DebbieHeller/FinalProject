@@ -2,13 +2,14 @@ const mysql = require('mysql2');
 const path = require('path');
 const pool = require('../LibraryDB');  
 
-async function getBooks(libraryId) {
+async function getBooks(libraryId, limit = 12, offset = 0) {
     try {
         const [rows] = await pool.query(
             `SELECT b.*, bil.isNew
              FROM booksInLibrary bil
              JOIN books b ON bil.bookId = b.id         
-             WHERE bil.libraryId = ?`, [libraryId]);
+             WHERE bil.libraryId = ?
+             LIMIT ? OFFSET ?`, [libraryId, limit, offset]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -16,9 +17,11 @@ async function getBooks(libraryId) {
     }
 }
 
-async function getBooksForAdmin() {
+async function getBooksForAdmin(limit = 12, offset = 0) {
     try {
-        const [rows] = await pool.query(`SELECT * FROM books`);
+        const [rows] = await pool.query(
+            `SELECT * FROM books
+             LIMIT ? OFFSET ?`, [limit, offset]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -26,14 +29,15 @@ async function getBooksForAdmin() {
     }
 }
 
-async function getBooksForUser(libraryId) {
+async function getBooksForUser(libraryId, limit = 12, offset = 0) {
     try {
         const [rows] = await pool.query(
             `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable
              FROM booksInLibrary bil
              JOIN books b ON bil.bookId = b.id   
              JOIN copyBook cb ON cb.bookInLibraryId = bil.id      
-             WHERE bil.libraryId = ?`, [libraryId]);
+             WHERE bil.libraryId = ?
+             LIMIT ? OFFSET ?`, [libraryId, limit, offset]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -41,7 +45,7 @@ async function getBooksForUser(libraryId) {
     }
 }
 
-async function getfilteredBooks(query, libraryId) {
+async function getfilteredBooks(query, libraryId, limit = 12, offset = 0) {
     try {
         const sql = `
             SELECT b.*
@@ -49,9 +53,10 @@ async function getfilteredBooks(query, libraryId) {
             JOIN booksInLibrary bil ON b.id = bil.bookId
             WHERE bil.libraryId = ?
             AND (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+            LIMIT ? OFFSET ?
         `;
         const wildcardQuery = `%${query}%`;
-        const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery]);
+        const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery, limit, offset]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -59,14 +64,15 @@ async function getfilteredBooks(query, libraryId) {
     }
 }
 
-async function getfilteredBooksForAdmin(query) {
+async function getfilteredBooksForAdmin(query, limit = 12, offset = 0) {
     try {
         const sql = `
             SELECT * FROM books b
             WHERE (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+            LIMIT ? OFFSET ?
         `;
         const wildcardQuery = `%${query}%`;
-        const [rows] = await pool.query(sql, [wildcardQuery, wildcardQuery, wildcardQuery]);
+        const [rows] = await pool.query(sql, [wildcardQuery, wildcardQuery, wildcardQuery, limit, offset]);
         return rows;
     } catch (err) {
         console.log(err);
@@ -74,8 +80,7 @@ async function getfilteredBooksForAdmin(query) {
     }
 }
 
-
-async function getfilteredBooksForUser(query, libraryId) {
+async function getfilteredBooksForUser(query, libraryId, limit = 12, offset = 0) {
     try {
         const sql = `SELECT b.*, bil.isNew, cb.id as copyBookId, cb.isAvailable
         FROM booksInLibrary bil
@@ -83,9 +88,10 @@ async function getfilteredBooksForUser(query, libraryId) {
         JOIN copyBook cb ON cb.bookInLibraryId = bil.id      
         WHERE bil.libraryId = ?
         AND (b.author LIKE ? OR b.nameBook LIKE ? OR b.category LIKE ?)
+        LIMIT ? OFFSET ?
         `;
         const wildcardQuery = `%${query}%`;
-        const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery]);
+        const [rows] = await pool.query(sql, [libraryId, wildcardQuery, wildcardQuery, wildcardQuery, limit, offset]);
         return rows;
     } catch (err) {
         console.log(err);

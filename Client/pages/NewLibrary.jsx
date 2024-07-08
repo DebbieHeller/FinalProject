@@ -119,7 +119,7 @@ function NewLibrary() {
             <span className="newLibrary-close" onClick={() => setShowManagerModal(false)}>
               &times;
             </span>
-            <h2>בחירת מנהל ספרייה</h2>
+            <button>הוספת מנהל ספרייה</button>
             <input
               type="text"
               placeholder="חיפוש לפי שם משתמש"

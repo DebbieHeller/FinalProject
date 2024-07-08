@@ -8,11 +8,15 @@ function Books() {
   const { user } = useContext(userContext);
   const libraryId = parseInt(localStorage.getItem("libraryId"));
   const [books, setBooks] = useState([]);
+  const [filteredBooks, setFilteredBooks] = useState([]);
   const [comments, setComments] = useState({});
   const [selectedBook, setSelectedBook] = useState(null);
   const [showComments, setShowComments] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [showAddBookModal, setShowAddBookModal] = useState(false);
+  const [offset, setOffset] = useState(0);
+  const [isSearching, setIsSearching] = useState(false);
+  const limit = 12
   const [newBook, setNewBook] = useState({
     nameBook: '',
     author: '',
@@ -24,23 +28,34 @@ function Books() {
   });
 
   useEffect(() => {
-    if (searchQuery === '') {
-      const booksApi = user && user.roleId == 1 ? `http://localhost:3000/homeBooks`//?זה בעיה שלא נבדק הקוקיז בפטש הזה?
-        : `http://localhost:3000/homeBooks?libraryId=${libraryId}`
-      fetch(booksApi)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return res.json();
-        })
-        .then((books) => {
-          setBooks(books);
-        })
-        .catch((error) => console.error("Error fetching books:", error));
-    }
-  }, [libraryId, searchQuery]);
+    const booksApi = user && user.roleId == 1 ?
+      `http://localhost:3000/homeBooks?limit=${limit}&offset=${offset}` :
+      `http://localhost:3000/homeBooks?libraryId=${libraryId}&limit=${limit}&offset=${offset}`;
 
+    fetch(booksApi)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return res.json();
+      })
+      .then((newBooks) => {
+        setBooks((prevBooks) => [...prevBooks, ...newBooks]);
+        setIsSearching(false);
+      })
+      .catch((error) => console.error("Error fetching books:", error));
+  }, [libraryId, offset]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight) {
+        setOffset((prevOffset) => prevOffset + limit);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleShowComments = (bookId) => {
     setShowComments(!showComments);
@@ -54,19 +69,26 @@ function Books() {
     }
   };
 
+  useEffect(() => {
+    if (searchQuery == '')
+      setIsSearching(false);
+  }, [searchQuery]);
+
   const handleSearch = (searchQuery) => {
-    const filteredBooksApi = user && user.roleId == 1 ? `http://localhost:3000/homeBooks?query=${searchQuery}`
-      : `http://localhost:3000/homeBooks?libraryId=${libraryId}&query=${searchQuery}`
+    setSearchQuery(searchQuery);
+    if (searchQuery.trim() === "") {
+      setIsSearching(false);
+      return;
+    }
+    setIsSearching(true);
+    const filteredBooksApi = user && user.roleId == 1 ?
+      `http://localhost:3000/homeBooks?query=${searchQuery}&limit=${limit}&offset=0` :
+      `http://localhost:3000/homeBooks?libraryId=${libraryId}&query=${searchQuery}&limit=${limit}&offset=0`;
+
     fetch(filteredBooksApi)
-      .then((res) => {
-        if (!res.ok) {
-          alert(searchQuery);
-          throw new Error("Network response was not ok");
-        }
-        return res.json();
-      })
+      .then((res) => res.json())
       .then((data) => {
-        setBooks(data);
+        setFilteredBooks(data);
       })
       .catch((error) => console.error("Error searching books:", error));
   };
@@ -126,11 +148,16 @@ function Books() {
 
       {user && user.roleId == 1 && <button className="add-book-button" onClick={() => setShowAddBookModal(true)}>הוספת ספר</button>}
       <div className="books-grid">
-        {books.map(book => (
+        {!isSearching ? books.map(book => (
           <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
             <BookCard book={book} />
           </div>
-        ))}
+        )) :
+          filteredBooks.map(book => (
+            <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+              <BookCard book={book} />
+            </div>
+          ))}
       </div>
       {selectedBook && (
         <div className="modal" onClick={() => setSelectedBook(null)}>
@@ -149,12 +176,16 @@ function Books() {
             </button>
             {showComments && comments[selectedBook.id] && (
               <div className="comments-section">
-                {comments[selectedBook.id].map(comment => (
-                  <div key={comment.id} className="comment-card">
-                    <h4>{comment.title}</h4>
-                    <p>{comment.body}</p>
-                  </div>
-                ))}
+                {comments[selectedBook.id] ? (
+                  comments[selectedBook.id].map((comment) => (
+                    <div key={comment.id} className="comment-card">
+                      <h4>{comment.title}</h4>
+                      <p>{comment.body}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p>טוען הערות...</p>
+                )}
               </div>
             )}
           </div>
