@@ -209,11 +209,11 @@ async function insertBookToLibrary(libraryId, bookId, unitsInStock) {
     }
 }
 
-async function updateBook(id, nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew) {
+async function updateBook(id,nameBook, author, numOfPages,publishingYear,summary,image,category) {
     try {
         const [rows] = await pool.query(
-            "UPDATE Books SET nameBook = ?, author = ?, numOfPages = ?, publishingYear = ?, likes = ?, summary = ?, imagePath = ?, unitsInStock = ?, category = ?, libraryId = ?, isNew = ? WHERE id = ?",
-            [nameBook, author, numOfPages, publishingYear, likes, summary, imagePath, unitsInStock, category, libraryId, isNew, id]
+            "UPDATE Books SET nameBook = ?, author = ?, numOfPages = ?, publishingYear = ?, summary = ?, image = ?, category = ? WHERE id = ?",
+            [nameBook, author, numOfPages, publishingYear, summary, image, category, id]
         );
         return rows;
     } catch (err) {

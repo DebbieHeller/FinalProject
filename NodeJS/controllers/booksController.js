@@ -63,9 +63,9 @@ async function create(nameBook, author, numOfPages, publishingYear, summary, ima
     }
 }
 
-async function update(bookId,nameBook, author, numOfPages,publishingYear,likes,summary,image,unitsInStock,category,libraryId,isNew) {
+async function update(bookId,nameBook, author, numOfPages,publishingYear,summary,image,category) {
     try {
-        return await model.updateBook(bookId,nameBook, author, numOfPages,publishingYear,likes,summary,image,unitsInStock,category,libraryId,isNew)
+        return await model.updateBook(bookId,nameBook, author, numOfPages,publishingYear,summary,image,category)
     } catch (err) {
         throw err
     }

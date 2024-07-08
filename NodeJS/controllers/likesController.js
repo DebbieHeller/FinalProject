@@ -3,19 +3,23 @@ const model = require("../models/likesModel");
 async function getAll(libraryId) {
     try {
         const response = libraryId? await model.getlikes(libraryId)
-        :await await model.getAlllikes()
+        : await model.getAlllikes()
         return response
     } catch (err) {
         throw err
     }
 }
 
-async function updateLikes(bookId) {
+async function update(bookId, userId) {
     try {
-        return await model.updateLikes(bookId)
+        const likeId = await model.checkLike(bookId, userId)
+        if(likeId.length > 0)
+            return await model.deleteLike(likeId[0].id)
+        else
+            return await model.createLike(bookId, userId)
     } catch (err) {
         throw err
     }
 }
 
-module.exports = { getAll, updateLikes};
+module.exports = { getAll, update};

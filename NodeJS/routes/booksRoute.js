@@ -56,13 +56,9 @@ booksRouter.put("/:bookId", async (req, res) => {
       req.body.author,
       req.body.numOfPages,
       req.body.publishingYear,
-      req.body.likes,
       req.body.summary,
       req.body.image,
-      req.body.unitsInStock,
-      req.body.category,
-      req.body.libraryId,
-      req.body.isNew
+      req.body.category
     );
     res.status(200).send(await getSingle(req.params.bookId));
   } catch (error) {

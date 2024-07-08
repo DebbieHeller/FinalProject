@@ -71,8 +71,9 @@ CREATE TABLE books (
 CREATE TABLE likes (
   id INT AUTO_INCREMENT PRIMARY KEY,
   bookId INT NOT NULL,
-  numLikes INT NOT NULL,
-  FOREIGN KEY (bookId) REFERENCES books(id)
+  userId INT NOT NULL,
+  FOREIGN KEY (bookId) REFERENCES books(id),
+  FOREIGN KEY (userId) REFERENCES users(id)
 );
 
 CREATE TABLE booksInLibrary (
@@ -206,33 +207,35 @@ INSERT INTO books (nameBook, author, numOfPages, publishingYear, summary, image,
 ('אויב באדמת ידיד','יונה ספיר',445,'2014','ספר מדהים לבני הנעורים','oyev-yadid.jpg','עלילה'),
 ('החמישה','חיים גרינבוים',400,'2021','ספר מקצועי ועלילתי','hachamisha.jpg','עלילה');
 
-INSERT INTO likes (bookId, numLikes) VALUES 
-(1, 100), 
-(2, 150), 
-(3, 120), 
-(4, 80), 
-(5, 200), 
-(6, 140), 
-(7, 110), 
-(8, 160), 
-(9, 170), 
-(10, 130),
-(11,40),
-(12,87),
-(13,190),
-(14,38),
-(15,120),
-(16,90),
-(17,300),
-(18,290),
-(19,57),
-(20,148),
-(21,23),
-(22,78),
-(23,78),
-(24,78),
-(25,78),
-(26,78);
+INSERT INTO likes (bookId, userId) VALUES 
+(1, 1), 
+(2, 2), 
+(3, 3), 
+(4, 9), 
+(5, 8), 
+(6, 3), 
+(7, 3), 
+(8, 4), 
+(9, 7), 
+(10, 7),
+(11,9),
+(12,5),
+(13,4),
+(14,5),
+(15,6),
+(16,6),
+(17,6),
+(18,6),
+(19,6),
+(20,6),
+(21,6),
+(22,6),
+(23,6),
+(24,6),
+(25,6),
+(1,6),
+(26,6),
+(27,6);
 
 INSERT INTO booksInLibrary (libraryId, bookId, unitsInStock, isNew) VALUES 
 (1, 1, 2, FALSE),

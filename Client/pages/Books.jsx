@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import "../css/books.css";
 import { FaSearch } from "react-icons/fa";
 import BookCard from "../components/BookCard";
+import NewBook from "../components/NewBook";
 import { userContext } from "../src/App";
 
 function Books() {
@@ -17,15 +18,6 @@ function Books() {
   const [offset, setOffset] = useState(0);
   const [isSearching, setIsSearching] = useState(false);
   const limit = 12
-  const [newBook, setNewBook] = useState({
-    nameBook: '',
-    author: '',
-    numOfPages: '',
-    publishingYear: '',
-    summary: '',
-    image: null,
-    category: '',
-  });
 
   useEffect(() => {
     const booksApi = user && user.roleId == 1 ?
@@ -91,39 +83,6 @@ function Books() {
         setFilteredBooks(data);
       })
       .catch((error) => console.error("Error searching books:", error));
-  };
-
-  const handleAddBookChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setNewBook(prevState => ({
-      ...prevState,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const handleAddBookSubmit = () => {
-    const formData = new FormData();
-    for (const key in newBook) {
-      formData.append(key, newBook[key]);
-    }
-    fetch('http://localhost:3000/books', {
-      method: 'POST',
-      credentials: 'include',
-      body: formData
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        setBooks([...books, data]);
-        setShowAddBookModal(false);
-      })
-      .catch((error) => console.error('Error adding book:', error));
-  };
-
-  const handleImageChange = (e) => {
-    setNewBook(prevState => ({
-      ...prevState,
-      image: e.target.files[0]
-    }));
   };
 
   return (
@@ -192,80 +151,7 @@ function Books() {
         </div>
       )}
       {showAddBookModal && (
-        <div className="modal">
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <span className="close-right" onClick={() => setShowAddBookModal(false)}>&times;</span>
-            <h2>הוספת ספר חדש</h2>
-            <form className="add-book-form" onSubmit={(e) => { e.preventDefault(); handleAddBookSubmit(); }}>
-              <input
-                type="text"
-                name="nameBook"
-                placeholder="שם ספר"
-                value={newBook.nameBook}
-                onChange={handleAddBookChange}
-                required
-              />
-              <input
-                type="text"
-                name="author"
-                placeholder="שם סופר"
-                value={newBook.author}
-                onChange={handleAddBookChange}
-                required
-              />
-              <input
-                type="number"
-                name="numOfPages"
-                placeholder="מספר עמודים"
-                value={newBook.numOfPages}
-                onChange={handleAddBookChange}
-                required
-              />
-              <input
-                type="number"
-                name="publishingYear"
-                placeholder="שנת הוצאה לאור"
-                value={newBook.publishingYear}
-                onChange={handleAddBookChange}
-                required
-              />
-              <textarea
-                name="summary"
-                placeholder="תקציר"
-                value={newBook.summary}
-                onChange={handleAddBookChange}
-                required
-              />
-              <select
-                name="category"
-                value={newBook.category}
-                onChange={handleAddBookChange}
-                required
-              >
-                <option value="">בחר קטגוריה</option>
-                <option value="fiction">סיפורת</option>
-                <option value="non-fiction">עיון</option>
-                <option value="fantasy">פנטזיה</option>
-                <option value="mystery">מסתורין</option>
-                <option value="biography">ביוגרפיה</option>
-                <option value="science-fiction">מדע בדיוני</option>
-                <option value="history">היסטוריה</option>
-                <option value="romance">רומן</option>
-                <option value="self-help">עזרה עצמית</option>
-                <option value="other">אחר</option>
-              </select>
-              <label>תמונה</label>
-              <input
-                type="file"
-                name="image"
-                accept="image/*"
-                onChange={handleImageChange}
-                required
-              />
-              <button type="submit">אישור</button>
-            </form>
-          </div>
-        </div>
+        <NewBook setShowAddBookModal={setShowAddBookModal} setBooks={setBooks} />
       )}
     </div>
   );

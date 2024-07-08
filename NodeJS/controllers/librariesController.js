@@ -10,13 +10,11 @@ async function getAll() {
 
 async function create(libraryName, address, phone, userId) {
     try {
-        console.log(userId)
         const libraries = await model.getLibraries();
         const userIsManager = libraries.some(library => library.userId == userId);
         if (userIsManager) {
             return null
         }
-        console.log('ooooo')
         return await model.createLibrary(libraryName, address, phone, userId)
     } catch (err) {
         throw err

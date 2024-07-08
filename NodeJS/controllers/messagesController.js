@@ -10,7 +10,6 @@ async function getUserMessages(userId) {
 
 async function create(userId,title,body,status,createdDate) {
     try {
-        console.log(userId)
         return await model.createMessage(userId,title,body,status,createdDate)
     } catch (err) {
         throw err
