@@ -2,22 +2,25 @@ import React, { useContext, useState, useEffect } from "react";
 import { userContext } from "../src/App";
 import Cart from "../components/Cart";
 import BookCard from "../components/BookCard";
-import '../css/books.css';
-import '../css/newBorrow.css';
-import { FaSearch, FaShoppingCart } from 'react-icons/fa';
+import "../css/books.css";
+import "../css/newBorrow.css";
+import { FaSearch, FaShoppingCart } from "react-icons/fa";
 
 function NewBorrow() {
-    const libraryId = parseInt(localStorage.getItem('libraryId'));
+    const libraryId = parseInt(localStorage.getItem("libraryId"));
     const [books, setBooks] = useState([]);
+    const [filteredBooks, setFilteredBooks] = useState([]);
     const [comments, setComments] = useState({});
     const [selectedBook, setSelectedBook] = useState(null);
     const [showComments, setShowComments] = useState(false);
-    const [searchQuery, setSearchQuery] = useState('');
+    const [searchQuery, setSearchQuery] = useState("");
     const [isSearching, setIsSearching] = useState(false);
     const [recommendedBooks, setRecommendedBooks] = useState([]);
     const [cart, setCart] = useState([]);
     const [isCartVisible, setIsCartVisible] = useState(false);
     const { user } = useContext(userContext);
+    const [offset, setOffset] = useState(0);
+    const limit = 12;
 
     useEffect(() => {
         fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`, {
@@ -32,30 +35,51 @@ function NewBorrow() {
     }, [libraryId, user.id]);
 
     useEffect(() => {
-        if (searchQuery === '') {
-            fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}`, {
-                method: 'GET',
-                credentials: 'include'
-            })
+            fetch(
+                `http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}&limit=${limit}&offset=${offset}`,
+                {
+                    method: "GET",
+                    credentials: "include",
+                }
+            )
                 .then((res) => res.json())
-                .then((books) => {
-                    if (recommendedBooks.length > 0) {
-                        const filteredBooks = books.filter(
+                .then((fetchedBooks) => {
+                    if (recommendedBooks.length > 0 && offset == 0) {
+                        const filteredBooks = fetchedBooks.filter(
                             book => !recommendedBooks.some(recommendedBook => recommendedBook.id === book.id)
                         );
                         setBooks(filteredBooks);
                     } else {
-                        setBooks(books);
+                        // Append new books to existing list if offset is greater than 0 (infinite scroll)
+                        setBooks((prevBooks) => [...prevBooks, ...fetchedBooks]);
                     }
                     setIsSearching(false);
                 })
-                .catch((error) => console.error('Error fetching books:', error));
-        }
-    }, [libraryId, user.id, recommendedBooks, searchQuery]);
+                .catch((error) => console.error("Error fetching books:", error));
+    }, [libraryId, user.id, recommendedBooks, offset]); // Fetch books and recommended books when libraryId, user.id, or offset changes
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (
+                window.innerHeight + document.documentElement.scrollTop >=
+                document.documentElement.offsetHeight
+            ) {
+                setOffset((prevOffset) => prevOffset + limit);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, [offset]); 
+
+    useEffect(() => {
+        if(searchQuery == '')
+            setIsSearching(false);
+    }, [searchQuery]);
 
     const handleSearch = (query) => {
         setSearchQuery(query);
-        if (query.trim() === '') {
+        if (query.trim() === "") {
             setIsSearching(false);
             return;
         }
@@ -63,7 +87,7 @@ function NewBorrow() {
         fetch(`http://localhost:3000/homeBooks?libraryId=${libraryId}&query=${query}&userId=${user.id}`)
             .then((res) => res.json())
             .then((data) => {
-                setBooks(data);
+                setFilteredBooks(data);
             })
             .catch((error) => console.error("Error searching books:", error));
     };
@@ -73,15 +97,15 @@ function NewBorrow() {
         if (!comments[bookId]) {
             fetch(`http://localhost:3000/comments?bookId=${bookId}`)
                 .then((res) => res.json())
-                .then((comments) => {
-                    setComments({ ...comments, [bookId]: comments });
+                .then((fetchedComments) => {
+                    setComments({ ...comments, [bookId]: fetchedComments });
                 })
-                .catch((error) => console.error('Error fetching comments:', error));
+                .catch((error) => console.error("Error fetching comments:", error));
         }
     };
 
     const handleAddToCart = (book) => {
-        if (!cart.some(cartItem => cartItem.id === book.id)) {
+        if (!cart.some((cartItem) => cartItem.id === book.id)) {
             setCart([...cart, book]);
         }
         setSelectedBook(null);
@@ -129,7 +153,12 @@ function NewBorrow() {
                         </>
                     )}
                     <div className="book-section">
-                        {books.map(book => (
+                        {!isSearching? books.map(book => (
+                            <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                                <BookCard book={book} />
+                            </div>
+                        )): 
+                        filteredBooks.map(book => (
                             <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                                 <BookCard book={book} />
                             </div>
@@ -150,7 +179,7 @@ function NewBorrow() {
                             <p><strong>Category:</strong> {selectedBook.category}</p>
                             <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>
                             <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id); }}>
-                                {showComments ? 'Hide Comments' : 'Show Comments'}
+                                {showComments ? "הסתרת הערות" : "הצגת הערות"}
                             </button>
                             {showComments && comments[selectedBook.id] && (
                                 <div className="comments-section">
@@ -173,4 +202,5 @@ function NewBorrow() {
         </>
     );
 }
+
 export default NewBorrow;

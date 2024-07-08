@@ -1,22 +1,22 @@
 const model = require('../models/booksModel')
 
-async function getAll(libraryId, query, userId) {
+async function getAll(libraryId, query, userId, limit, offset) {
     try {
         //books
         if(libraryId && !query && !userId)
-            return await model.getBooks(libraryId);
+            return await model.getBooks(libraryId, limit, offset);
         if(!libraryId && !query && !userId)
-            return await model.getBooksForAdmin();
+            return await model.getBooksForAdmin(limit, offset);
         if(libraryId && !query && userId)
-            return await model.getBooksForUser(libraryId);
+            return await model.getBooksForUser(libraryId, limit, offset);
         
         //filtered books
         if(libraryId && query && !userId)
-            return await model.getfilteredBooks(query, libraryId);
+            return await model.getfilteredBooks(query, libraryId, limit, offset);
         if(!libraryId && query && !userId)
-            return await model.getfilteredBooksForAdmin(query);
+            return await model.getfilteredBooksForAdmin(query, limit, offset);
         if(libraryId && query && userId)
-            return await model.getfilteredBooksForUser(query, libraryId);
+            return await model.getfilteredBooksForUser(query, libraryId, limit, offset);
         
     } catch (err) {
         throw err
