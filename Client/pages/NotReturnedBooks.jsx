@@ -44,7 +44,7 @@ function NotReturnedBooks() {
   const handleSendMessage = (borrow) => {
     const daysDelayed = calculateDaysDelayed(borrow);
     const title = 'איחור בהחזרת הספר';
-    const body = `אתה מחזיק בספר כבר ${daysDelayed} ימים מעל המותר. כל יום גורר איתו קנס, החזר בהקדם.`;
+    const body = `אתה מחזיק בספר: "${borrow.nameBook}" כבר ${daysDelayed} ימים מעל המותר. כל יום גורר איתו קנס, החזר בהקדם.`;
     
     if (title && body) {
       const createdDate = new Date().toLocaleDateString('en-CA');

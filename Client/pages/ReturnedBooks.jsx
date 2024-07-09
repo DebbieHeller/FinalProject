@@ -105,6 +105,7 @@ function ReturnedBooks() {
             <th>קוד ספר</th>
             <th>שם ספר</th>
             <th>שם סופר</th>
+            <th>סטטוס</th>
             <th>לא הוחזר</th>
             <th>תקין</th>
             <th>לא תקין</th>
@@ -121,6 +122,7 @@ function ReturnedBooks() {
                 <td className='td-detailed'>{borrow.copyBookId}</td>
                 <td className='td-detailed'>{borrow.nameBook}</td>
                 <td className='td-detailed'>{borrow.author}</td>
+                <td className='td-detailed'>{borrow.status}</td>
                 <td className='td-detailed'>
                   <input
                     type="checkbox"
