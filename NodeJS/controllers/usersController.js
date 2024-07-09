@@ -17,7 +17,6 @@ async function getUsers(roleId, userId) {
 
 async function getSingle(id) {
     try {
-        console.log("dddd")
         return await model.getUser(id)
     } catch (err) {
         throw err

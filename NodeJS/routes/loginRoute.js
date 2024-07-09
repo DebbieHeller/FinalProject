@@ -30,7 +30,7 @@ loginRouter.post('/', async (req, res) => {
             res.status(201).send(user);
         }
     } catch (error) {
-        res.status(500).send({ error: 'Failed to fetch book' });
+        res.status(500).send({ error: 'Failed to fetch user' });
     }
 });
 

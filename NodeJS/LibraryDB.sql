@@ -271,6 +271,7 @@ INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES
 (2, true),
 (3, true),
 (4, true),
+(5, true),
 (1, true),
 (6, true),
 (7, true),
@@ -298,16 +299,16 @@ INSERT INTO copyBook (bookInLibraryId, isAvailable) VALUES
 (27,true);
 
 INSERT INTO borrows (copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) VALUES 
-(1, 1, '2024-05-10', NULL, 'Borrowed', FALSE, TRUE),
-(4, 1, '2024-05-10', '2024-06-15', 'Returned', TRUE, TRUE),
-(7, 1, '2024-05-10', '2024-06-20', 'Returned', TRUE, FALSE),
-(3, 1, '2024-05-10', '2024-06-20',  'Returned', FALSE, FALSE),
-(5, 1, '2024-05-10', '2024-06-20',  'Returned', FALSE, FALSE),
-(6, 1, '2023-06-10', '2024-06-20', 'Returned', FALSE, FALSE),
-(7, 7, '2024-06-10', '2024-06-20',  'Returned', FALSE, FALSE),
-(8, 1, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(9, 1, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE),
-(2, 5, '2023-06-10', NULL, 'Borrowed', FALSE, TRUE);
+(1, 1, '2024-05-10', NULL, 'Borrowed', NULL, NULL),
+(4, 1, '2024-05-10', '2024-06-15', 'Returned', NULL, NULL),
+(7, 1, '2024-05-10', '2024-06-20', 'Returned', NULL, NULL),
+(3, 1, '2024-05-10', '2024-06-20',  'Returned', NULL, NULL),
+(5, 1, '2024-05-10', '2024-06-20',  'Returned', NULL, NULL),
+(6, 1, '2023-06-10', '2024-06-20', 'Returned', NULL, NULL),
+(7, 7, '2024-06-10', '2024-06-20',  'Returned', NULL, NULL),
+(8, 1, '2023-06-10', NULL, 'Borrowed', NULL, NULL),
+(9, 1, '2023-06-10', NULL, 'Borrowed', NULL, NULL),
+(2, 5, '2023-06-10', NULL, 'Borrowed', NULL, NULL);
 
 INSERT INTO comments (title, body, userId, bookId) VALUES 
 ('סופרת ותיקה', 'ספר יפה ומרגש ככ נוסטלגי', 1, 1),

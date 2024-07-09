@@ -14,8 +14,8 @@ async function getAllUsers() {
 
 async function getUser(id) {
     try {
-        console.log("nnnnnnnn")
-        const [rows] = await pool.query(`SELECT * FROM users where id = ?`, [id])
+        const [rows] = await pool.query(`SELECT * FROM users where id=?`, [id])
+        console.log("rows "+ rows, "id" +id)
         return rows[0]
 
     } catch (err) {

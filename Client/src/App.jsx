@@ -9,7 +9,7 @@ import Books from "../pages/Books";
 import Messages from "../pages/Messages";
 import UserBorrows from "../pages/UserBorrows";
 import UserBooks from "../pages/UserBooks";
-import NewBorrow from "../pages/NewBorrow";
+import Warnable from "../pages/Warnable";
 import Logout from "../components/Logout";
 import UserBook from "../pages/UserBook";
 import ReturnedBooks from "../pages/ReturnedBooks";
@@ -19,15 +19,23 @@ import Inspectors from "../pages/Inspectors";
 import Libraries from "../pages/Libraries";
 import Borrower from "../pages/Borrower";
 import NewLibrary from "../pages/NewLibrary";
-
 export const userContext = createContext();
 
 function App() {
   const [user, setUser] = useState();
 
-  useEffect(() => {
-    alert("Welcome to the application!");
-  }, []);
+  // useEffect(() => {
+  //   fetch(`http://localhost:3000/checkConnect`, {
+  //     method: 'GET',
+  //     credentials: 'include'
+  //   })
+  //     .then((res) =>{console.log(res), res.json()})
+  //     .then((user) => {
+  //       console.log("user " + user)
+  //       setUser(user)
+  //     })
+  //     .catch((error) => console.error('Error fetching user', error));
+  // }, []);
 
   return (
     <>
@@ -41,7 +49,8 @@ function App() {
             </Route>
 
             <Route path="/home" element={<HomeLayout />}>
-              <Route path="new-borrow" element={<NewBorrow />} />
+              <Route index element={<Warnable />} />
+              <Route path="new-borrow" element={<Warnable />} />
               <Route path="messages" element={<Messages />} />
               <Route path="user-borrows" element={<UserBorrows />} />
               <Route path="user-borrows/:id" element={<UserBook />} />

@@ -7,8 +7,7 @@ import { userContext } from '../src/App';
 function Home() {
   const { user } = useContext(userContext);
   const [unreadCount, setUnreadCount] = useState(0);
-  const [showBlockedMessage, setShowBlockedMessage] = useState(false);
-
+  
   useEffect(() => {
     if (user && user.id) {
       fetch(`http://localhost:3000/messages?count=1`, {
@@ -26,20 +25,6 @@ function Home() {
         .catch(error => console.error('Error fetching unread messages count:', error));
     }
   }, [user]);
-
-  const handleNewBorrowClick = () => {
-    if (user.isWarned) {
-      setShowBlockedMessage(true);
-    } else {
-      // Navigate to "/home/new-borrow" if user is not warned
-      // Example: window.location.href = "/home/new-borrow";
-    }
-  };
-
-  const handleCloseMessage = () => {
-    setShowBlockedMessage(false);
-  };
-  
 
   return (
     <div className="home-container">
@@ -65,22 +50,10 @@ function Home() {
             <Link to="/home/user-books">ספרים בהשאלה</Link>
           </li>
           <li>
-            {user.isWarned ? (
-              <span className="disabled-link" onClick={handleNewBorrowClick}>השאלה חדשה</span>
-            ) : (
               <Link to="/home/new-borrow">השאלה חדשה</Link>
-            )}
           </li>
         </ul>
       </nav>
-      {showBlockedMessage && (
-        <div className="blocked-message-container">
-          <div className="blocked-message-content">
-            <span className="close-btn" onClick={handleCloseMessage}>x</span>
-            <p>המשתמש חסום מלבצע פעולה זו.</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

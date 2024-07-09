@@ -44,7 +44,7 @@ function ReturnedBooks() {
   const handleSubmit = () => {
     try {
       const updatedBorrows = borrows
-        .filter((borrow, index) => checkboxData[index].isReturned || checkboxData[index].isIntact !== '')
+        // .filter((borrow, index) => checkboxData[index].isReturned || checkboxData[index].isIntact !== '')
         .map((borrow, index) => ({
           borrowId: borrow.borrowId,
           copyBookId: borrow.copyBookId,
@@ -92,9 +92,6 @@ function ReturnedBooks() {
       console.error("Error updating borrows:", error);
     }
   };
-  
-  
-  
   
   return (
     <div className="borrows-container">

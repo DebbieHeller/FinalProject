@@ -10,27 +10,22 @@ import { Outlet } from "react-router-dom"
 
 function HomeLayout() {
 
-  const { user } = useContext(userContext);
-  
-
-  // useEffect(() => {
-  //   alert("nnnnnnnnn")
-  //   const fetchUserData = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost:3000/checkConnect');
-  //       if (response.ok) {
-  //         const userData = await response.json();
-  //         setUser(userData);
-  //       } else {
-  //         throw new Error('Failed to fetch user data');
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error);
-        
-  //     }
-  //   };
-
+  const { user, setUser } = useContext(userContext);
  
+  // useEffect(() => {
+  //   fetch(`http://localhost:3000/checkConnect`, {
+  //     method: 'GET',
+  //     credentials: 'include'
+  //   })
+  //     .then((res) => res.json())
+  //     .then((user) => {
+  //       console.log("user " + user)
+  //       setUser(user)
+  //       console.log("1user " + {user})
+  //     })
+  //     .catch((error) => console.error('Error fetching user', error));
+  // }, []);
+
   return (
     <>
       {user.roleId === 4 && <Home />}

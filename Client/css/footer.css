@@ -1,7 +1,8 @@
 .footer-list {
     list-style-type: none;
     padding: 0;
-    background-color: #968080; /* Light gray background */
+    margin: 0;
+    background-color: #a79d9d; 
     color: #fff;
     display: flex;
     justify-content: center;

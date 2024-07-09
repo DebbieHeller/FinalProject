@@ -19,6 +19,19 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.WarnMessage {
+  background-color: #ffcccb;
+  border: 1px solid #ff0000;
+  color: #ff0000;
+  padding: 20px;
+  margin: 20px;
+  border-radius: 5px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 80px;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
