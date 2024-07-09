@@ -38,7 +38,7 @@ function Borrowers() {
       body = `החזרת ספר ${borrow.nameBook} לא תקין תחוייב בקנס`;
     } else if (!borrow.isReturned) {
       title = "ספר לא הוחזר";
-      body = `${borrow.nameBook} הינך נדרש להחזיר את הספר שנשאל`;
+      body = `${borrow.nameBook} :הינך נדרש להחזיר את הספר שנשאל`;
     }
 
     if (title && body) {

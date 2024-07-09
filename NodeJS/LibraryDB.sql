@@ -109,7 +109,7 @@ CREATE TABLE borrows (
   userId INT NOT NULL,
   borrowDate DATE NOT NULL,
   returnDate DATE default NULL,
-  status VARCHAR(50)  CHECK (status IN ('Borrowed', 'Returned', 'Overdue')),
+  status VARCHAR(50)  CHECK (status IN ('Borrowed', 'Returned', 'Overdue', 'Overdue-Returned')),
   isReturned BOOLEAN  DEFAULT TRUE,
   isIntact BOOLEAN DEFAULT TRUE,
   FOREIGN KEY (copyBookId) REFERENCES copyBook(id),

@@ -61,7 +61,7 @@ async function getInspectorBorrows(libraryId) {
         WHERE booksInLibrary.libraryId=?
         AND borrows.isIntact IS NULL
         AND borrows.isReturned IS NULL
-        AND borrows.status ='Returned';
+        AND borrows.status IN ('Returned', 'Overdue-Returned');
       `, [libraryId]
     );
     return rows;
