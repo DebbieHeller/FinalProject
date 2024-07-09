@@ -38,7 +38,7 @@ function HomeLayout() {
       {user.roleId === 2 && <LibraryAdminHome />}
       {user.roleId === 1 && <AdminHome />}
       <Outlet />
-      {user.roleId === 4 && <Footer />}
+      {/* {user.roleId === 4 && <Footer />} */}
     </>
   );
 }

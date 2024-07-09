@@ -14,7 +14,10 @@ function Borrower() {
     createdDate: new Date().toLocaleDateString('en-CA'),
     readDate: null,
   });
-  const [showModal, setShowModal] = useState(false); // State for modal visibility
+  const [showModal, setShowModal] = useState(false)
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [email, setEmail] = useState(borrow.email)
+  const [emailMessage, setEmailMessage] = useState('')
 
   useEffect(() => {
     fetch(`http://localhost:3000/libraryAdmin?userId=${borrow.userId}`, {
@@ -34,6 +37,14 @@ function Borrower() {
 
   const closeModal = () => {
     setShowModal(false);
+  };
+
+  const openEmailModal = () => {
+    setShowEmailModal(true);
+  };
+
+  const closeEmailModal = () => {
+    setShowEmailModal(false);
   };
 
   const handleSubmitMessage = (e) => {
@@ -56,7 +67,6 @@ function Borrower() {
     })
       .then((res) => res.json())
       .then((response) => {
-        
         closeModal(); 
       })
       .catch((error) => console.error("Error sending message:", error));
@@ -77,10 +87,38 @@ function Borrower() {
       .catch((error) => console.error("Error blocking user:", error));
   };
 
-  const handleSendEmail = () => {
-    // Placeholder function for sending email logic
-    console.log("Sending email to:");
-    // Add your email sending logic here
+  const handleSendEmail = async (e) => {
+    e.preventDefault();
+    openEmailModal(); // Open the email modal
+  };
+
+  const handleSubmitEmail = async (e) => {
+    e.preventDefault();
+    try {
+      const fullEmail = {
+        email,
+        message: emailMessage, // Include email message in the request
+      };
+
+      const response = await fetch('http://localhost:3000/sendEmail', {
+        method: 'POST',
+        credentials: "include",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(fullEmail),
+      });
+
+      if (response.ok) {
+        
+        closeEmailModal(); 
+      } else {
+        throw new Error('נכשל בהרשמה לניוזלייטר');
+      }
+    } catch (error) {
+      console.error('שגיאה בהרשמה לניוזלייטר:', error);
+      alert('נכשל בהרשמה לניוזלייטר');
+    }
   };
 
   return (
@@ -112,7 +150,7 @@ function Borrower() {
       <button onClick={handleSendEmail}>Send Email</button>
       <button onClick={() => blockUser(borrow.userId)}>Block User</button>
 
-      {/* Modal for sending message */}
+      {/* Message Modal */}
       {showModal && (
         <div className="modal-backdrop">
           <div className="modal-container">
@@ -140,6 +178,40 @@ function Borrower() {
               <div className="modal-actions">
                 <button className="submit-button" type="submit">אישור</button>
                 <button className="cancel-button" type="button" onClick={closeModal}>
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Email Modal */}
+      {showEmailModal && (
+        <div className="modal-backdrop">
+          <div className="modal-container">
+            <h2 className="modal-header">Send Email</h2>
+            <form onSubmit={handleSubmitEmail}>
+              <label className="modal-label" htmlFor="email">Email:</label>
+              <input
+                className="modal-input"
+                type="email"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <label className="modal-label" htmlFor="email-message">Message:</label>
+              <textarea
+                className="modal-textarea"
+                id="email-message"
+                value={emailMessage}
+                onChange={(e) => setEmailMessage(e.target.value)}
+                required
+              ></textarea>
+              <div className="modal-actions">
+                <button className="submit-button" type="submit">Send Email</button>
+                <button className="cancel-button" type="button" onClick={closeEmailModal}>
                   Cancel
                 </button>
               </div>

@@ -24,10 +24,36 @@ export const userContext = createContext();
 
 function App() {
   const [user, setUser] = useState();
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    alert("Welcome to the application!");
+    // Fetch user and unread count when the component mounts
+    fetchUser();
+    fetchUnreadCount();
   }, []);
+
+  const fetchUser = async () => {
+    // Fetch user logic here
+  };
+
+  const fetchUnreadCount = async () => {
+    if (user && user.id) {
+      try {
+        const response = await fetch(`http://localhost:3000/messages?count=1`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const data = await response.json();
+        console.log(data)
+        setUnreadCount(data.unreadCount);
+      } catch (error) {
+        console.error('Error fetching unread messages count:', error);
+      }
+    }
+  };
+
+  
 
   return (
     <>

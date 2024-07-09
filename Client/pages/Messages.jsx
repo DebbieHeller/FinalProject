@@ -3,7 +3,7 @@ import { userContext } from "../src/App";
 import '../css/messages.css';
 
 function Messages() {
-  const { user } = useContext(userContext);
+  const { user, setUser } = useContext(userContext);
   const [messages, setMessages] = useState([]);
   const [selectedMessage, setSelectedMessage] = useState(null);
 
@@ -11,7 +11,7 @@ function Messages() {
     fetch(`http://localhost:3000/messages`, {
       method: 'GET',
       credentials: 'include'
-  })
+    })
       .then(response => response.json())
       .then(data => setMessages(data))
       .catch(error => console.error("Error fetching messages:", error));
@@ -34,13 +34,17 @@ function Messages() {
         },
         body: JSON.stringify(updatedMessage)
       })
-      .then(response => response.json())
-      .then(() => {
-        setMessages(prevMessages => prevMessages.map(m => 
-          m.id === message.id ? {...m, ...updatedMessage} : m
-        ));
-      })
-      .catch(error => console.error("Error updating message:", error));
+        .then(response => response.json())
+        .then(() => {
+          setMessages(prevMessages => prevMessages.map(m => 
+            m.id === message.id ? { ...m, ...updatedMessage } : m
+          ));
+          setUser(prevUser => ({
+            ...prevUser,
+            unreadMessagesCount: prevUser.unreadMessagesCount - 1
+          }));
+        })
+        .catch(error => console.error("Error updating message:", error));
     }
   };
 

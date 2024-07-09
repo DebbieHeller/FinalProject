@@ -22,6 +22,7 @@ const inspectorBorrows=require('./routes/inspectorBorrowsRoute')
 const libraryAdmin = require('./routes/libraryAdminRoute');
 const libraries = require('./routes/librariesRoute')
 const checkConnect=require('./routes/checkConnectRoute')
+const sendEmail=require('./routes/sendEmailRoute')
 
 app.use(cookieParser());
 app.use(express.json());
@@ -48,6 +49,7 @@ app.use("/messages", messages);
 app.use("/subscriptionTypes",subscriptionTypes);
 app.use("/inspectorBorrows",inspectorBorrows);
 app.use("/libraries", libraries);
+app.use("/sendEmail",sendEmail);
 
 
 const PORT = 3000;

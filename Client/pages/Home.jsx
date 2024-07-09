@@ -1,45 +1,32 @@
 import { Link } from "react-router-dom";
 import "../css/home.css";
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 import { userContext } from '../src/App';
 
 function Home() {
-  const { user } = useContext(userContext);
-  const [unreadCount, setUnreadCount] = useState(0);
+  const { user, setUser } = useContext(userContext);
   const [showBlockedMessage, setShowBlockedMessage] = useState(false);
-
-  useEffect(() => {
-    if (user && user.id) {
-      fetch(`http://localhost:3000/messages?count=1`, {
-        method: 'GET',
-        credentials: "include",
-        headers: {
-            "Content-Type": "application/json",
-        }
-    })
-        .then(response => response.json())
-        .then(data => {
-          setUnreadCount(data.unreadCount);
-          console.log(unreadCount)
-        })
-        .catch(error => console.error('Error fetching unread messages count:', error));
-    }
-  }, [user]);
 
   const handleNewBorrowClick = () => {
     if (user.isWarned) {
       setShowBlockedMessage(true);
     } else {
-      // Navigate to "/home/new-borrow" if user is not warned
-      // Example: window.location.href = "/home/new-borrow";
+      window.location.href = "/home/new-borrow";
     }
   };
 
   const handleCloseMessage = () => {
     setShowBlockedMessage(false);
   };
-  
+
+  const handleMessageRead = () => {
+    // Update the unread messages count when a message is read
+    setUser(prevUser => ({
+      ...prevUser,
+      unreadMessagesCount: prevUser.unreadMessagesCount - 1
+    }));
+  };
 
   return (
     <div className="home-container">
@@ -50,13 +37,13 @@ function Home() {
           </li>
           <li>
             <Link to="/home/messages">
-            הודעות 
-            {unreadCount > 0 && (
-              <span className="unread-count">
-                <FaEnvelope className="envelope-icon" /> {unreadCount}
-              </span>
-            )}
-          </Link>
+              הודעות 
+              {user?.unreadMessagesCount > 0 && (
+                <span className="unread-count">
+                  <FaEnvelope className="envelope-icon" /> {user.unreadMessagesCount}
+                </span>
+              )}
+            </Link>
           </li>
           <li>
             <Link to="/home/user-borrows">השאלות קודמות</Link>
@@ -65,7 +52,7 @@ function Home() {
             <Link to="/home/user-books">ספרים בהשאלה</Link>
           </li>
           <li>
-            {user.isWarned ? (
+            {user?.isWarned ? (
               <span className="disabled-link" onClick={handleNewBorrowClick}>השאלה חדשה</span>
             ) : (
               <Link to="/home/new-borrow">השאלה חדשה</Link>

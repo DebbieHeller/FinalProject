@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import '../css/inspectorBorrows.css';
+import "../css/inspectorBorrows.css";
 
 function ReturnedBooks() {
   const [borrows, setBorrows] = useState([]);
@@ -8,94 +8,105 @@ function ReturnedBooks() {
 
   useEffect(() => {
     fetch(`http://localhost:3000/inspectorBorrows?libraryId=${libraryId}`, {
-      method: 'GET',
-      credentials: 'include'
+      method: "GET",
+      credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
         setBorrows(data);
-        setCheckboxData(data.map(() => ({
-          borrowId: '',
-          isReturned: '',
-          isIntact: ''
-        })));
+        setCheckboxData(
+          data.map(() => ({
+            borrowId: "",
+            isReturned: "",
+            isIntact: "",
+          }))
+        );
       })
       .catch((error) => console.error("Error fetching borrows:", error));
   }, [libraryId]);
 
   const handleCheckboxChange = (index, type) => {
-    const updatedData = {...checkboxData}
+    const updatedData = { ...checkboxData };
 
-    if (type === 'isReturned') {
+    if (type === "isReturned") {
       updatedData[index].isReturned = !updatedData[index].isReturned;
-      updatedData[index].isIntact = '';
-    }
-    else{
-      if (type === 'isIntact') {
-        updatedData[index].isIntact = updatedData[index].isIntact === 'intact' ? '' : 'intact';
-      } else if (type === 'isNotIntact') {
-        updatedData[index].isIntact = updatedData[index].isIntact === 'notIntact' ? '' : 'notIntact';
+      updatedData[index].isIntact = "";
+    } else {
+      if (type === "isIntact") {
+        updatedData[index].isIntact =
+          updatedData[index].isIntact === "intact" ? "" : "intact";
+      } else if (type === "isNotIntact") {
+        updatedData[index].isIntact =
+          updatedData[index].isIntact === "notIntact" ? "" : "notIntact";
       }
-      updatedData[index].isReturned = ''
-    }    
+      updatedData[index].isReturned = "";
+    }
     setCheckboxData(updatedData);
   };
 
   const handleSubmit = () => {
     try {
       const updatedBorrows = borrows
-        .filter((borrow, index) => checkboxData[index].isReturned || checkboxData[index].isIntact !== '')
+        .filter(
+          (borrow, index) =>
+            checkboxData[index].isReturned ||
+            checkboxData[index].isIntact !== ""
+        )
         .map((borrow, index) => ({
           borrowId: borrow.borrowId,
           copyBookId: borrow.copyBookId,
-          isReturned: checkboxData[index].isReturned == '' ? true : false,
-          isIntact: checkboxData[index].isIntact === 'intact',
+          isReturned: checkboxData[index].isReturned == "" ? true : false,
+          isIntact: checkboxData[index].isIntact === "intact",
         }));
-  
+
       let allRequestsSucceeded = true;
-  
-      updatedBorrows.forEach(updatedBorrow => {
-        fetch(`http://localhost:3000/inspectorBorrows/${updatedBorrow.borrowId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            copyBookId: updatedBorrow.copyBookId,
-            isReturned: updatedBorrow.isReturned,
-            isIntact: updatedBorrow.isIntact,
-          }),
-          credentials: 'include',
-        })
-          .then(response => {
+
+      updatedBorrows.forEach((updatedBorrow) => {
+        fetch(
+          `http://localhost:3000/inspectorBorrows/${updatedBorrow.borrowId}`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              copyBookId: updatedBorrow.copyBookId,
+              isReturned: updatedBorrow.isReturned,
+              isIntact: updatedBorrow.isIntact,
+            }),
+            credentials: "include",
+          }
+        )
+          .then((response) => {
             if (!response.ok) {
               allRequestsSucceeded = false;
-              throw new Error('Network response was not ok');
+              throw new Error("Network response was not ok");
             }
           })
-          .catch(error => {
+          .catch((error) => {
             console.error("Error updating borrow:", error);
             allRequestsSucceeded = false;
           });
       });
-  
-      if (allRequestsSucceeded) {
-        const updatedBorrowsIds = updatedBorrows.map(borrow => borrow.borrowId);
-       
-        setBorrows(borrows.filter(borrow => !updatedBorrowsIds.includes(borrow.borrowId)));
 
+      if (allRequestsSucceeded) {
+        const updatedBorrowsIds = updatedBorrows.map(
+          (borrow) => borrow.borrowId
+        );
+
+        setBorrows(
+          borrows.filter(
+            (borrow) => !updatedBorrowsIds.includes(borrow.borrowId)
+          )
+        );
       } else {
         console.error("Not all requests succeeded, please try again.");
       }
-  
     } catch (error) {
       console.error("Error updating borrows:", error);
     }
   };
-  
-  
-  
-  
+
   return (
     <div className="borrows-container">
       <h1>ספרים שהוחזרו</h1>
@@ -114,34 +125,36 @@ function ReturnedBooks() {
         <tbody>
           {borrows.length === 0 ? (
             <tr>
-              <td className='td-detailed' colSpan="6">אין ספרים שהושאלו</td>
+              <td className="td-detailed" colSpan="6">
+                אין ספרים שהושאלו
+              </td>
             </tr>
           ) : (
             borrows.map((borrow, index) => (
               <tr key={borrow.borrowId}>
-                <td className='td-detailed'>{borrow.copyBookId}</td>
-                <td className='td-detailed'>{borrow.nameBook}</td>
-                <td className='td-detailed'>{borrow.author}</td>
-                <td className='td-detailed'>{borrow.status}</td>
-                <td className='td-detailed'>
+                <td className="td-detailed">{borrow.copyBookId}</td>
+                <td className="td-detailed">{borrow.nameBook}</td>
+                <td className="td-detailed">{borrow.author}</td>
+                <td className="td-detailed">{borrow.status}</td>
+                <td className="td-detailed">
                   <input
                     type="checkbox"
                     checked={checkboxData[index].isReturned}
-                    onChange={() => handleCheckboxChange(index, 'isReturned')}
+                    onChange={() => handleCheckboxChange(index, "isReturned")}
                   />
                 </td>
-                <td className='td-detailed'>
+                <td className="td-detailed">
                   <input
                     type="checkbox"
-                    checked={checkboxData[index].isIntact === 'intact'}
-                    onChange={() => handleCheckboxChange(index, 'isIntact')}
+                    checked={checkboxData[index].isIntact === "intact"}
+                    onChange={() => handleCheckboxChange(index, "isIntact")}
                   />
                 </td>
-                <td className='td-detailed'>
+                <td className="td-detailed">
                   <input
                     type="checkbox"
-                    checked={checkboxData[index].isIntact === 'notIntact'}
-                    onChange={() => handleCheckboxChange(index, 'isNotIntact')}
+                    checked={checkboxData[index].isIntact === "notIntact"}
+                    onChange={() => handleCheckboxChange(index, "isNotIntact")}
                   />
                 </td>
               </tr>
