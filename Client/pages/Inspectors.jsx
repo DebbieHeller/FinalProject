@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../css/inspectors.css";
-import InspectorForm from "../components/InspectorForm"; // ייבוא של טופס הוספת פקח
+import UserForm from "../components/UserForm"; // ייבוא של טופס הוספת פקח
 
 function Inspectors() {
   const roleId = 2;
@@ -48,7 +48,7 @@ function Inspectors() {
         <button onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Hide Form' : 'Add Inspector'}
         </button>
-        {showForm && <InspectorForm onSubmit={handleAddInspector} />}
+        {showForm && <UserForm onSubmit={handleAddInspector} />}
       </div>
 
       <table className="user-table">

@@ -34,7 +34,7 @@ usersRouter.post("/", async (req, res) => {
     );
     console.log(response);
     if (response) {
-      res.status(201).json({ message: "User created successfully", data: response });
+      res.status(201).json(response);
     } else {
       res.status(501).json({ message: "User creation failed" });
     }

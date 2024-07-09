@@ -56,8 +56,8 @@ function Borrower() {
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log("Message sent:", response);
-        closeModal(); // Close the modal after sending
+        
+        closeModal(); 
       })
       .catch((error) => console.error("Error sending message:", error));
   };
@@ -73,8 +73,6 @@ function Borrower() {
     })
       .then((res) => res.json())
       .then((response) => {
-        console.log("User blocked:", response);
-        // Optionally handle UI update or feedback
       })
       .catch((error) => console.error("Error blocking user:", error));
   };

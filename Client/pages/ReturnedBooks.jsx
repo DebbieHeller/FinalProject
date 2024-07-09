@@ -81,10 +81,9 @@ function ReturnedBooks() {
   
       if (allRequestsSucceeded) {
         const updatedBorrowsIds = updatedBorrows.map(borrow => borrow.borrowId);
-        console.log(updatedBorrowsIds)
+       
         setBorrows(borrows.filter(borrow => !updatedBorrowsIds.includes(borrow.borrowId)));
 
-        console.log(checkboxData)
       } else {
         console.error("Not all requests succeeded, please try again.");
       }

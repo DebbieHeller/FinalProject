@@ -1,7 +1,7 @@
 const express = require('express');
 const inspectorBorrowsRouter = express.Router();
 inspectorBorrowsRouter.use(express.json());
-const { getInspectorBorrows, updateBorrowByInspector,getLateBorrows } = require('../controllers/borrowsController');
+const { getInspectorBorrows, updateBorrowByInspector,getLateBorrows,updateStatusBorrow } = require('../controllers/borrowsController');
 
 inspectorBorrowsRouter.get('/', async (req, res) => {
     const libraryId = req.query.libraryId;
@@ -30,9 +30,9 @@ inspectorBorrowsRouter.get('/', async (req, res) => {
 
 
 inspectorBorrowsRouter.put('/:borrowId', async (req, res) => {
-    console.log(req.body)
+   const query=req.query;
+   if(query==null){
     try {
-       
         await updateBorrowByInspector(
             req.params.borrowId,
             req.body.copyBookId,
@@ -42,6 +42,19 @@ inspectorBorrowsRouter.put('/:borrowId', async (req, res) => {
         res.status(200).send;
     } catch (error) {
         res.status(500).send({ error: 'Failed to update borrow' });
+    }
+   }
+    else if(query){
+        try {
+            console.log(req.body.status)
+            await updateStatusBorrow(
+                req.params.borrowId,
+                req.body.status
+            );
+            res.status(200).send;
+        } catch (error) {
+            res.status(500).send({ error: 'Failed to update borrow' });
+        }
     }
 });
 

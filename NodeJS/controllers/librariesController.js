@@ -8,14 +8,14 @@ async function getAll() {
     }
 }
 
-async function create(libraryName, address, phone, userId) {
+async function create(libraryName, address, phone) {
     try {
-        const libraries = await model.getLibraries();
-        const userIsManager = libraries.some(library => library.userId == userId);
-        if (userIsManager) {
-            return null
-        }
-        return await model.createLibrary(libraryName, address, phone, userId)
+        // const libraries = await model.getLibraries();
+        // const userIsManager = libraries.some(library => library.userId == userId);
+        // if (userIsManager) {
+        //     return null
+        // }
+        return await model.createLibrary(libraryName, address, phone)
     } catch (err) {
         throw err
     }

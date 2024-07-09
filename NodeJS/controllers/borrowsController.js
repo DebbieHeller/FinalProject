@@ -46,7 +46,13 @@ async function getLateBorrows(libraryId,date) {
   }
 }
 
-
+async function updateStatusBorrow(borrowId,status) {
+  try {
+    return await model.updateStatusBorrow(borrowId,status);
+  } catch (err) {
+    throw err;
+  }
+}
 async function getSingle(id) {
   try {
       return await model.getBorrow(id)
@@ -77,4 +83,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser,getLateBorrows};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser,getLateBorrows,updateStatusBorrow};

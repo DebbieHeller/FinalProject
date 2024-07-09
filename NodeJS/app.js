@@ -21,6 +21,7 @@ const likes = require("./routes/likesRoute")
 const inspectorBorrows=require('./routes/inspectorBorrowsRoute')
 const libraryAdmin = require('./routes/libraryAdminRoute');
 const libraries = require('./routes/librariesRoute')
+const checkConnect=require('./routes/checkConnectRoute')
 
 app.use(cookieParser());
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use("/likes", likes);
 app.use("/login", login);
 app.use("/signUp", signUp);
 app.use("/comments", comments);
+app.use("/checkConnect",checkConnect);
 
 
 app.use(jwtAuthentication);

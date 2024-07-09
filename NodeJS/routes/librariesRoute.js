@@ -14,14 +14,14 @@ librariesRouter.get('/', async (req, res) => {
 
 librariesRouter.post('/', async (req, res) => {
     try {
+        console.log(req.body)
         const response = await create(
             req.body.libraryName,
             req.body.address,
             req.body.phone,
-            req.body.userId
         )
         if(response) {
-            res.sendStatus(201);
+            res.status(201).json(response);
         }
         else {
             res.sendStatus(409);

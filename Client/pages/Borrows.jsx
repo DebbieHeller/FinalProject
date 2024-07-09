@@ -50,6 +50,7 @@ function Borrows() {
       const createdDate = new Date().toISOString().split("T")[0];
       const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
       
+     
       fetch('http://localhost:3000/messages', {
         method: 'POST',
         credentials: 'include',
@@ -62,7 +63,30 @@ function Borrows() {
       .then(data => {
         setMessage('הודעה נשלחה בהצלחה');
         setSentMessages(prev => ({ ...prev, [borrow.copyBookId]: true }));
-        console.log(data);
+        
+  
+        
+        fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}?query=${111}`, {
+          method: 'PUT',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: 'Overdue' }), 
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to update borrow status');
+          }
+          return response.json();
+        })
+        .then(updatedData => {
+          console.log('Borrow status updated successfully:', updatedData);
+          
+        })
+        .catch(error => {
+          console.error('Error updating borrow status:', error);
+        });
       })
       .catch(error => {
         setMessage('נכשל בשליחת הודעה');
@@ -70,6 +94,7 @@ function Borrows() {
       });
     }
   };
+  
 
   return (
     <div className="borrows-container">

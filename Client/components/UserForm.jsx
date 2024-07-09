@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 const libraryId = parseInt(localStorage.getItem("libraryId"));
-function InspectorForm({ onSubmit }) {
+function UserForm({ onSubmit }) {
   const [formData, setFormData] = useState({
     username: "",
     phone: "",
@@ -62,9 +62,9 @@ function InspectorForm({ onSubmit }) {
           <option value={true}>Yes</option>
         </select>
       </label> */}
-      <button type="submit">Add Inspector</button>
+      <button type="submit">אישור</button>
     </form>
   );
 }
 
-export default InspectorForm;
+export default UserForm;

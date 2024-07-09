@@ -16,9 +16,9 @@ async function getborrows(userId) {
       `,
       [userId]
     );
-    console.log(rows)
-    return rows;
     
+    return rows;
+
   } catch (error) {
     console.error(error);
     throw error;
@@ -49,7 +49,7 @@ async function getTerriableUser(userId) {
 }
 
 async function getInspectorBorrows(libraryId) {
-  
+
   try {
     const [rows] = await pool.query(
       `
@@ -62,7 +62,7 @@ async function getInspectorBorrows(libraryId) {
         AND borrows.isIntact IS NULL
         AND borrows.isReturned IS NULL
         AND borrows.status ='Returned';
-      `,[libraryId]
+      `, [libraryId]
     );
     return rows;
   } catch (err) {
@@ -74,7 +74,7 @@ async function getInspectorBorrows(libraryId) {
 
 
 async function getLateBorrows(libraryId, date) {
-  // יצירת אובייקט Date לפני שבועיים
+
   const deadlineForBorrow = new Date();
   deadlineForBorrow.setDate(deadlineForBorrow.getDate() - 14);
 
@@ -102,8 +102,8 @@ async function getLateBorrows(libraryId, date) {
 
 async function getUnFixBorrows(libraryId) {
   try {
-      const [rows] = await pool.query(
-          `
+    const [rows] = await pool.query(
+      `
           SELECT borrows.id as borrowId, borrows.*, books.*, users.isWarned, users.userName
           FROM borrows
           JOIN copyBook ON borrows.copyBookId = copyBook.id
@@ -114,12 +114,12 @@ async function getUnFixBorrows(libraryId) {
           AND borrows.isIntact IS FALSE
           AND borrows.status = 'Returned';
           `,
-          [libraryId]
-      );
-      return rows;
+      [libraryId]
+    );
+    return rows;
   } catch (err) {
-      console.error('Error fetching unfix borrows:', err);
-      throw err;
+    console.error('Error fetching unfix borrows:', err);
+    throw err;
   }
 }
 
@@ -168,27 +168,39 @@ async function updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate
   }
 }
 
-async function updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact) {
+async function updateBorrowByInspector(borrowId, copyBookId, isReturned, isIntact) {
   try {
     const [rows] = await pool.query(
       `UPDATE borrows
       SET isReturned = ?, isIntact = ? WHERE id = ? `,
       [isReturned, isIntact, borrowId]
     )
-    if(isIntact===true){
+    if (isIntact === true) {
       await pool.query(
-      `UPDATE copyBook SET isAvailable = ? WHERE id = ? `, [1, copyBookId]
-    );
+        `UPDATE copyBook SET isAvailable = ? WHERE id = ? `, [1, copyBookId]
+      );
     }
-    
-    
+
+
     return rows;
   } catch (err) {
     console.error('Error updating borrow record:', err);
     throw err;
   }
 }
-
+async function updateStatusBorrow(borrowId, status) {
+  try {
+    const [rows] = await pool.query(
+      `UPDATE borrows
+      SET status = ? WHERE id = ? `,
+      [status, borrowId]
+    )
+    return rows;
+  } catch (err) {
+    console.error('Error updating borrow record:', err);
+    throw err;
+  }
+}
 async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) {
   try {
     const [rows] = await pool.query(
@@ -207,4 +219,4 @@ async function createBorrow(copyBookId, userId, borrowDate, returnDate, status, 
 
 
 
-module.exports = { getborrows, getBorrow, updateBorrow, createBorrow ,prevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser,getLateBorrows};
+module.exports = { getborrows, getBorrow, updateBorrow, createBorrow, prevBorrows, getInspectorBorrows, updateBorrowByInspector, getUnFixBorrows, getTerriableUser, getLateBorrows, updateStatusBorrow };
