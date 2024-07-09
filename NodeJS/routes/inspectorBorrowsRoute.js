@@ -31,8 +31,10 @@ inspectorBorrowsRouter.get('/', async (req, res) => {
 
 inspectorBorrowsRouter.put('/:borrowId', async (req, res) => {
    const query=req.query;
+   
    if(query==null){
     try {
+        
         await updateBorrowByInspector(
             req.params.borrowId,
             req.body.copyBookId,

@@ -40,17 +40,23 @@ async function getByroleId(id) {
 
 async function getByUsername(username) {
     try {
-        const sql = `SELECT *
-        FROM users
-        where username=?`
+        const sql = `
+            SELECT u.*, 
+                   COUNT(m.id) AS unreadMessagesCount
+            FROM users u
+            LEFT JOIN messages m ON u.id = m.userId AND m.status = 'לא נקראה'
+            WHERE u.username = ?
+            GROUP BY u.id
+        `;
 
-        const [rows] = await pool.query(sql, [username])
-        return rows[0]
+        const [rows] = await pool.query(sql, [username]);
+        return rows[0];
     } catch (err) {
-        console.error('Error geting user:', err)
-        throw err
+        console.error('Error getting user:', err);
+        throw err;
     }
 }
+
 
 async function createUser(username, phone, email, address, subscriptionTypeId, roleId, libraryId, hashedPassword) {
     try {

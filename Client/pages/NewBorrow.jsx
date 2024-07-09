@@ -23,6 +23,7 @@ function NewBorrow() {
     const limit = 12;
 
     useEffect(() => {
+        console.log(user)
         fetch(`http://localhost:3000/recommends?libraryId=${libraryId}&userId=${user.id}`, {
             method: 'GET',
             credentials: 'include'

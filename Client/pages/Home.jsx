@@ -1,12 +1,20 @@
 import { Link } from "react-router-dom";
 import "../css/home.css";
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 import { userContext } from '../src/App';
 
 function Home() {
-  const { user } = useContext(userContext);
+  const { user, setUser } = useContext(userContext);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const handleMessageRead = () => {
+    // Update the unread messages count when a message is read
+    setUser(prevUser => ({
+      ...prevUser,
+      unreadMessagesCount: prevUser.unreadMessagesCount - 1
+    }));
+  };
   
   useEffect(() => {
     if (user && user.id) {
@@ -35,13 +43,13 @@ function Home() {
           </li>
           <li>
             <Link to="/home/messages">
-            הודעות 
-            {unreadCount > 0 && (
-              <span className="unread-count">
-                <FaEnvelope className="envelope-icon" /> {unreadCount}
-              </span>
-            )}
-          </Link>
+              הודעות 
+              {user?.unreadMessagesCount > 0 && (
+                <span className="unread-count">
+                  <FaEnvelope className="envelope-icon" /> {user.unreadMessagesCount}
+                </span>
+              )}
+            </Link>
           </li>
           <li>
             <Link to="/home/user-borrows">השאלות קודמות</Link>

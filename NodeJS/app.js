@@ -24,6 +24,7 @@ const libraries = require('./routes/librariesRoute')
 const checkConnect=require('./routes/checkConnectRoute')
 const logout=require('./routes/logoutRoute')
 
+const sendEmail=require('./routes/sendEmailRoute')
 
 app.use(cookieParser());
 app.use(express.json());
@@ -51,6 +52,8 @@ app.use("/subscriptionTypes",subscriptionTypes);
 app.use("/inspectorBorrows",inspectorBorrows);
 app.use("/libraries", libraries);
 app.use("/logout", logout);
+app.use("/sendEmail",sendEmail);
+
 
 const PORT = 3000;
 app.listen(PORT, () => {

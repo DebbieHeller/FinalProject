@@ -104,7 +104,7 @@ async function getUnFixBorrows(libraryId) {
   try {
     const [rows] = await pool.query(
       `
-          SELECT borrows.id as borrowId, borrows.*, books.*, users.isWarned, users.userName
+          SELECT borrows.id as borrowId, borrows.*, books.*, users.isWarned, users.userName,users.email
           FROM borrows
           JOIN copyBook ON borrows.copyBookId = copyBook.id
           JOIN booksInLibrary ON copyBook.bookInLibraryId = booksInLibrary.id
@@ -170,6 +170,7 @@ async function updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate
 
 async function updateBorrowByInspector(borrowId, copyBookId, isReturned, isIntact) {
   try {
+
     const [rows] = await pool.query(
       `UPDATE borrows
       SET isReturned = ?, isIntact = ? WHERE id = ? `,
