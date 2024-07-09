@@ -34,14 +34,15 @@ usersRouter.post("/", async (req, res) => {
     );
     console.log(response);
     if (response) {
-      res.status(201).json(response);
+      res.status(201).json({ message: "User created successfully", data: response });
     } else {
-      res.sendStatus(501);
+      res.status(501).json({ message: "User creation failed" });
     }
   } catch (error) {
-    res.status(500).send({ error: "Failed to fetch user" });
+    res.status(500).json({ error: "Failed to fetch user" });
   }
 });
+
 
 usersRouter.put("/:userId", async (req, res) => {
   try {

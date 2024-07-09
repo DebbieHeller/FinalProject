@@ -1,42 +1,24 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import "../css/newLibrary.css";
+import InspectorForm from "../components/InspectorForm"; // ייבוא של טופס בחירת מנהל
 
 function NewLibrary() {
   const navigate = useNavigate();
   const [libraryName, setLibraryName] = useState('');
   const [address, setAddress] = useState('');
   const [phone, setPhone] = useState('');
-  const [showManagerModal, setShowManagerModal] = useState(false);
-  const [users, setUsers] = useState([]);
   const [selectedManager, setSelectedManager] = useState(null);
-  const [searchQuery, setSearchQuery] = useState('');
-
-  useEffect(() => {
-    fetch('http://localhost:3000/users', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error('Error fetching users:', error));
-  }, []);
+  const [showManagerForm, setShowManagerForm] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if(!selectedManager){
-      alert('לא בחרת מנהל')
-      return;
-    }
     const newLibrary = {
-      libraryName,
-      address,
-      phone,
-      userId: selectedManager.id
+      libraryName:libraryName,
+      address:address,
+      phone:phone,
+      userId: 15,
     };
 
     fetch('http://localhost:3000/libraries', {
@@ -48,22 +30,40 @@ function NewLibrary() {
       body: JSON.stringify(newLibrary)
     })
       .then((res) => {
-        if(res.status == 201)
+        if (res.status === 201) {
           navigate('/admin-home/libraries');
-        else if(res.status == 409)
-            alert('בחרת מנהל של ספריה קיימת')
+        }
       })
       .catch((error) => console.error('Error adding library:', error));
   };
 
-  const handleManagerSelect = (manager) => {
-    setSelectedManager(manager);
-    setShowManagerModal(false);
+  const handleAddManager = (managerData) => {
+    managerData.roleId=3
+    console.log(managerData.roleId)
+    fetch("http://localhost:3000/users", {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(managerData),
+    })
+      .then((response) => {
+        console.log(response)
+        if (response.ok) {
+          console.log("Inspector added successfully");
+        
+        } else {
+          console.error("Error adding manager:", response.statusText);
+        }
+      })
+      .catch((error) => console.error("Error adding manager:", error));
   };
 
-  const filteredManagers = users.filter((user) =>
-    user.username.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleManagerSelect = (manager) => {
+    setSelectedManager(manager);
+    setShowManagerForm(false);
+  };
 
   return (
     <div className="newLibrary-container">
@@ -101,50 +101,18 @@ function NewLibrary() {
         </div>
         <div className="newLibrary-form-group">
           <label>מנהל ספרייה</label>
-          <button type="button" onClick={() => setShowManagerModal(true)}>
-            בחירת מנהל ספרייה
-          </button>
-          {selectedManager && (
-            <div>
-              מנהל נבחר: {selectedManager.username}
-            </div>
+          {selectedManager ? (
+            <p>{selectedManager.username}</p>
+          ) : (
+            <button type="button" onClick={() => setShowManagerForm(!showManagerForm)}>
+              {showManagerForm ? 'Hide Manager Form' : 'Select Manager'}
+            </button>
           )}
         </div>
+       
         <button type="submit">אישור</button>
       </form>
-
-      {showManagerModal && (
-        <div className="newLibrary-modal">
-          <div className="newLibrary-modal-content">
-            <span className="newLibrary-close" onClick={() => setShowManagerModal(false)}>
-              &times;
-            </span>
-            <button>הוספת מנהל ספרייה</button>
-            <input
-              type="text"
-              placeholder="חיפוש לפי שם משתמש"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <table>
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>שם משתמש</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredManagers.map((manager) => (
-                  <tr key={manager.id} onClick={() => handleManagerSelect(manager)}>
-                    <td>{manager.id}</td>
-                    <td>{manager.username}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
+      {showManagerForm && <InspectorForm onSubmit={handleAddManager} />}
     </div>
   );
 }

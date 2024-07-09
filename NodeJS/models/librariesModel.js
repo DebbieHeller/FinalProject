@@ -15,6 +15,7 @@ async function getLibraries() {
 }
 
 async function createLibrary(libraryName, address, phone, userId) {
+
     try {
         const [library] = await pool.query(
             "INSERT INTO libraries (libraryName, address, phone) VALUES (?, ?, ?)",
@@ -23,7 +24,7 @@ async function createLibrary(libraryName, address, phone, userId) {
 
         await pool.query(
             "UPDATE users SET libraryId = ?, roleId = ? where id = ?",
-            [library.insertId, 2, userId]
+            [library.insertId, 3, userId]
         );
 
         return library.insertId;
