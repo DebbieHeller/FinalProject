@@ -1,6 +1,6 @@
 .home-header-nav {
   padding: 18px 20px;
-  background-color: #4996a1;
+  background-color: #5491a7;
   position: fixed;
   width: 100%;
   z-index: 1000;
@@ -26,4 +26,16 @@
 .home-header-nav li a:hover,
 .home-header-nav li a:focus {
   background-color: rgb(183, 185, 190);
+}
+
+.unread-count {
+  color: #fff;
+  font-weight: bold;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 12px;
+}
+
+.envelope-icon {
+  margin-right: 5px;
 }

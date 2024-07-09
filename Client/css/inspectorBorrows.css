@@ -1,56 +1,54 @@
-/* Borrows.css */
-
 .borrows-container {
-    padding: 20px;
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: #f8f8f8;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .borrows-container h1 {
-    text-align: center;
-    color: #333;
-  }
-  
-  .borrows-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-  }
-  
-  .borrows-table th, .borrows-table td {
-    padding: 12px 15px;
-    border: 1px solid #ddd;
-    text-align: left;
-  }
-  
-  .borrows-table th {
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  
-  .borrows-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .borrows-table tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .borrows-icons {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .borrows-icons svg {
-    cursor: pointer;
-    color: #007bff;
-    transition: color 0.2s;
-  }
-  
-  .borrows-icons svg:hover {
-    color: #0056b3;
-  }
-  
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #f8f8f8;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.borrows-table {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+
+.borrows-table th,
+.borrows-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.borrows-table th {
+  background-color: #f4f4f4;
+  color: #333;
+}
+
+.borrows-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.borrows-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.borrows-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.borrows-icons svg {
+  cursor: pointer;
+  color: rgb(125, 165, 188);
+  transition: color 0.2s;
+}
+
+.borrows-icons svg:hover {
+  color: rgb(73, 147, 190);
+}
+
+
+.td-detailed {
+  cursor: default;
+}

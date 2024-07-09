@@ -3,8 +3,9 @@
 }
 
 .messages-table {
-  width: 100%;
+  width: 60%;
   border-collapse: collapse;
+  margin: 0 auto;
 }
 
 .messages-table th, .messages-table td {

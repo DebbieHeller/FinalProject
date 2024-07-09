@@ -100,8 +100,8 @@ function UserBooks() {
     const updatedSelectedBooks = [...selectedBooksToReturn];
 
     selectedBooksToReturn.forEach((borrowBook) => {
-      const returnDate = new Date().toISOString().split("T")[0];
-      const borrowDate = new Date(borrowBook.borrowDate).toISOString().split("T")[0];
+      const returnDate = new Date().toLocaleDateString('en-CA');
+      const borrowDate = new Date(borrowBook.borrowDate).toLocaleDateString('en-CA');
 
       const updatedBorrow = {
         id: borrowBook.borrowId,

@@ -1,8 +1,10 @@
 const model = require("../models/messagesModel");
 
-async function getUserMessages(userId) {
+async function getUserMessages(userId, count) {
     try {
-        return await model.getMessages(userId)
+        const response = count? await model.getCountMessages(userId)
+        :await model.getMessages(userId)
+        return response;
     } catch (err) {
         throw err
     }

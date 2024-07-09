@@ -115,8 +115,8 @@ function UserBorrows() {
                                 className={selectedRow === index ? "selected-row" : ""}
                                 onDoubleClick={() => handleRowDoubleClick(index, book)}
                             >
-                                <td>{new Date(book.borrowDate).toISOString().split('T')[0]}</td>
-                                <td>{new Date(book.returnDate).toISOString().split('T')[0]}</td>
+                                <td>{new Date(book.borrowDate).toLocaleDateString('en-CA')}</td>
+                                <td>{new Date(book.returnDate).toLocaleDateString('en-CA')}</td>
                                 <td>{book.nameBook}</td>
                                 <td>{book.author}</td>
                                 <td>{book.category}</td>

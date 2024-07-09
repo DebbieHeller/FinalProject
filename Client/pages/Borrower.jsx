@@ -11,7 +11,7 @@ function Borrower() {
     title: "",
     body: "",
     status: "לא נקראה",
-    createdDate: new Date().toISOString().split("T")[0],
+    createdDate: new Date().toLocaleDateString('en-CA'),
     readDate: null,
   });
   const [showModal, setShowModal] = useState(false); // State for modal visibility
@@ -42,7 +42,7 @@ function Borrower() {
     const fullMessage = {
       ...message,
       status: "לא נקראה", // Or set status as needed
-      createdDate: new Date().toISOString().split("T")[0],
+      createdDate: new Date().toLocaleDateString('en-CA'),
       readDate: null,
     };
 
@@ -99,11 +99,11 @@ function Borrower() {
         <tbody>
           {books.map((book) => (
             <tr key={book.borrowId}>
-              <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
-              <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
-              <td>{book.status}</td>
-              <td>{book.isReturned ? "Yes" : "No"}</td>
-              <td>{book.isIntact ? "Yes" : "No"}</td>
+              <td className='td-detailed'>{new Date(book.borrowDate).toLocaleDateString('en-CA')}</td>
+              <td className='td-detailed'>{new Date(book.returnDate).toLocaleDateString('en-CA')}</td>
+              <td className='td-detailed'>{book.status}</td>
+              <td className='td-detailed'>{book.isReturned ? "Yes" : "No"}</td>
+              <td className='td-detailed'>{book.isIntact ? "Yes" : "No"}</td>
             </tr>
           ))}
         </tbody>

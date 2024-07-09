@@ -1,11 +1,7 @@
 const express = require("express");
 const usersRouter = express.Router();
 usersRouter.use(express.json());
-const {
-  create,
-  getUsers,
-  warningUser,
-} = require("../controllers/usersController");
+const { create, getUsers,  warningUser } = require("../controllers/usersController");
 
 usersRouter.get("/", async (req, res) => {
   try {

@@ -43,7 +43,7 @@ function Borrowers() {
     }
 
     if (title && body) {
-      const createdDate = new Date().toISOString().split("T")[0];
+      const createdDate = new Date().toLocaleDateString('en-CA');
       const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
       
       fetch('http://localhost:3000/messages', {
@@ -91,8 +91,8 @@ function Borrowers() {
             >
               <td>{borrow.userName}</td>
               <td>{borrow.nameBook}</td>
-              <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
-              <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
+              <td>{new Date(book.borrowDate).toLocaleDateString('en-CA')}</td>
+              <td>{new Date(book.returnDate).toLocaleDateString('en-CA')}</td>
               <td>{borrow.status}</td>
               <td>{borrow.isReturned ? "Yes" : "No"}</td>
               <td>{borrow.isIntact ? "Yes" : "No"}</td>

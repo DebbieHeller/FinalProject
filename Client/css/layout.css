@@ -22,7 +22,7 @@
 .library-input-container button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #007bff;
+    background-color: #5491a7;
     color: white;
     border: none;
     border-radius: 4px;
@@ -30,5 +30,5 @@
 }
 
 .library-input-container button:hover {
-    background-color: #0056b3;
+    background-color: #44788b;
 }

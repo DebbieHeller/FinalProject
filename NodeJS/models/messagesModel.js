@@ -15,6 +15,18 @@ async function getMessages(userId) {
     }
 }
 
+async function getCountMessages(userId) {
+    try {
+        const [rows] = await pool.query(
+            'SELECT COUNT(*) AS unreadCount FROM messages WHERE userId = ? AND readDate is NULL', [userId]
+        );
+        return rows[0];
+    } catch (err) {
+        console.log(err);
+        throw err;
+    }
+}
+
 async function updateMessage(id, status, readDate) {
     try {
         const [rows] = await pool.query(
@@ -44,4 +56,4 @@ async function createMessage(userId, title, body, status, createdDate) {
 
 
 
-module.exports = { getMessages, updateMessage ,createMessage}
+module.exports = { getMessages, getCountMessages, updateMessage ,createMessage}
