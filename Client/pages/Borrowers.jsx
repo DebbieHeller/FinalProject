@@ -8,6 +8,7 @@ function Borrowers() {
   const [borrowRecords, setBorrowRecords] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [message, setMessage] = useState('');
+  const [sentMessages, setSentMessages] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,9 +18,7 @@ function Borrowers() {
     })
       .then((res) => res.json())
       .then((data) => {
-        
         setBorrowRecords(data);
-        
       })
       .catch((error) =>
         console.error("Error fetching borrow records:", error)
@@ -36,7 +35,7 @@ function Borrowers() {
     let body = '';
     if (!borrow.isIntact && borrow.isReturned) {
       title = "ספר לא תקין";
-      body = `החזרת ספר ${borrow.nameBook} לא תקין תחוייב בקנס` ;
+      body = `החזרת ספר ${borrow.nameBook} לא תקין תחוייב בקנס`;
     } else if (!borrow.isReturned) {
       title = "ספר לא הוחזר";
       body = `${borrow.nameBook} הינך נדרש להחזיר את הספר שנשאל`;
@@ -45,10 +44,10 @@ function Borrowers() {
     if (title && body) {
       const createdDate = new Date().toLocaleDateString('en-CA');
       const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
-      
+
       fetch('http://localhost:3000/messages', {
         method: 'POST',
-         credentials: 'include',
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -57,6 +56,28 @@ function Borrowers() {
       .then(response => response.json())
       .then(data => {
         setMessage('Message sent successfully');
+        setSentMessages(prev => ({ ...prev, [borrow.copyBookId]: true }));
+
+        fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}?query=${111}`, {
+          method: 'PUT',
+          credentials: 'include',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: 'Overdue' }),
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Failed to update borrow status');
+          }
+          return response.json();
+        })
+        .then(updatedData => {
+          console.log('Borrow status updated successfully:', updatedData);
+        })
+        .catch(error => {
+          console.error('Error updating borrow status:', error);
+        });
       })
       .catch(error => {
         setMessage('Failed to send message');
@@ -91,13 +112,17 @@ function Borrowers() {
             >
               <td>{borrow.userName}</td>
               <td>{borrow.nameBook}</td>
-              <td>{new Date(book.borrowDate).toLocaleDateString('en-CA')}</td>
-              <td>{new Date(book.returnDate).toLocaleDateString('en-CA')}</td>
+              <td>{new Date(borrow.borrowDate).toLocaleDateString('en-CA')}</td>
+              <td>{new Date(borrow.returnDate).toLocaleDateString('en-CA')}</td>
               <td>{borrow.status}</td>
               <td>{borrow.isReturned ? "Yes" : "No"}</td>
               <td>{borrow.isIntact ? "Yes" : "No"}</td>
               <td>
-                <button onClick={() => handleSendMessage(borrow)}>שלח הודעה</button>
+                {sentMessages[borrow.copyBookId] ? (
+                  <span>הודעה נשלחה</span>
+                ) : (
+                  <button onClick={() => handleSendMessage(borrow)}>שלח הודעה</button>
+                )}
               </td>
             </tr>
           ))}

@@ -15,7 +15,6 @@ function UserBooks() {
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [daysLeftMap, setDaysLeftMap] = useState(new Map());
   
-
   useEffect(() => {
     fetch(`http://localhost:3000/borrows?userId=${user.id}`, {
       method: 'GET',
@@ -87,7 +86,7 @@ function UserBooks() {
     })
       .then((res) => res.json())
       .then(() => {
-        const prevLikes = likes[bookId]
+        const prevLikes = likes[bookId];
         setLikes({ ...likes, [bookId]: prevLikes + 1 });
       })
       .catch((error) => console.error('Error updating likes:', error));
@@ -100,19 +99,22 @@ function UserBooks() {
     const updatedSelectedBooks = [...selectedBooksToReturn];
 
     selectedBooksToReturn.forEach((borrowBook) => {
-      const returnDate = new Date().toLocaleDateString('en-CA');
-      const borrowDate = new Date(borrowBook.borrowDate).toLocaleDateString('en-CA');
+      const returnDate = new Date();
+      const borrowDate = new Date(borrowBook.borrowDate);
+      const dueDate = new Date(borrowDate);
+      dueDate.setDate(borrowDate.getDate() + 14);
+      const status = returnDate <= dueDate ? "Returned" : "Overdue-Returned";
 
       const updatedBorrow = {
         id: borrowBook.borrowId,
         copyBookId: borrowBook.copyBookId,
         userId: user.id,
         bookId: borrowBook.id,
-        borrowDate: borrowDate,
-        returnDate: returnDate,
-        status: "Returned",
-        isReturned:null,
-        isIntact:null,
+        borrowDate: borrowDate.toLocaleDateString('en-CA'),
+        returnDate: returnDate.toLocaleDateString('en-CA'),
+        status: status,
+        isReturned: null,
+        isIntact: null,
       };
 
       fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {
@@ -136,11 +138,8 @@ function UserBooks() {
             }
             setSelectedBooksToReturn([...updatedSelectedBooks]);
           }
-          // else {
-          //   console.error("Error returning book:", response.statusText);
-          // }
-          if (response.status == 403) {
-            alert("אין לך הרשאה מתאימה, הכנס מחדש")
+          if (response.status === 403) {
+            alert("אין לך הרשאה מתאימה, הכנס מחדש");
             navigate('/logout');
           }
         })
@@ -150,9 +149,8 @@ function UserBooks() {
  
   return (
     <div className="user-books-container">
-     
       <h1>ספרים בהשאלה</h1>
-      {books.length == 0 && <div className="no-books-message">אין כרגע ספרים בהשאלתך</div>}
+      {books.length === 0 && <div className="no-books-message">אין כרגע ספרים בהשאלתך</div>}
       <div className="books-grid">
         {books.map((book) => (
           <div key={book.copyBookId} className="book-card">

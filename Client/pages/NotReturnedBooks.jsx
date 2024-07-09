@@ -45,12 +45,11 @@ function NotReturnedBooks() {
     const daysDelayed = calculateDaysDelayed(borrow);
     const title = 'איחור בהחזרת הספר';
     const body = `אתה מחזיק בספר כבר ${daysDelayed} ימים מעל המותר. כל יום גורר איתו קנס, החזר בהקדם.`;
-    
+
     if (title && body) {
       const createdDate = new Date().toLocaleDateString('en-CA');
       const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
-      
-     
+
       fetch('http://localhost:3000/messages', {
         method: 'POST',
         credentials: 'include',
@@ -63,16 +62,14 @@ function NotReturnedBooks() {
       .then(data => {
         setMessage('הודעה נשלחה בהצלחה');
         setSentMessages(prev => ({ ...prev, [borrow.copyBookId]: true }));
-        
-  
-        
+
         fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}?query=${111}`, {
           method: 'PUT',
           credentials: 'include',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ status: 'Overdue' }), 
+          body: JSON.stringify({ status: 'Overdue' }),
         })
         .then(response => {
           if (!response.ok) {
@@ -82,7 +79,6 @@ function NotReturnedBooks() {
         })
         .then(updatedData => {
           console.log('Borrow status updated successfully:', updatedData);
-          
         })
         .catch(error => {
           console.error('Error updating borrow status:', error);
@@ -94,12 +90,10 @@ function NotReturnedBooks() {
       });
     }
   };
-  
 
   return (
     <div className="borrows-container">
       <h1>ספרים שלא הוחזרו</h1>
-    
       <table className="borrows-table">
         <thead>
           <tr>
@@ -115,15 +109,13 @@ function NotReturnedBooks() {
             <tr key={index}>
               <td className='td-detailed'>{borrow.nameBook}</td>
               <td className='td-detailed'>{new Date(borrow.borrowDate).toLocaleDateString('en-CA')}</td>
-              <td className='td-detailed'>{new Date(borrow.returnDate).toLocaleDateString('en-CA')}</td>
+              <td className='td-detailed'>{new Date(borrow.borrowDate).toLocaleDateString('en-CA')}</td>
               <td className='td-detailed'>{borrow.status}</td>
-              <td className='td-detailed'>
+              <td>
                 {sentMessages[borrow.copyBookId] ? (
                   <span>הודעה נשלחה</span>
                 ) : (
-                  <button onClick={() => handleSendMessage(borrow)}>
-                    שלח הודעה
-                  </button>
+                  <button onClick={() => handleSendMessage(borrow)}>שלח הודעה</button>
                 )}
               </td>
             </tr>
