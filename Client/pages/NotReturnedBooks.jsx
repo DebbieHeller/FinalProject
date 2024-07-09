@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../css/inspectorBorrows.css"; // Import CSS file for styling
 
-function Borrows() {
+function NotReturnedBooks() {
   const libraryId = parseInt(localStorage.getItem("libraryId"));
   const [borrows, setBorrows] = useState([]);
   const [message, setMessage] = useState('');
@@ -47,7 +47,7 @@ function Borrows() {
     const body = `אתה מחזיק בספר כבר ${daysDelayed} ימים מעל המותר. כל יום גורר איתו קנס, החזר בהקדם.`;
     
     if (title && body) {
-      const createdDate = new Date().toISOString().split("T")[0];
+      const createdDate = new Date().toLocaleDateString('en-CA');
       const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
       
       fetch('http://localhost:3000/messages', {
@@ -73,7 +73,7 @@ function Borrows() {
 
   return (
     <div className="borrows-container">
-      <h1>השאלות קודמות</h1>
+      <h1>ספרים שלא הוחזרו</h1>
     
       <table className="borrows-table">
         <thead>
@@ -88,11 +88,11 @@ function Borrows() {
         <tbody>
           {borrows.map((borrow, index) => (
             <tr key={index}>
-              <td>{borrow.nameBook}</td>
-              <td>{new Date(borrow.borrowDate).toISOString().split('T')[0]}</td>
-              <td>{new Date(borrow.returnDate).toISOString().split('T')[0]}</td>
-              <td>{borrow.status}</td>
-              <td>
+              <td className='td-detailed'>{borrow.nameBook}</td>
+              <td className='td-detailed'>{new Date(borrow.borrowDate).toLocaleDateString('en-CA')}</td>
+              <td className='td-detailed'>{new Date(borrow.returnDate).toLocaleDateString('en-CA')}</td>
+              <td className='td-detailed'>{borrow.status}</td>
+              <td className='td-detailed'>
                 {sentMessages[borrow.copyBookId] ? (
                   <span>הודעה נשלחה</span>
                 ) : (
@@ -110,4 +110,4 @@ function Borrows() {
   );
 }
 
-export default Borrows;
+export default NotReturnedBooks;

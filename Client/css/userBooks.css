@@ -4,12 +4,12 @@
   margin-bottom: 10px;
 }
 .book-info .days-left-message {
-  color: #28a745;
+  color: rgb(125, 165, 188);
   font-weight: bold;
 }
 
 .book-info .overdue-message {
-  color: #dc3545;
+  color: rgb(125, 165, 188);
   font-weight: bold;
 }
 .toggle-comments,
@@ -53,11 +53,11 @@
 }
 
 .comment-form button:hover {
-  background-color: #0056b3;
+  background-color: #44788b;
 }
 
 .return-books-button {
-    background-color: #dc3545;
+    background-color: #5491a7;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -68,7 +68,7 @@
   }
 
 .return-books-button:hover {
-  background-color: #c82333;
+  background-color: #44788b;
 }
 
 .error-message {

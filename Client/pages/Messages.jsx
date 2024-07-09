@@ -8,7 +8,7 @@ function Messages() {
   const [selectedMessage, setSelectedMessage] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:3000/messages?userId=${user.id}`, {
+    fetch(`http://localhost:3000/messages`, {
       method: 'GET',
       credentials: 'include'
   })
@@ -23,7 +23,7 @@ function Messages() {
     if (message.status === 'לא נקראה') {
       const updatedMessage = {
         status: 'נקראה',
-        readDate: new Date().toISOString().split('T')[0]
+        readDate: new Date().toLocaleDateString('en-CA')
       };
 
       fetch(`http://localhost:3000/messages/${message.id}`, {
@@ -64,7 +64,7 @@ function Messages() {
                 onDoubleClick={() => handleDoubleClick(message)}
               >
                 <td>{message.title}</td>
-                <td>{new Date(message.createdDate).toLocaleDateString()}</td>
+                <td>{new Date(message.createdDate).toLocaleDateString('en-CA')}</td>
                 <td>{message.status}</td>
               </tr>
             ))

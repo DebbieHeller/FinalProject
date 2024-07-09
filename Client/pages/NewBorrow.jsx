@@ -35,28 +35,28 @@ function NewBorrow() {
     }, [libraryId, user.id]);
 
     useEffect(() => {
-            fetch(
-                `http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}&limit=${limit}&offset=${offset}`,
-                {
-                    method: "GET",
-                    credentials: "include",
+        fetch(
+            `http://localhost:3000/homeBooks?libraryId=${libraryId}&userId=${user.id}&limit=${limit}&offset=${offset}`,
+            {
+                method: "GET",
+                credentials: "include",
+            }
+        )
+            .then((res) => res.json())
+            .then((fetchedBooks) => {
+                if (recommendedBooks.length > 0 && offset == 0) {
+                    const filteredBooks = fetchedBooks.filter(
+                        book => !recommendedBooks.some(recommendedBook => recommendedBook.id === book.id)
+                    );
+                    setBooks(filteredBooks);
+                } else {
+                    // Append new books to existing list if offset is greater than 0 (infinite scroll)
+                    setBooks((prevBooks) => [...prevBooks, ...fetchedBooks]);
                 }
-            )
-                .then((res) => res.json())
-                .then((fetchedBooks) => {
-                    if (recommendedBooks.length > 0 && offset == 0) {
-                        const filteredBooks = fetchedBooks.filter(
-                            book => !recommendedBooks.some(recommendedBook => recommendedBook.id === book.id)
-                        );
-                        setBooks(filteredBooks);
-                    } else {
-                        // Append new books to existing list if offset is greater than 0 (infinite scroll)
-                        setBooks((prevBooks) => [...prevBooks, ...fetchedBooks]);
-                    }
-                    setIsSearching(false);
-                })
-                .catch((error) => console.error("Error fetching books:", error));
-    }, [libraryId, user.id, recommendedBooks, offset]); // Fetch books and recommended books when libraryId, user.id, or offset changes
+                setIsSearching(false);
+            })
+            .catch((error) => console.error("Error fetching books:", error));
+    }, [libraryId, user.id, recommendedBooks, offset]);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -70,10 +70,10 @@ function NewBorrow() {
 
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
-    }, [offset]); 
+    }, [offset]);
 
     useEffect(() => {
-        if(searchQuery == '')
+        if (searchQuery === '')
             setIsSearching(false);
     }, [searchQuery]);
 
@@ -153,16 +153,16 @@ function NewBorrow() {
                         </>
                     )}
                     <div className="book-section">
-                        {!isSearching? books.map(book => (
+                        {!isSearching ? books.map(book => (
                             <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
                                 <BookCard book={book} />
                             </div>
-                        )): 
-                        filteredBooks.map(book => (
-                            <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
-                                <BookCard book={book} />
-                            </div>
-                        ))}
+                        )) :
+                            filteredBooks.map(book => (
+                                <div key={book.copyBookId} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>
+                                    <BookCard book={book} />
+                                </div>
+                            ))}
                     </div>
                 </div>
 
@@ -178,6 +178,11 @@ function NewBorrow() {
                             <p><strong>Summary:</strong> {selectedBook.summary}</p>
                             <p><strong>Category:</strong> {selectedBook.category}</p>
                             <p><strong>New:</strong> {selectedBook.isNew ? 'Yes' : 'No'}</p>
+                            <p><strong>Available copies:</strong> {selectedBook.availableCopies}</p>
+                            {selectedBook.availableCopies > 0 ? <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
+                                להשאלה
+                            </button>
+                                : <p>הספר אינו זמין להשאלה</p>}
                             <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleShowComments(selectedBook.id); }}>
                                 {showComments ? "הסתרת הערות" : "הצגת הערות"}
                             </button>
@@ -191,10 +196,7 @@ function NewBorrow() {
                                     ))}
                                 </div>
                             )}
-                            {selectedBook.isAvailable == true ? <button className='singleBook' onClick={(e) => { e.stopPropagation(); handleAddToCart(selectedBook); }}>
-                                להשאלה
-                            </button>
-                                : <p>הספר אינו זמין להשאלה</p>}
+                           
                         </div>
                     </div>
                 )}

@@ -105,7 +105,7 @@ function Books() {
         </div>
       </form>
 
-      {user && user.roleId == 1 && <button className="add-book-button" onClick={() => setShowAddBookModal(true)}>הוספת ספר</button>}
+      {user && (user.roleId == 1 || user.roleId == 2) && <button className="add-book-button" onClick={() => setShowAddBookModal(true)}>הוספת ספר</button>}
       <div className="books-grid">
         {!isSearching ? books.map(book => (
           <div key={book.id} className="book-card" onClick={() => { setShowComments(false); setSelectedBook(book); }}>

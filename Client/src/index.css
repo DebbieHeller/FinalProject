@@ -32,7 +32,10 @@ body {
 
 h1 {
   font-size: 3.2em;
-  line-height: 1.1;
+  line-height: 3;
+  text-align: center;
+  color: rgb(125, 165, 188);
+  margin-bottom: 20px;
 }
 
 button {

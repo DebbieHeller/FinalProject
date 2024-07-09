@@ -112,7 +112,8 @@
 }
 
 .new-borrow-container h3 {
-    text-align: center; /* Center the headers */
+    text-align: center; 
+    color: #5491a7;
 }
 
 .book-section {
@@ -123,8 +124,9 @@
 }
 
 .separator-line {
-    width: 100%;
+    width: 80%;
     border: 1px solid #ccc;
-    margin: 20px 0;
+    height: 2px;
+    background-color: #5491a7;
 }
 

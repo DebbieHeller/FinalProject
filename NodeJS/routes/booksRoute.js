@@ -29,7 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-booksRouter.post("/", jwtAuthentication, roleAuthorization([1]), upload.single("image"), async (req, res) => {
+booksRouter.post("/", jwtAuthentication, roleAuthorization([1, 2]), upload.single("image"), async (req, res) => {
     try {
       const imageUrl = req.file ? req.file.filename : null;
       const response = await create(

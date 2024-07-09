@@ -63,10 +63,10 @@ function Inspectors() {
         <tbody>
           {users.map(user => (
             <tr key={user.id} className="user-row">
-              <td>{user.username}</td>
-              <td>{user.email}</td>
-              <td>{user.phone}</td>
-              <td>{user.address}</td>
+              <td className='td-detailed'>{user.username}</td>
+              <td className='td-detailed'>{user.email}</td>
+              <td className='td-detailed'>{user.phone}</td>
+              <td className='td-detailed'>{user.address}</td>
             </tr>
           ))}
         </tbody>

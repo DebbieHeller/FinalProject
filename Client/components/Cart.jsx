@@ -63,7 +63,7 @@ function Cart({ setIsCartVisible, cart, setCart, setBooks, setRecommendedBooks }
             const newBorrow = {
                 copyBookId: book.copyBookId,
                 userId: user.id,
-                borrowDate: new Date().toISOString().split('T')[0],
+                borrowDate: new Date().toLocaleDateString('en-CA'),
                 returnDate: null,
                 status: 'Borrowed',
                 isReturned: false,

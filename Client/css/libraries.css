@@ -5,17 +5,10 @@
     margin: 20px;
   }
   
-  /* Style for the header */
-  .Libraries h1 {
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
   /* Style for the add library button */
   .Libraries button {
     padding: 10px 20px;
-    background-color: #007bff;
+    background-color: #5491a7;
     color: white;
     border: none;
     cursor: pointer;
@@ -23,14 +16,14 @@
   }
   
   .Libraries button:hover {
-    background-color: #0056b3;
+    background-color: #44788b;
   }
   
-  /* Style for the table */
   .Libraries-table {
-    width: 100%;
+    width: 80%;
     border-collapse: collapse;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
   }
   
   .Libraries-table th, .Libraries-table td {

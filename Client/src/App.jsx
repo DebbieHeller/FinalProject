@@ -13,7 +13,7 @@ import NewBorrow from "../pages/NewBorrow";
 import Logout from "../components/Logout";
 import UserBook from "../pages/UserBook";
 import ReturnedBooks from "../pages/ReturnedBooks";
-import Borrows from "../pages/Borrows";
+import Borrows from "../pages/NotReturnedBooks";
 import Borrowers from "../pages/Borrowers";
 import Inspectors from "../pages/Inspectors";
 import Libraries from "../pages/Libraries";

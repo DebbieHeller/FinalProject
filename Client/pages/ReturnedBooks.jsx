@@ -99,7 +99,7 @@ function ReturnedBooks() {
   
   return (
     <div className="borrows-container">
-      <h1>השאלות קודמות</h1>
+      <h1>ספרים שהוחזרו</h1>
       <table className="borrows-table">
         <thead>
           <tr>
@@ -114,29 +114,29 @@ function ReturnedBooks() {
         <tbody>
           {borrows.length === 0 ? (
             <tr>
-              <td colSpan="6">אין ספרים שהושאלו</td>
+              <td className='td-detailed' colSpan="6">אין ספרים שהושאלו</td>
             </tr>
           ) : (
             borrows.map((borrow, index) => (
               <tr key={borrow.borrowId}>
-                <td>{borrow.copyBookId}</td>
-                <td>{borrow.nameBook}</td>
-                <td>{borrow.author}</td>
-                <td>
+                <td className='td-detailed'>{borrow.copyBookId}</td>
+                <td className='td-detailed'>{borrow.nameBook}</td>
+                <td className='td-detailed'>{borrow.author}</td>
+                <td className='td-detailed'>
                   <input
                     type="checkbox"
                     checked={checkboxData[index].isReturned}
                     onChange={() => handleCheckboxChange(index, 'isReturned')}
                   />
                 </td>
-                <td>
+                <td className='td-detailed'>
                   <input
                     type="checkbox"
                     checked={checkboxData[index].isIntact === 'intact'}
                     onChange={() => handleCheckboxChange(index, 'isIntact')}
                   />
                 </td>
-                <td>
+                <td className='td-detailed'>
                   <input
                     type="checkbox"
                     checked={checkboxData[index].isIntact === 'notIntact'}

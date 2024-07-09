@@ -1,11 +1,12 @@
 const express = require('express');
 const messagesRouter = express.Router();
 messagesRouter.use(express.json());
-const { getUserMessages, update,create } = require('../controllers/messagesController');
+const { getUserMessages, update, create } = require('../controllers/messagesController');
+const roleAuthorization = require("../middlewares/roleAuthorization");
 
-messagesRouter.get('/', async (req, res) => {
+messagesRouter.get('/', roleAuthorization([4]),  async (req, res) => {
     try {
-        const messages = await getUserMessages(req.query.userId);
+        const messages = await getUserMessages(req.userId, req.query.count);
         res.status(200).send(messages);
     } catch (error) {
         res.status(500).send({ error: 'Failed to fetch messages' });

@@ -7,11 +7,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.newLibrary-container h1 {
-  text-align: center;
-  margin-bottom: 20px;
-}
-
 .newLibrary-form-group {
   margin-bottom: 15px;
 }
@@ -29,7 +24,7 @@
 
 .newLibrary-form-group button {
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: #5491a7;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -37,13 +32,13 @@
 }
 
 .newLibrary-form-group button:hover {
-  background-color: #0056b3;
+  background-color: #44788b;
 }
 
 .newLibrary-container button[type="submit"] {
   width: 100%;
   padding: 10px;
-  background-color: #28a745;
+  background-color: #5491a7;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -51,7 +46,7 @@
 }
 
 .newLibrary-container button[type="submit"]:hover {
-  background-color: #218838;
+  background-color: #44788b;
 }
 
 .newLibrary-modal {
