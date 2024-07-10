@@ -64,14 +64,13 @@ async function getInspectorBorrows(libraryId) {
         AND borrows.status IN ('Returned', 'Overdue-Returned');
       `, [libraryId]
     );
+    console.log(rows)
     return rows;
   } catch (err) {
     console.log(err);
     throw err;
   }
 }
-
-
 
 async function getLateBorrows(libraryId, date) {
 
@@ -112,7 +111,7 @@ async function getUnFixBorrows(libraryId) {
           JOIN users ON borrows.userId = users.id
           WHERE booksInLibrary.libraryId = ?
           AND borrows.isIntact IS FALSE
-          AND borrows.status = 'Returned';
+          AND borrows.status IN ('Returned', 'Overdue-Returned');
           `,
       [libraryId]
     );
@@ -154,12 +153,12 @@ async function getBorrow(id) {
   }
 }
 
-async function updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact) {
+async function updateBorrow(borrowId, returnDate, status) {
   try {
     const [rows] = await pool.query(
       `UPDATE borrows
-      SET copyBookId = ?, userId = ?, borrowDate = ?, returnDate = ?, status = ?, isReturned = ?, isIntact = ? WHERE id = ? `,
-      [copyBookId, userId, borrowDate, returnDate, status, isReturned, isIntact, borrowId]
+      SET returnDate = ?, status = ?, isReturned=?, isIntact=? WHERE id = ? `,
+      [returnDate, status, null, null, borrowId]
     )
     return rows;
   } catch (err) {

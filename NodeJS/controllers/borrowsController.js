@@ -1,4 +1,5 @@
 const model = require("../models/borrowsModel");
+const userModel=require("../models/usersModel")
 
 async function getAll(userId) {
   try {
@@ -30,29 +31,16 @@ async function getTerriableUser(userId) {
     throw err;
   }
 }
-async function getInspectorBorrows(libraryId) {
+async function getInspectorBorrows(libraryId, date) {
   try {
-    return await model.getInspectorBorrows(libraryId);
+    const borrows = date? await model.getLateBorrows(libraryId, date)
+    : await model.getInspectorBorrows(libraryId)
+    return borrows
   } catch (err) {
     throw err;
   }
 }
 
-async function getLateBorrows(libraryId,date) {
-  try {
-    return await model.getLateBorrows(libraryId,date);
-  } catch (err) {
-    throw err;
-  }
-}
-
-async function updateStatusBorrow(borrowId,status) {
-  try {
-    return await model.updateStatusBorrow(borrowId,status);
-  } catch (err) {
-    throw err;
-  }
-}
 async function getSingle(id) {
   try {
       return await model.getBorrow(id)
@@ -60,16 +48,19 @@ async function getSingle(id) {
       throw err
   }
 }
-async function updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact) {
+async function updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact,statusBorrow, userId, status) {
   try {
-      return await model.updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact)
+    const updated = status? await model.updateStatusBorrow(borrowId,status)
+    : await model.updateBorrowByInspector(borrowId,copyBookId,isReturned,isIntact)
+    (statusBorrow == 'Overdue-Returned' && isIntact && await userModel.freeUser(userId))
+    return updated;
   } catch (err) {
       throw err
   }
 }
-async function update(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact) {
+async function update(borrowId, returnDate,status) {
   try {
-      return await model.updateBorrow(borrowId, copyBookId, userId, borrowDate, returnDate,status,isReturned,isIntact)
+      return await model.updateBorrow(borrowId, returnDate,status)
   } catch (err) {
       throw err
   }
@@ -83,4 +74,4 @@ async function create( copyBookId, userId, borrowDate, returnDate,status,isRetur
 }
 
 
-module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser,getLateBorrows,updateStatusBorrow};
+module.exports = { getAll ,update, getSingle, create, getPrevBorrows,getInspectorBorrows,updateBorrowByInspector,getUnFixBorrows,getTerriableUser};

@@ -58,7 +58,7 @@ function Borrowers() {
         setMessage('Message sent successfully');
         setSentMessages(prev => ({ ...prev, [borrow.copyBookId]: true }));
 
-        fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}?query=${111}`, {
+        fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}`, {
           method: 'PUT',
           credentials: 'include',
           headers: {
@@ -97,7 +97,6 @@ function Borrowers() {
             <th>שם ספר</th>
             <th>תאריך השאלה</th>
             <th>תאריך החזרה</th>
-            <th>סטטוס</th>
             <th>החזר</th>
             <th>תקין</th>
             <th>שליחת הודעה</th>
@@ -114,7 +113,6 @@ function Borrowers() {
               <td>{borrow.nameBook}</td>
               <td>{new Date(borrow.borrowDate).toLocaleDateString('en-CA')}</td>
               <td>{new Date(borrow.returnDate).toLocaleDateString('en-CA')}</td>
-              <td>{borrow.status}</td>
               <td>{borrow.isReturned ? "Yes" : "No"}</td>
               <td>{borrow.isIntact ? "Yes" : "No"}</td>
               <td>

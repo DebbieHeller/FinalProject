@@ -33,15 +33,11 @@ borrowsRouter.post('/', async (req, res) => {
 
 borrowsRouter.put('/:borrowId', roleAuthorization([4]), async (req, res) => {
     try {
+        console.log(req.body)
         await update(
             req.params.borrowId,
-            req.body.copyBookId,
-            req.body.userId,
-            req.body.borrowDate,
             req.body.returnDate,
-            req.body.status,
-            req.body.isReturned,
-            req.body.isIntact
+            req.body.status,           
         );
         res.status(200).send(await getSingle(req.params.borrowId));
     } catch (error) {

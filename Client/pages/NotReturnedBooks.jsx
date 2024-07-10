@@ -45,7 +45,7 @@ function NotReturnedBooks() {
     const daysDelayed = calculateDaysDelayed(borrow);
     const title = 'איחור בהחזרת הספר';
     const body = `אתה מחזיק בספר: "${borrow.nameBook}" כבר ${daysDelayed} ימים מעל המותר. כל יום גורר איתו קנס, החזר בהקדם.`;
-    
+
     if (title && body) {
       const createdDate = new Date().toLocaleDateString('en-CA');
       const messageData = { userId: borrow.userId, title, body, status: 'לא נקראה', createdDate };
@@ -58,36 +58,34 @@ function NotReturnedBooks() {
         },
         body: JSON.stringify(messageData),
       })
-      .then(response => response.json())
-      .then(data => {
-        setMessage('הודעה נשלחה בהצלחה');
-        setSentMessages(prev => ({ ...prev, [borrow.copyBookId]: true }));
+        .then(response => response.json())
+        .then(data => {
+          setMessage('הודעה נשלחה בהצלחה');
+          setSentMessages(prev => ({ ...prev, [borrow.copyBookId]: true }
+          ));
 
-        fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}?query=${111}`, {
-          method: 'PUT',
-          credentials: 'include',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ status: 'Overdue' }),
-        })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Failed to update borrow status');
-          }
-          return response.json();
-        })
-        .then(updatedData => {
-          console.log('Borrow status updated successfully:', updatedData);
+          fetch(`http://localhost:3000/inspectorBorrows/${borrow.copyBookId}`, {
+            method: 'PUT',
+            credentials: 'include',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: 'Overdue' }),
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Failed to update borrow status');
+              }
+              console.log('Borrow status updated successfully');
+            })
+            .catch(error => {
+              console.error('Error updating borrow status:', error);
+            });
         })
         .catch(error => {
-          console.error('Error updating borrow status:', error);
+          setMessage('נכשל בשליחת הודעה');
+          console.error('Error sending message:', error);
         });
-      })
-      .catch(error => {
-        setMessage('נכשל בשליחת הודעה');
-        console.error('Error sending message:', error);
-      });
     }
   };
 

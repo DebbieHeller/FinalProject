@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import "../css/home.css";
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FaEnvelope } from 'react-icons/fa';
 import { userContext } from '../src/App';
 

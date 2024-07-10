@@ -107,14 +107,8 @@ function UserBooks() {
 
       const updatedBorrow = {
         id: borrowBook.borrowId,
-        copyBookId: borrowBook.copyBookId,
-        userId: user.id,
-        bookId: borrowBook.id,
-        borrowDate: borrowDate.toLocaleDateString('en-CA'),
         returnDate: returnDate.toLocaleDateString('en-CA'),
-        status: status,
-        isReturned: null,
-        isIntact: null,
+        status: status
       };
 
       fetch(`http://localhost:3000/borrows/${borrowBook.borrowId}`, {

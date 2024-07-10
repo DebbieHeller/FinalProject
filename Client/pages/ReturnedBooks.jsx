@@ -47,12 +47,14 @@ function ReturnedBooks() {
   const handleSubmit = () => {
     try {
       const updatedBorrows = borrows
-        // .filter((borrow, index) => checkboxData[index].isReturned || checkboxData[index].isIntact !== '')
+        .filter((borrow, index) => checkboxData[index].isReturned || checkboxData[index].isIntact !== '')
         .map((borrow, index) => ({
           borrowId: borrow.borrowId,
           copyBookId: borrow.copyBookId,
           isReturned: checkboxData[index].isReturned == "" ? true : false,
           isIntact: checkboxData[index].isIntact === "intact",
+          statusBorrow: borrow.status,
+          userId:borrow.userId
         }));
 
       let allRequestsSucceeded = true;
@@ -62,6 +64,7 @@ function ReturnedBooks() {
           `http://localhost:3000/inspectorBorrows/${updatedBorrow.borrowId}`,
           {
             method: "PUT",
+            credentials: "include",
             headers: {
               "Content-Type": "application/json",
             },
@@ -69,8 +72,9 @@ function ReturnedBooks() {
               copyBookId: updatedBorrow.copyBookId,
               isReturned: updatedBorrow.isReturned,
               isIntact: updatedBorrow.isIntact,
+              statusBorrow: updatedBorrow.statusBorrow,
+              userId:updatedBorrow.userId
             }),
-            credentials: "include",
           }
         )
           .then((response) => {
@@ -94,6 +98,13 @@ function ReturnedBooks() {
           borrows.filter(
             (borrow) => !updatedBorrowsIds.includes(borrow.borrowId)
           )
+        );
+        setCheckboxData(
+          borrows.map(() => ({
+            borrowId: "",
+            isReturned: "",
+            isIntact: "",
+          }))
         );
       } else {
         console.error("Not all requests succeeded, please try again.");

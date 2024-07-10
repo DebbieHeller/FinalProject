@@ -85,6 +85,19 @@ async function warningUser(userId) {
       }
 }
 
+async function freeUser(userId) {
+    try {
+        const [rows] = await pool.query(
+          "UPDATE users SET isWarned = FALSE WHERE id = ?",
+          [userId]
+        );
+        return rows;
+      } catch (err) {
+        console.error('Error updating warning status:', err);
+        throw err;
+      }
+}
+
 async function validateUsername(username) {
     try {
         const [existUser] = await pool.query(`SELECT username FROM users where username=?`, [username])
@@ -96,4 +109,4 @@ async function validateUsername(username) {
     }
 }
 
-module.exports = { getAllUsers, getUser, getByUsername, createUser, validateUsername, getByroleId, warningUser }
+module.exports = { getAllUsers, getUser, getByUsername, createUser, validateUsername, getByroleId, warningUser , freeUser}

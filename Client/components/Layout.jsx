@@ -17,7 +17,7 @@ function Layout() {
             {libraryId ? <Outlet /> 
             : (
                 <div className="library-input-container">
-                    <p>הכנס קוד ספריה</p>
+                    <p className='code'>הכנס קוד ספריה</p>
                     <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
                     <button onClick={handleSubmit}>אישור</button>
                 </div>
